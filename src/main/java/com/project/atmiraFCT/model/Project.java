@@ -5,38 +5,47 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
+@Table(name="project")
 public class Project {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id_code;
 
+    @Column(name="type_of_service",length = 20,nullable = false)
     private String typeOfService;
 
+    @Column(name="name",length = 20,nullable = false)
     private String name;
 
+    @Column(name="initial_date",nullable = false)
     private Date initialDate;
 
+    @Column(name="end_date",nullable = false)
     private Date endDate;
 
+    @Column(name="active",nullable = false)
     private Boolean active;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "project", cascade = CascadeType.ALL)
-    List<Task> task;
+    List<Task> tasks;
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "project", cascade = CascadeType.ALL)
+    List<Expense> expenses;
 
-    public Project(Long id_code, String typeOfService, String name, Date initialDate, Date endDate, Boolean active, List<Task> task) {
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "project", cascade = CascadeType.ALL)
+    List<ColaboratorProject> colaboratorProjects;
+
+    public Project(Long id_code, String typeOfService, String name, Date initialDate, Date endDate, Boolean active, List<Task> tasks, List<Expense> expenses, List<ColaboratorProject> colaboratorProjects) {
         this.id_code = id_code;
         this.typeOfService = typeOfService;
         this.name = name;
         this.initialDate = initialDate;
         this.endDate = endDate;
         this.active = active;
-        this.task = task;
-    }
-
-    public Project() {
-
+        this.tasks = tasks;
+        this.expenses = expenses;
+        this.colaboratorProjects = colaboratorProjects;
     }
 
     public Long getId_code() {
@@ -87,11 +96,31 @@ public class Project {
         this.active = active;
     }
 
-    public List<Task> getTask() {
-        return task;
+    public List<Task> getTasks() {
+        return tasks;
     }
 
-    public void setTask(List<Task> task) {
-        this.task = task;
+    public void setTasks(List<Task> tasks) {
+        this.tasks = tasks;
+    }
+
+    public List<Expense> getExpenses() {
+        return expenses;
+    }
+
+    public void setExpenses(List<Expense> expenses) {
+        this.expenses = expenses;
+    }
+
+    public List<ColaboratorProject> getColaboratorProjects() {
+        return colaboratorProjects;
+    }
+
+    public void setColaboratorProjects(List<ColaboratorProject> colaboratorProjects) {
+        this.colaboratorProjects = colaboratorProjects;
+    }
+
+    public Project() {
+
     }
 }

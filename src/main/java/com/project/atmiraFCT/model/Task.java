@@ -3,29 +3,44 @@ package com.project.atmiraFCT.model;
 
 import jakarta.persistence.*;
 
+import java.util.List;
 import java.util.Objects;
 
 @Entity
+@Table(name="task")
 public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id_code;
 
+    @Column(name="description",length = 256,nullable = false)
     private String description;
 
+    @Column(name="objective ",length = 256,nullable = false)
     private String objective;
 
+    @Column(name="isClosed ",length = 256,nullable = false)
     private Boolean isClosed;
 
+    @Column(name="task",nullable = false)
     private Long task;
 
+    @Column(name="active",nullable = false)
     private Boolean active;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="id_code_project")
     private Project project;
 
-    public Task(Long id_code, String description, String objective, Boolean isClosed, Long task, Boolean active, Project project) {
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "task", cascade = CascadeType.ALL)
+    List<Expense> expenses;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="id_colaborator")
+    private Colaborator colaborator;
+
+
+    public Task(Long id_code, String description, String objective, Boolean isClosed, Long task, Boolean active, Project project, List<Expense> expenses, Colaborator colaborator) {
         this.id_code = id_code;
         this.description = description;
         this.objective = objective;
@@ -33,6 +48,8 @@ public class Task {
         this.task = task;
         this.active = active;
         this.project = project;
+        this.expenses = expenses;
+        this.colaborator = colaborator;
     }
 
     public Task() {
@@ -95,16 +112,19 @@ public class Task {
         this.project = project;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Task task1 = (Task) o;
-        return Objects.equals(id_code, task1.id_code) && Objects.equals(description, task1.description) && Objects.equals(objective, task1.objective) && Objects.equals(isClosed, task1.isClosed) && Objects.equals(task, task1.task) && Objects.equals(active, task1.active) && Objects.equals(project, task1.project);
+    public List<Expense> getExpenses() {
+        return expenses;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id_code, description, objective, isClosed, task, active, project);
+    public void setExpenses(List<Expense> expenses) {
+        this.expenses = expenses;
+    }
+
+    public Colaborator getColaborator() {
+        return colaborator;
+    }
+
+    public void setColaborator(Colaborator colaborator) {
+        this.colaborator = colaborator;
     }
 }
