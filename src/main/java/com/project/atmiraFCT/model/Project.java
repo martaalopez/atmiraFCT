@@ -12,19 +12,19 @@ public class Project {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id_code;
 
-    @Column(name="type_of_service",length = 20,nullable = false)
+    @Column(name="type_of_service",length = 20)
     private String typeOfService;
 
-    @Column(name="name",length = 20,nullable = false)
+    @Column(name="name",length = 20)
     private String name;
 
-    @Column(name="initial_date",nullable = false)
+    @Column(name="initial_date")
     private Date initialDate;
 
-    @Column(name="end_date",nullable = false)
+    @Column(name="end_date")
     private Date endDate;
 
-    @Column(name="active",nullable = false)
+    @Column(name="active")
     private Boolean active;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "project", cascade = CascadeType.ALL)
