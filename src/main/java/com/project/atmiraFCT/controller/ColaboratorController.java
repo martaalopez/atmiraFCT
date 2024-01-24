@@ -1,14 +1,12 @@
 package com.project.atmiraFCT.controller;
 
-import com.project.atmiraFCT.exception.RecordNotFoundException;
-import com.project.atmiraFCT.model.Colaborator;
+import com.project.atmiraFCT.model.domain.Colaborator;
 import com.project.atmiraFCT.repository.ColaboratorRepository;
 import com.project.atmiraFCT.service.ColaboratorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 public class ColaboratorController {
@@ -19,7 +17,7 @@ public class ColaboratorController {
     @Autowired
     private ColaboratorService colaboratorService;
 
-    @PostMapping("/save")
+    @PostMapping("/colaborator/save")
     public Colaborator saveColaborator(@RequestBody Colaborator colaborator) {
         return colaboratorRepository.save(colaborator);
     }
@@ -49,7 +47,7 @@ public class ColaboratorController {
         }
     }*/
 
-    @PostMapping("/createOrUpdate")
+    @PostMapping("/colaborator/createOrUpdate")
     public Colaborator createOrUpdateColaborator(@RequestBody Colaborator colaborator) {
         return colaboratorService.createOrUpdateColaborator(colaborator);
     }
