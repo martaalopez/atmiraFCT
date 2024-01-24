@@ -1,4 +1,4 @@
-package com.project.atmiraFCT.model;
+package com.project.atmiraFCT.model.domain;
 
 import com.project.atmiraFCT.model.Enum.TypeOfService;
 import jakarta.persistence.*;

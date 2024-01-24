@@ -1,6 +1,9 @@
-package com.project.atmiraFCT.model;
+package com.project.atmiraFCT.model.domain;
 
 import jakarta.persistence.*;
+
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 import java.util.List;
 
@@ -12,9 +15,8 @@ public class Colaborator {
     @Column(name = "id_alias")
     private String id_alias;
 
-    @Column(name="email",length = 100)
+    @Column(name="email", length = 100)
     private String email;
-
 
     @Column(name="isActive")
     private Boolean isActive;
@@ -31,13 +33,13 @@ public class Colaborator {
     @Column(name="expense")
     private Boolean expense;
 
-    @Column(name="name",length = 50)
+    @Column(name="name", length = 50)
     private String name;
 
-    @Column(name="surname",length = 100)
+    @Column(name="surname", length = 100)
     private String surname;
 
-    @Column(name="password",length = 12)
+    @Column(name="password", length = 256)
     private String password;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "colaborator", cascade = CascadeType.ALL)
@@ -63,7 +65,7 @@ public class Colaborator {
         this.expense = expense;
         this.name = name;
         this.surname = surname;
-        this.password = password;
+        setPassword(password);
         this.expenses = expenses;
         this.task = task;
         this.workPlace = workPlace;
@@ -72,6 +74,31 @@ public class Colaborator {
 
     public Colaborator() {
 
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = hashPassword(password);
+    }
+
+    private String hashPassword(String password) {
+        try {
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            byte[] hashedBytes = md.digest(password.getBytes());
+
+            // Convertir bytes a representación hexadecimal
+            StringBuilder sb = new StringBuilder();
+            for (byte b : hashedBytes) {
+                sb.append(String.format("%02x", b));
+            }
+
+            return sb.toString();
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException("Error al hashear la contraseña", e);
+        }
     }
 
     public String getId_alias() {
@@ -144,14 +171,6 @@ public class Colaborator {
 
     public void setSurname(String surname) {
         this.surname = surname;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public List<Expense> getExpenses() {

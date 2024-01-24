@@ -1,8 +1,7 @@
 package com.project.atmiraFCT.controller;
 
 import com.project.atmiraFCT.exception.RecordNotFoundException;
-import com.project.atmiraFCT.model.Colaborator;
-import com.project.atmiraFCT.model.Project;
+import com.project.atmiraFCT.model.domain.Project;
 import com.project.atmiraFCT.repository.ProjectRepository;
 import com.project.atmiraFCT.service.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +24,7 @@ public class ProjectController {
         return service.getAllProjects();
     }
 
-    @PostMapping("/projects")
+    @PostMapping("/project/save")
     public Project saveProject(@RequestBody Project project) {
         return service.saveProject(project);
     }
@@ -48,6 +47,7 @@ public class ProjectController {
         Project updated = service.createOrUpdateProject(updatedProject);
         return ResponseEntity.ok(updated);
     }
+
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteProject(@PathVariable Long id) {
