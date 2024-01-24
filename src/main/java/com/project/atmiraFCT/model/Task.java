@@ -22,11 +22,9 @@ public class Task {
     @Column(name="isClosed ",length = 256,nullable = false)
     private Boolean isClosed;
 
-    @Column(name="task",nullable = false)
+    @Column(name="task",nullable = true)
     private Long task;
 
-    @Column(name="active",nullable = false)
-    private Boolean active;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="id_code_project")
@@ -46,7 +44,6 @@ public class Task {
         this.objective = objective;
         this.isClosed = isClosed;
         this.task = task;
-        this.active = active;
         this.project = project;
         this.expenses = expenses;
         this.colaborator = colaborator;
@@ -96,13 +93,6 @@ public class Task {
         this.task = task;
     }
 
-    public Boolean getActive() {
-        return active;
-    }
-
-    public void setActive(Boolean active) {
-        this.active = active;
-    }
 
     public Project getProject() {
         return project;
