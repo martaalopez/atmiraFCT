@@ -1,7 +1,6 @@
 package com.project.atmiraFCT.model.domain;
 
 import jakarta.persistence.*;
-
 import java.util.Date;
 import java.util.List;
 
@@ -10,35 +9,35 @@ import java.util.List;
 public class Colaborator {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private String  id_alias;
+    @Column(name = "id_alias")
+    private String id_alias;
 
-    @Column(name="email",length = 100,nullable = false)
+    @Column(name="email",length = 100)
     private String email;
 
 
-    @Column(name="is_active",nullable = false)
+    @Column(name="isActive")
     private Boolean isActive;
 
-    @Column(name="relase_date",nullable = false)
+    @Column(name="relaseDate")
     private Date relaseDate;
 
-    @Column(name="hours",nullable = false)
+    @Column(name="hours")
     private Integer hours;
 
-    @Column(name="guards",nullable = false)
+    @Column(name="guards")
     private Boolean guards;
 
-    @Column(name="expense",nullable = false)
+    @Column(name="expense")
     private Boolean expense;
 
-    @Column(name="name",length = 50,nullable = false)
+    @Column(name="name",length = 50)
     private String name;
 
-    @Column(name="surname",length = 100,nullable = false)
+    @Column(name="surname",length = 100)
     private String surname;
 
-    @Column(name="password",length = 12,nullable = false)
+    @Column(name="password",length = 12)
     private String password;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "colaborator", cascade = CascadeType.ALL)

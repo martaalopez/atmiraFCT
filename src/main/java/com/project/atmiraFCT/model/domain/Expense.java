@@ -58,6 +58,10 @@ public class Expense {
         this.colaborator = colaborator;
     }
 
+    public Expense() {
+
+    }
+
     public Integer getId() {
         return id;
     }

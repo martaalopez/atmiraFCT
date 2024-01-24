@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/colaborators")
 public class ColaboratorController {
 
     @Autowired
@@ -30,7 +29,7 @@ public class ColaboratorController {
         return colaboratorRepository.findAll();
     }
 
-    @GetMapping("/{id}")
+   /* @GetMapping("/{id}")
     public Colaborator getColaboratorById(@PathVariable String id) {
         Optional<Colaborator> colaborator = colaboratorRepository.findById(id);
         if (colaborator.isPresent()) {
@@ -48,7 +47,7 @@ public class ColaboratorController {
         } else {
             throw new RecordNotFoundException("No colaborator found with id: " + id);
         }
-    }
+    }*/
 
     @PostMapping("/createOrUpdate")
     public Colaborator createOrUpdateColaborator(@RequestBody Colaborator colaborator) {

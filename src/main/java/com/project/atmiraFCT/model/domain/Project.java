@@ -1,5 +1,6 @@
 package com.project.atmiraFCT.model.domain;
 
+import com.project.atmiraFCT.model.Enum.TypeOfService;
 import jakarta.persistence.*;
 import java.util.Date;
 import java.util.List;
@@ -12,16 +13,17 @@ public class Project {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id_code;
 
-    @Column(name="type_of_service",length = 20)
-    private String typeOfService;
+    @Enumerated(EnumType.STRING)
+    @Column(name="typeOfService", length = 20)
+    private TypeOfService typeOfService;
 
     @Column(name="name",length = 20)
     private String name;
 
-    @Column(name="initial_date")
+    @Column(name="initialDate")
     private Date initialDate;
 
-    @Column(name="end_date")
+    @Column(name="endDate")
     private Date endDate;
 
     @Column(name="active")
@@ -36,7 +38,7 @@ public class Project {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "project", cascade = CascadeType.ALL)
     List<ColaboratorProject> colaboratorProjects;
 
-    public Project(Long id_code, String typeOfService, String name, Date initialDate, Date endDate, Boolean active, List<Task> tasks, List<Expense> expenses, List<ColaboratorProject> colaboratorProjects) {
+    public Project(Long id_code, TypeOfService typeOfService, String name, Date initialDate, Date endDate, Boolean active, List<Task> tasks, List<Expense> expenses, List<ColaboratorProject> colaboratorProjects) {
         this.id_code = id_code;
         this.typeOfService = typeOfService;
         this.name = name;
@@ -56,11 +58,11 @@ public class Project {
         this.id_code = id_code;
     }
 
-    public String getTypeOfService() {
+    public TypeOfService getTypeOfService() {
         return typeOfService;
     }
 
-    public void setTypeOfService(String typeOfService) {
+    public void setTypeOfService(TypeOfService typeOfService) {
         this.typeOfService = typeOfService;
     }
 
