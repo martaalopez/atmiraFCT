@@ -1,6 +1,6 @@
 package com.project.atmiraFCT.service;
 import com.project.atmiraFCT.exception.RecordNotFoundException;
-import com.project.atmiraFCT.model.Project;
+import com.project.atmiraFCT.model.domain.Project;
 import com.project.atmiraFCT.repository.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -1,10 +1,9 @@
-package com.project.atmiraFCT.model;
+package com.project.atmiraFCT.model.domain;
 
 
 import jakarta.persistence.*;
 
 import java.util.List;
-import java.util.Objects;
 
 @Entity
 @Table(name="task")

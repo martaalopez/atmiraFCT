@@ -1,8 +1,7 @@
 package com.project.atmiraFCT.service;
 
 
-import com.project.atmiraFCT.model.Project;
-import com.project.atmiraFCT.model.Task;
+import com.project.atmiraFCT.model.domain.Task;
 import com.project.atmiraFCT.repository.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -1,12 +1,9 @@
 package com.project.atmiraFCT.service;
 
 import com.project.atmiraFCT.exception.RecordNotFoundException;
-import com.project.atmiraFCT.model.Colaborator;
-import com.project.atmiraFCT.model.Project;
+import com.project.atmiraFCT.model.domain.Colaborator;
 import com.project.atmiraFCT.repository.ColaboratorRepository;
-import com.project.atmiraFCT.repository.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

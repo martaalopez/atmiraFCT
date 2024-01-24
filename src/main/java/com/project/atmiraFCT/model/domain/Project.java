@@ -1,4 +1,4 @@
-package com.project.atmiraFCT.model;
+package com.project.atmiraFCT.model.domain;
 
 import jakarta.persistence.*;
 import java.util.Date;

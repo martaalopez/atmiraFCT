@@ -1,6 +1,6 @@
 package com.project.atmiraFCT.controller;
 
-import com.project.atmiraFCT.model.Project;
+import com.project.atmiraFCT.model.domain.Project;
 import com.project.atmiraFCT.service.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

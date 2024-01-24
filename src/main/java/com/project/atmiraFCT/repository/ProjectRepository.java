@@ -1,6 +1,6 @@
 package com.project.atmiraFCT.repository;
 
-import com.project.atmiraFCT.model.Project;
+import com.project.atmiraFCT.model.domain.Project;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
