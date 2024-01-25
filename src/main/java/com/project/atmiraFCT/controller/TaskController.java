@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/tasks")
 public class TaskController {
 
     @Autowired
@@ -26,14 +25,14 @@ public class TaskController {
         return taskService.saveTask(task);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("task/{id}")
     public ResponseEntity<Task> getTaskById(@PathVariable("id") Long id) {
         Task task = taskService.getTaskById(id);
         return ResponseEntity.ok(task);
     }
 
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("taskDelete/{id}")
     public ResponseEntity<String> deleteTask(@PathVariable Long id) {
         try {
             taskService.deleteTask(id);

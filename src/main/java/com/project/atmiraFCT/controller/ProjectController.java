@@ -8,6 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,8 +28,17 @@ public class ProjectController {
     }
 
     @PostMapping("/project/save")
-    public Project saveProject(@RequestBody Project project) {
-        return service.saveProject(project);
+    public ResponseEntity<Project> saveProject(@RequestBody Project project) {
+        // Validar que la fecha inicial sea el día de hoy o posterior
+        LocalDate today = LocalDate.now();
+        LocalDate initialDate = project.getInitialDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+        if (initialDate.isBefore(today)) {
+            throw new IllegalArgumentException("La fecha inicial debe ser el día de hoy o posterior.");
+        }
+
+        Project savedProject = service.saveProject(project);
+        return ResponseEntity.ok(savedProject);
     }
 
     @GetMapping("/{id}")
