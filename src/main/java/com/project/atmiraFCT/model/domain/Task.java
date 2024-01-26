@@ -28,21 +28,27 @@ public class Task {
     @JoinColumn(name="id_code_project")
     private Project project;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "task", cascade = CascadeType.ALL)
-    List<Expense> expenses;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="id_colaborator")
     private Colaborator colaborator;
 
-    public Task(Long id_code, String description, String objective, Boolean isClosed, Long task, Boolean active, Project project, List<Expense> expenses, Colaborator colaborator) {
+    public Task(Long id_code, String description, String objective, Boolean isClosed, Long task, Boolean active) {
+        this.id_code = id_code;
+        this.description = description;
+        this.objective = objective;
+        this.isClosed = isClosed;
+        this.task = task;
+
+    }
+
+    public Task(Long id_code, String description, String objective, Boolean isClosed, Long task, Boolean active, Project project, Colaborator colaborator) {
         this.id_code = id_code;
         this.description = description;
         this.objective = objective;
         this.isClosed = isClosed;
         this.task = task;
         this.project = project;
-        this.expenses = expenses;
         this.colaborator = colaborator;
     }
 
@@ -97,14 +103,6 @@ public class Task {
 
     public void setProject(Project project) {
         this.project = project;
-    }
-
-    public List<Expense> getExpenses() {
-        return expenses;
-    }
-
-    public void setExpenses(List<Expense> expenses) {
-        this.expenses = expenses;
     }
 
     public Colaborator getColaborator() {
