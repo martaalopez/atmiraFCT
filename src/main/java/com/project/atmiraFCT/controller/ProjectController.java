@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,12 +28,16 @@ public class ProjectController {
 
     @PostMapping("/project/save")
     public ResponseEntity<Project> saveProject(@RequestBody Project project) {
-        // Validar que la fecha inicial sea el día de hoy o posterior
         LocalDate today = LocalDate.now();
         LocalDate initialDate = project.getInitialDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate endDate = project.getEndDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 
         if (initialDate.isBefore(today)) {
             throw new IllegalArgumentException("La fecha inicial debe ser el día de hoy o posterior.");
+        }
+
+        if (endDate.isBefore(initialDate)) {
+            throw new IllegalArgumentException("La fecha de finalización no puede ser anterior a la fecha inicial.");
         }
 
         Project savedProject = service.saveProject(project);

@@ -42,6 +42,9 @@ public class Colaborator {
     @Column(name="password", length = 256)
     private String password;
 
+    @Column(name="responsible ", length = 10)
+    private String responsible ;
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "colaborator", cascade = CascadeType.ALL)
     List<Expense> expenses;
 
@@ -54,6 +57,14 @@ public class Colaborator {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "colaborator", cascade = CascadeType.ALL)
     List<ColaboratorProject> colaboratorProjects;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "colaborator_department",
+            joinColumns = @JoinColumn(name = "colaborator_id_alias"),
+            inverseJoinColumns = @JoinColumn(name = "department_id")
+    )
+    private List<Department> departments;
 
     public Colaborator(String id_alias, String email, Boolean isActive, Date relaseDate, Integer hours, Boolean guards, Boolean expense, String name, String surname, String password, List<Expense> expenses, List<Task> task, WorkPlace workPlace, List<ColaboratorProject> colaboratorProjects) {
         this.id_alias = id_alias;
@@ -84,22 +95,7 @@ public class Colaborator {
         this.password = hashPassword(password);
     }
 
-    private String hashPassword(String password) {
-        try {
-            MessageDigest md = MessageDigest.getInstance("SHA-256");
-            byte[] hashedBytes = md.digest(password.getBytes());
 
-            // Convertir bytes a representación hexadecimal
-            StringBuilder sb = new StringBuilder();
-            for (byte b : hashedBytes) {
-                sb.append(String.format("%02x", b));
-            }
-
-            return sb.toString();
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException("Error al hashear la contraseña", e);
-        }
-    }
 
     public String getId_alias() {
         return id_alias;
@@ -203,5 +199,21 @@ public class Colaborator {
 
     public void setColaboratorProjects(List<ColaboratorProject> colaboratorProjects) {
         this.colaboratorProjects = colaboratorProjects;
+    }
+
+    private String hashPassword(String password) {
+        try {
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            byte[] hashedBytes = md.digest(password.getBytes());
+
+            StringBuilder sb = new StringBuilder();
+            for (byte b : hashedBytes) {
+                sb.append(String.format("%02x", b));
+            }
+
+            return sb.toString();
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException("Error al hashear la contraseña", e);
+        }
     }
 }
