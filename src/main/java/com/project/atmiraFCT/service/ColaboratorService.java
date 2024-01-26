@@ -48,13 +48,13 @@ public class ColaboratorService  {
                 fromDB.setEmail(colaborator.getEmail());
                 fromDB.setActive(colaborator.getActive());
                 fromDB.setRelaseDate(colaborator.getRelaseDate());
-                fromDB.setHours(colaborator.getHours()); // Update hours
-                fromDB.setGuards(colaborator.getGuards()); // Update guards
-                fromDB.setExpense(colaborator.getExpense()); // Update expense
+                fromDB.setHours(colaborator.getHours());
+                fromDB.setGuards(colaborator.getGuards());
+                fromDB.setExpense(colaborator.getExpense());
                 fromDB.setName(colaborator.getName());
                 fromDB.setSurname(colaborator.getSurname());
                 fromDB.setPassword(colaborator.getPassword());
-                // Update other fields as needed
+
 
                 end = colaboratorRepository.save(fromDB);
             } else {

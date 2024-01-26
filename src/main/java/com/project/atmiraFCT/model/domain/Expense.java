@@ -1,6 +1,5 @@
 package com.project.atmiraFCT.model.domain;
 
-
 import jakarta.persistence.*;
 
 @Entity
@@ -36,9 +35,6 @@ public class Expense {
     @JoinColumn(name="id_code_project")
     private Project project;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="id_code_task")
-    private Task task;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="id_colaborator")
@@ -54,7 +50,6 @@ public class Expense {
         this.description = description;
         this.state = state;
         this.project = project;
-        this.task = task;
         this.colaborator = colaborator;
     }
 
@@ -134,13 +129,6 @@ public class Expense {
         this.project = project;
     }
 
-    public Task getTask() {
-        return task;
-    }
-
-    public void setTask(Task task) {
-        this.task = task;
-    }
 
     public Colaborator getColaborator() {
         return colaborator;

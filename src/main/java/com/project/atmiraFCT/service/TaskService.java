@@ -1,11 +1,14 @@
 package com.project.atmiraFCT.service;
 
 import com.project.atmiraFCT.exception.RecordNotFoundException;
+import com.project.atmiraFCT.model.domain.Colaborator;
+import com.project.atmiraFCT.model.domain.Project;
 import com.project.atmiraFCT.model.domain.Task;
+import com.project.atmiraFCT.repository.ColaboratorRepository;
+import com.project.atmiraFCT.repository.ProjectRepository;
 import com.project.atmiraFCT.repository.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -14,8 +17,24 @@ public class TaskService {
 
     @Autowired
     private TaskRepository taskRepository;
+    @Autowired
+    private ProjectRepository projectRepository;
+    @Autowired
+    private ColaboratorRepository colaboratorRepository;
 
     public Task saveTask(Task task) {
+
+        /*primero guardamos el proyecto*/
+        Project project = task.getProject();
+        projectRepository.save(project);
+        task.setProject(project);
+
+        /*guardamos ahora el colaborador
+        Colaborator colaborator=task.getColaborator();
+        colaboratorRepository.save(colaborator);*/
+
+        /*asociamos el colaborador con la tarea*/
+      /*  task.setColaborator(colaborator);*/
         return taskRepository.save(task);
     }
 

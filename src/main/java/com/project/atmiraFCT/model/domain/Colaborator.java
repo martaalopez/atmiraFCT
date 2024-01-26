@@ -45,10 +45,10 @@ public class Colaborator {
     @Column(name="responsible ", length = 10)
     private String responsible ;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "colaborator", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "colaborator")
     List<Expense> expenses;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "colaborator", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "colaborator")
     List<Task> task;
 
     @ManyToOne(fetch = FetchType.LAZY)

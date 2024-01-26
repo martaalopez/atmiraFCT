@@ -1,11 +1,11 @@
 package com.project.atmiraFCT.model.Enum;
 
 public enum TypeOfService {
-    IT("Mantenimiento"),
-    HR("Desarrollo"),
-    FINANCE("Finance"),
+    MT("Mantenimiento"),
+    DES("Desarrollo"),
+    FINZ("Finanzas"),
     MARKETING("Marketing"),
-    OPERATIONS("Operations");
+    OPRT("Operaciones");
 
     private final String displayName;
 
