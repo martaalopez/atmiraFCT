@@ -9,22 +9,20 @@ import java.util.List;
 @Table(name="task")
 public class Task {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id_code;
 
-    @Column(name="description",length = 256,nullable = false)
+    @Column(name="description",length = 256)
     private String description;
 
-    @Column(name="objective ",length = 256,nullable = false)
+    @Column(name="objective ",length = 256)
     private String objective;
 
-    @Column(name="isClosed ",length = 256,nullable = false)
+    @Column(name="isClosed")
     private Boolean isClosed;
 
-    @Column(name="task",nullable = true)
+    @Column(name="task")
     private Long task;
-
-
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="id_code_project")
@@ -36,7 +34,6 @@ public class Task {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="id_colaborator")
     private Colaborator colaborator;
-
 
     public Task(Long id_code, String description, String objective, Boolean isClosed, Long task, Boolean active, Project project, List<Expense> expenses, Colaborator colaborator) {
         this.id_code = id_code;

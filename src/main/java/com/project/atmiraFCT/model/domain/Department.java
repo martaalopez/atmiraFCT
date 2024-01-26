@@ -2,6 +2,8 @@ package com.project.atmiraFCT.model.domain;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 @Table(name="department")
 public class Department {
@@ -13,14 +15,14 @@ public class Department {
     @Column(name="code",length = 50,nullable = false)
     private String code;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="id_workplace")
-    private WorkPlace workPlace;
+    @ManyToMany(mappedBy = "departments")
+    private List<Colaborator> colaborators;
 
-    public Department(Long id, String code, WorkPlace workPlace) {
+
+    public Department(Long id, String code) {
         this.id = id;
         this.code = code;
-        this.workPlace = workPlace;
+
     }
 
     public Department() {
@@ -43,11 +45,4 @@ public class Department {
         this.code = code;
     }
 
-    public WorkPlace getWorkPlace() {
-        return workPlace;
-    }
-
-    public void setWorkPlace(WorkPlace workPlace) {
-        this.workPlace = workPlace;
-    }
 }

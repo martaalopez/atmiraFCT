@@ -6,12 +6,9 @@ import com.project.atmiraFCT.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
-
 @RestController
 public class TaskController {
-
     @Autowired
     private TaskService taskService;
 
@@ -30,8 +27,6 @@ public class TaskController {
         Task task = taskService.getTaskById(id);
         return ResponseEntity.ok(task);
     }
-
-
     @DeleteMapping("taskDelete/{id}")
     public ResponseEntity<String> deleteTask(@PathVariable Long id) {
         try {
@@ -41,4 +36,10 @@ public class TaskController {
             throw new RecordNotFoundException("No task found with id: " + id);
         }
     }
+    @PutMapping("/task/{id}")
+    public ResponseEntity<Task> updateTask(@PathVariable("id") Long id, @RequestBody Task updatedTask) {
+        Task updated = taskService.createOrUpdateTask(updatedTask);
+        return ResponseEntity.ok(updated);
+    }
+
 }

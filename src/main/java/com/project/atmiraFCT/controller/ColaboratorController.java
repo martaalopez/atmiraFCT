@@ -7,7 +7,6 @@ import com.project.atmiraFCT.service.ColaboratorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -45,4 +44,6 @@ public class ColaboratorController {
     public Colaborator createOrUpdateColaborator(@RequestBody Colaborator colaborator) {
         return colaboratorService.createOrUpdateColaborator(colaborator);
     }
+
+
 }

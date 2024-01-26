@@ -41,6 +41,30 @@ public class TaskService {
         }
     }
 
+    public Task createOrUpdateTask(Task task) {
+        Task resultado;
+
+        if (task.getId_code() != null) { // Actualización
+            Optional<Task> resultadoConsulta = taskRepository.findById(task.getId_code());
+            if (resultadoConsulta.isPresent()) {
+                Task desdeBD = resultadoConsulta.get();
+                desdeBD.setDescription(task.getDescription());
+                desdeBD.setObjective(task.getObjective());
+                desdeBD.setClosed(task.getClosed());
+                desdeBD.setTask(task.getTask());
+                // Actualiza otros campos según sea necesario
+
+                resultado = taskRepository.save(desdeBD);
+            } else {
+                throw new RecordNotFoundException("No se encontró ninguna tarea con id: " + task.getId_code());
+            }
+        } else { // Inserción
+            resultado = taskRepository.save(task);
+        }
+
+        return resultado;
+    }
+
 
 
 }

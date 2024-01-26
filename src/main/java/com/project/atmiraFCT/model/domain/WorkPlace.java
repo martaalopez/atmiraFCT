@@ -12,20 +12,19 @@ public class WorkPlace {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name="code",length = 50,nullable = false)
+    @Column(name="code",length = 50)
     private String code;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "workPlace", cascade = CascadeType.ALL)
     List<Colaborator> colaborators;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "workPlace", cascade = CascadeType.ALL)
-    List<Department> departments;
 
-    public WorkPlace(Long id, String code, List<Colaborator> colaborators, List<Department> departments) {
+
+    public WorkPlace(Long id, String code, List<Colaborator> colaborators) {
         this.id = id;
         this.code = code;
         this.colaborators = colaborators;
-        this.departments = departments;
+
     }
 
     public WorkPlace() {
@@ -56,11 +55,4 @@ public class WorkPlace {
         this.colaborators = colaborators;
     }
 
-    public List<Department> getDepartments() {
-        return departments;
-    }
-
-    public void setDepartments(List<Department> departments) {
-        this.departments = departments;
-    }
 }
