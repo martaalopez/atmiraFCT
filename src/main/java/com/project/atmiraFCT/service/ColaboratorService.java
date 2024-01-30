@@ -1,9 +1,12 @@
 package com.project.atmiraFCT.service;
 
+import com.project.atmiraFCT.controller.ColaboratorController;
 import com.project.atmiraFCT.exception.RecordNotFoundException;
 import com.project.atmiraFCT.model.domain.Colaborator;
 import com.project.atmiraFCT.repository.ColaboratorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+/*import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;*/
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
@@ -13,9 +16,38 @@ public class ColaboratorService  {
     @Autowired
     private ColaboratorRepository colaboratorRepository;
 
+  /*  private final PasswordEncoder passwordEncoder;
+
+    public ColaboratorService(ColaboratorRepository colaboratorRepository) {
+        this.colaboratorRepository=colaboratorRepository;
+        this.passwordEncoder =new BCryptPasswordEncoder();
+
+    }*/
+
     public Colaborator saveColaborator(Colaborator colaborator) {
+       /* String encoderPassword=this.passwordEncoder.encode(colaborator.getPassword());
+        colaborator.setPassword(encoderPassword);*/
         return colaboratorRepository.save(colaborator);
     }
+
+ /*   public void updatePassword(String id ,String password){
+        Optional<Colaborator > result=colaboratorRepository.findById(id);
+        if(result.isPresent()){
+            Colaborator fromDB=result.get();
+            fromDB.setPassword(password);
+            colaboratorRepository.save(fromDB);
+        }
+    }
+   /* public void login(String email,String password){
+        Optional<Colaborator> result=colaboratorRepository.findByEmailAndPassword(email,password);
+        if(result.isPresent()) {
+            Colaborator fromDB = result.get();
+            fromDB.getActive(true);
+            colaboratorRepository.save(fromDB);
+        }else{
+            throw new RecordNotFoundException("No user found with email:"+email+" and password"+password);
+        }
+    }*/
 
     public List<Colaborator> getAllColaborators() {
         return colaboratorRepository.findAll();
@@ -29,6 +61,15 @@ public class ColaboratorService  {
             throw new RecordNotFoundException("No user found with id: " + id);
         }
     }
+
+   /* public Colaborator getUserByGmail(String gmail) {
+        Optional<Colaborator> colaborator = colaboratorRepository.findByGmail(gmail);
+        if(colaborator.isPresent()){
+            return colaborator.get();
+        }else{
+            throw new RecordNotFoundException("No user found with gmail" +": " + gmail);
+        }
+    }*/
 
     public void deleteColaborator(String id) {
         Optional<Colaborator> result = colaboratorRepository.findById(id);

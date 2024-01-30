@@ -4,6 +4,7 @@ import com.project.atmiraFCT.exception.RecordNotFoundException;
 import com.project.atmiraFCT.model.domain.Task;
 import com.project.atmiraFCT.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -17,9 +18,16 @@ public class TaskController {
         return taskService.getAllTasks();
     }
 
-    @PostMapping("/task/save")
-    public Task saveTask(@RequestBody Task task) {
-        return taskService.saveTask(task);
+    @PostMapping("/save")
+    public ResponseEntity<Task> saveTaskWithProjectAndColaborator(@RequestBody Task task,
+                                                                  @RequestParam Long projectId,
+                                                                  @RequestParam String colaboratorId) {
+        try {
+            Task savedTask = taskService.saveTaskWithProjectAndColaborator(task, projectId, colaboratorId);
+            return new ResponseEntity<>(savedTask, HttpStatus.CREATED);
+        } catch (RecordNotFoundException ex) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     @GetMapping("task/{id}")

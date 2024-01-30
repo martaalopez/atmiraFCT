@@ -22,21 +22,39 @@ public class TaskService {
     @Autowired
     private ColaboratorRepository colaboratorRepository;
 
-    public Task saveTask(Task task) {
+    public Task saveTaskWithProjectAndColaborator(Task task, Long projectId, String colaboratorId) {
+        // Verificar si el proyecto ya existe en la base de datos
+        Optional<Project> existingProject = projectRepository.findById(projectId);
 
-        /*primero guardamos el proyecto*/
-        Project project = task.getProject();
-        projectRepository.save(project);
+        Project project;
+        if (existingProject.isPresent()) {
+            // Si el proyecto existe, lo obtenemos de la base de datos
+            project = existingProject.get();
+        } else {
+            // Si el proyecto no existe, puedes manejar este caso según tus requisitos
+            throw new RecordNotFoundException("No se encontró ningún proyecto con id: " + projectId);
+        }
+
+        // Verificar si el colaborador ya existe en la base de datos
+        Optional<Colaborator> existingColaborator = colaboratorRepository.findById(colaboratorId);
+
+        Colaborator colaborator;
+        if (existingColaborator.isPresent()) {
+            // Si el colaborador existe, lo obtenemos de la base de datos
+            colaborator = existingColaborator.get();
+        } else {
+            // Si el colaborador no existe, puedes manejar este caso según tus requisitos
+            throw new RecordNotFoundException("No se encontró ningún colaborador con id: " + colaboratorId);
+        }
+
+        // Asignar el proyecto y el colaborador a la tarea
         task.setProject(project);
+        task.setColaborator(colaborator);
 
-        /*guardamos ahora el colaborador
-        Colaborator colaborator=task.getColaborator();
-        colaboratorRepository.save(colaborator);*/
-
-        /*asociamos el colaborador con la tarea*/
-      /*  task.setColaborator(colaborator);*/
+        // Guardar la tarea
         return taskRepository.save(task);
     }
+
 
     public List<Task> getAllTasks() {
         return taskRepository.findAll();

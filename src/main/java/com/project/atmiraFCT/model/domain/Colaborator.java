@@ -92,10 +92,8 @@ public class Colaborator {
     }
 
     public void setPassword(String password) {
-        this.password = hashPassword(password);
+        this.password = password;
     }
-
-
 
     public String getId_alias() {
         return id_alias;
@@ -201,19 +199,5 @@ public class Colaborator {
         this.colaboratorProjects = colaboratorProjects;
     }
 
-    private String hashPassword(String password) {
-        try {
-            MessageDigest md = MessageDigest.getInstance("SHA-256");
-            byte[] hashedBytes = md.digest(password.getBytes());
 
-            StringBuilder sb = new StringBuilder();
-            for (byte b : hashedBytes) {
-                sb.append(String.format("%02x", b));
-            }
-
-            return sb.toString();
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException("Error al hashear la contraseña", e);
-        }
-    }
 }
