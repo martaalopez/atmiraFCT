@@ -1,25 +1,30 @@
 package com.project.atmiraFCT.service;
 
 import com.project.atmiraFCT.exception.RecordNotFoundException;
+import com.project.atmiraFCT.model.domain.Colaborator;
+import com.project.atmiraFCT.model.domain.ColaboratorProject;
 import com.project.atmiraFCT.model.domain.Project;
+import com.project.atmiraFCT.repository.ColaboratorRepository;
 import com.project.atmiraFCT.repository.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @Service
 public class ProjectService {
 
+    private final ColaboratorRepository colaboratorRepository;
+
     @Autowired
     private ProjectRepository projectRepository;
+
+    public ProjectService(ColaboratorRepository colaboratorRepository) {
+        this.colaboratorRepository = colaboratorRepository;
+    }
 
     public Project saveProject(Project project) {
         return projectRepository.save(project);
@@ -47,9 +52,6 @@ public class ProjectService {
         }
     }
 
-  /*  public List<Project> getProjectsByColaborator(String collaboratorName) {
-        return projectRepository.findByColaboratorProjects_ColaboratorName(collaboratorName);
-    }*/
 
     public Project createOrUpdateProject(Project project) {
         Project end;
@@ -76,14 +78,19 @@ public class ProjectService {
         return end;
     }
 
-  /*  public Page<Project> getProjectsByUserId(String id_alias, Long id_code, Pageable pageable) {
-        return projectRepository.findByColaboratorProjects_Colaborator_IdAlias(id_alias, id_code, pageable);
+    public List<Project> getProjectsByColaboratorId(String colaboratorId) {
+        Optional<Colaborator> colaborator = colaboratorRepository.findById(colaboratorId);
+
+        if (colaborator.isPresent()) {
+            List<ColaboratorProject> colaboratorProjects = colaborator.get().getColaboratorProjects();
+            List<Project> projects = colaboratorProjects.stream()
+                    .map(ColaboratorProject::getProject)
+                    .collect(Collectors.toList());
+            return projects;
+        } else {
+            throw new RecordNotFoundException("No collaborator found with id: " + colaboratorId);
+        }
     }
-    public Page<Project> getProjectsByName(String name, Pageable pageable) {
-        List<Project> projects = projectRepository.findByName(name);
-        int start = (int) pageable.getOffset();
-        int end = Math.min((start + pageable.getPageSize()), projects.size());
-        return new PageImpl<>(projects.subList(start, end), pageable, projects.size());
-    }*/
+
 
 }
