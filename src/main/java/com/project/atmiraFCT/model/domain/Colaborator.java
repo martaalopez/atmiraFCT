@@ -1,6 +1,9 @@
 package com.project.atmiraFCT.model.domain;
 
 import jakarta.persistence.*;
+
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 import java.util.List;
 
@@ -12,9 +15,8 @@ public class Colaborator {
     @Column(name = "id_alias")
     private String id_alias;
 
-    @Column(name="email",length = 100)
+    @Column(name="email", length = 100)
     private String email;
-
 
     @Column(name="isActive")
     private Boolean isActive;
@@ -31,19 +33,22 @@ public class Colaborator {
     @Column(name="expense")
     private Boolean expense;
 
-    @Column(name="name",length = 50)
+    @Column(name="name", length = 50)
     private String name;
 
-    @Column(name="surname",length = 100)
+    @Column(name="surname", length = 100)
     private String surname;
 
-    @Column(name="password",length = 12)
+    @Column(name="password", length = 256)
     private String password;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "colaborator", cascade = CascadeType.ALL)
+    @Column(name="responsible ", length = 10)
+    private String responsible ;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "colaborator")
     List<Expense> expenses;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "colaborator", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "colaborator")
     List<Task> task;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -52,6 +57,14 @@ public class Colaborator {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "colaborator", cascade = CascadeType.ALL)
     List<ColaboratorProject> colaboratorProjects;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "colaborator_department",
+            joinColumns = @JoinColumn(name = "colaborator_id_alias"),
+            inverseJoinColumns = @JoinColumn(name = "department_id")
+    )
+    private List<Department> departments;
 
     public Colaborator(String id_alias, String email, Boolean isActive, Date relaseDate, Integer hours, Boolean guards, Boolean expense, String name, String surname, String password, List<Expense> expenses, List<Task> task, WorkPlace workPlace, List<ColaboratorProject> colaboratorProjects) {
         this.id_alias = id_alias;
@@ -63,7 +76,7 @@ public class Colaborator {
         this.expense = expense;
         this.name = name;
         this.surname = surname;
-        this.password = password;
+        setPassword(password);
         this.expenses = expenses;
         this.task = task;
         this.workPlace = workPlace;
@@ -72,6 +85,14 @@ public class Colaborator {
 
     public Colaborator() {
 
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getId_alias() {
@@ -146,14 +167,6 @@ public class Colaborator {
         this.surname = surname;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public List<Expense> getExpenses() {
         return expenses;
     }
@@ -185,4 +198,6 @@ public class Colaborator {
     public void setColaboratorProjects(List<ColaboratorProject> colaboratorProjects) {
         this.colaboratorProjects = colaboratorProjects;
     }
+
+
 }

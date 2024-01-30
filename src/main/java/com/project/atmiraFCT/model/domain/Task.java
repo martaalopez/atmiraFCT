@@ -9,42 +9,46 @@ import java.util.List;
 @Table(name="task")
 public class Task {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id_code;
 
-    @Column(name="description",length = 256,nullable = false)
+    @Column(name="description",length = 256)
     private String description;
 
-    @Column(name="objective ",length = 256,nullable = false)
+    @Column(name="objective ",length = 256)
     private String objective;
 
-    @Column(name="isClosed ",length = 256,nullable = false)
+    @Column(name="isClosed")
     private Boolean isClosed;
 
-    @Column(name="task",nullable = true)
+    @Column(name="task")
     private Long task;
-
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="id_code_project")
     private Project project;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "task", cascade = CascadeType.ALL)
-    List<Expense> expenses;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="id_colaborator")
     private Colaborator colaborator;
 
+    public Task(Long id_code, String description, String objective, Boolean isClosed, Long task, Boolean active) {
+        this.id_code = id_code;
+        this.description = description;
+        this.objective = objective;
+        this.isClosed = isClosed;
+        this.task = task;
 
-    public Task(Long id_code, String description, String objective, Boolean isClosed, Long task, Boolean active, Project project, List<Expense> expenses, Colaborator colaborator) {
+    }
+
+    public Task(Long id_code, String description, String objective, Boolean isClosed, Long task, Boolean active, Project project, Colaborator colaborator) {
         this.id_code = id_code;
         this.description = description;
         this.objective = objective;
         this.isClosed = isClosed;
         this.task = task;
         this.project = project;
-        this.expenses = expenses;
         this.colaborator = colaborator;
     }
 
@@ -99,14 +103,6 @@ public class Task {
 
     public void setProject(Project project) {
         this.project = project;
-    }
-
-    public List<Expense> getExpenses() {
-        return expenses;
-    }
-
-    public void setExpenses(List<Expense> expenses) {
-        this.expenses = expenses;
     }
 
     public Colaborator getColaborator() {

@@ -1,6 +1,5 @@
 package com.project.atmiraFCT.model.domain;
 
-
 import jakarta.persistence.*;
 
 @Entity
@@ -11,34 +10,31 @@ public class Expense {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer  id;
 
-    @Column(name="day",nullable = false)
+    @Column(name="day")
     private Integer day;
 
-    @Column(name="month",nullable = false)
+    @Column(name="month")
     private Integer month;
 
-    @Column(name="year",nullable = false)
+    @Column(name="year")
     private Integer year;
 
-    @Column(name="hours",nullable = false)
+    @Column(name="hours")
     private Integer hours;
 
     @Column(name="cost",nullable = false)
     private Integer cost;
 
-    @Column(name="description",length = 256,nullable = false)
+    @Column(name="description",length = 256)
     private String description;
 
-    @Column(name="state",nullable = false)
+    @Column(name="state")
     private Boolean state;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="id_code_project")
     private Project project;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="id_code_task")
-    private Task task;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="id_colaborator")
@@ -54,7 +50,6 @@ public class Expense {
         this.description = description;
         this.state = state;
         this.project = project;
-        this.task = task;
         this.colaborator = colaborator;
     }
 
@@ -134,13 +129,6 @@ public class Expense {
         this.project = project;
     }
 
-    public Task getTask() {
-        return task;
-    }
-
-    public void setTask(Task task) {
-        this.task = task;
-    }
 
     public Colaborator getColaborator() {
         return colaborator;

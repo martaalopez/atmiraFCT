@@ -1,12 +1,19 @@
 package com.project.atmiraFCT.service;
+
 import com.project.atmiraFCT.exception.RecordNotFoundException;
 import com.project.atmiraFCT.model.domain.Project;
 import com.project.atmiraFCT.repository.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+
 
 @Service
 public class ProjectService {
@@ -23,7 +30,7 @@ public class ProjectService {
     }
 
     public Project getUserById(Long id) {
-        Optional<Project>project = projectRepository.findById(id);
+        Optional<Project> project = projectRepository.findById(id);
         if(project.isPresent()){
             return project.get();
         }else{
@@ -40,9 +47,9 @@ public class ProjectService {
         }
     }
 
-    public List<Project> getProjectsByColaborator(String collaboratorName) {
+  /*  public List<Project> getProjectsByColaborator(String collaboratorName) {
         return projectRepository.findByColaboratorProjects_ColaboratorName(collaboratorName);
-    }
+    }*/
 
     public Project createOrUpdateProject(Project project) {
         Project end;
@@ -68,5 +75,15 @@ public class ProjectService {
 
         return end;
     }
+
+  /*  public Page<Project> getProjectsByUserId(String id_alias, Long id_code, Pageable pageable) {
+        return projectRepository.findByColaboratorProjects_Colaborator_IdAlias(id_alias, id_code, pageable);
+    }
+    public Page<Project> getProjectsByName(String name, Pageable pageable) {
+        List<Project> projects = projectRepository.findByName(name);
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), projects.size());
+        return new PageImpl<>(projects.subList(start, end), pageable, projects.size());
+    }*/
 
 }
