@@ -18,7 +18,6 @@ public class ColaboratorProject {
     @JoinColumn(name = "project_id")
     private Project project;
 
-
     public ColaboratorProject(Long id, Colaborator colaborator, Project project) {
         this.id = id;
         this.colaborator = colaborator;
@@ -27,6 +26,11 @@ public class ColaboratorProject {
 
     public ColaboratorProject() {
 
+    }
+
+    public ColaboratorProject(Project project, Colaborator colaborator) {
+        this.project=project;
+        this.colaborator=colaborator;
     }
 
     public Long getId() {
