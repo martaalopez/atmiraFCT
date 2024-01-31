@@ -1,5 +1,8 @@
 package com.project.atmiraFCT.model.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.project.atmiraFCT.model.Enum.TypeOfService;
 import jakarta.persistence.*;
 import java.util.Date;
@@ -7,6 +10,7 @@ import java.util.List;
 
 @Entity
 @Table(name="project")
+@JsonIgnoreProperties({"colaboratorProjects", "tasks", "expenses"})
 public class Project {
 
     @Id
@@ -29,14 +33,20 @@ public class Project {
     @Column(name="active")
     private Boolean active;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "project",cascade = CascadeType.MERGE)
-    List<Task> tasks;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "project", cascade = CascadeType.MERGE)
+    @JsonManagedReference // Add this annotation
+    private List<Task> tasks;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "project")
-    List<Expense> expenses;
+    @JsonManagedReference // Add this annotation
+    private List<Expense> expenses;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "project")
-    List<ColaboratorProject> colaboratorProjects;
+    @JsonManagedReference // Add this annotation
+    private List<ColaboratorProject> colaboratorProjects;
+
+
 
     public Project(Long id_code, TypeOfService typeOfService, String name, Date initialDate, Date endDate, Boolean active, List<Task> tasks, List<Expense> expenses, List<ColaboratorProject> colaboratorProjects) {
         this.id_code = id_code;

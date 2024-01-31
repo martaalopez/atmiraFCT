@@ -1,9 +1,11 @@
 package com.project.atmiraFCT.controller;
 
 import com.project.atmiraFCT.exception.RecordNotFoundException;
+import com.project.atmiraFCT.model.domain.Colaborator;
 import com.project.atmiraFCT.model.domain.Project;
 import com.project.atmiraFCT.repository.ProjectRepository;
 import com.project.atmiraFCT.service.ProjectService;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -25,10 +27,12 @@ public class ProjectController {
     @Autowired
     private ProjectRepository projectRepository;
 
-    @GetMapping("/projectlist")
-    public List<Project> getProjects() {
-        return service.getAllProjects();
-    }
+    @Autowired
+    private ProjectService projectService;
+
+ /*listar proyecto por personas*/
+
+
 
     @PostMapping("/project/save")
     public ResponseEntity<Project> saveProject(@RequestBody Project project) {
@@ -53,6 +57,7 @@ public class ProjectController {
         Project project = service.getUserById(id);
         return ResponseEntity.ok(project);
     }
+
 
 
   /************/
@@ -96,6 +101,10 @@ public class ProjectController {
         return new ResponseEntity<>(projects, HttpStatus.OK);
     }*/
 
+    @GetMapping("/collaborator/{colaboratorId}/projects")
+    public List<Project> getProjectsByColaboratorId(@PathVariable String colaboratorId) {
+        return projectService.getProjectsByColaboratorId(colaboratorId);
+    }
 
 
 }

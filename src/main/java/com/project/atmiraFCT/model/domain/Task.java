@@ -1,9 +1,5 @@
 package com.project.atmiraFCT.model.domain;
-
-
 import jakarta.persistence.*;
-
-import java.util.List;
 
 @Entity
 @Table(name="task")
@@ -24,12 +20,12 @@ public class Task {
     @Column(name="task")
     private Long task;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name="id_code_project")
     private Project project;
 
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name="id_colaborator")
     private Colaborator colaborator;
 
@@ -112,4 +108,6 @@ public class Task {
     public void setColaborator(Colaborator colaborator) {
         this.colaborator = colaborator;
     }
+
+
 }

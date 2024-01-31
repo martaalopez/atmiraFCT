@@ -1,5 +1,7 @@
 package com.project.atmiraFCT.model.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
 import java.security.MessageDigest;
@@ -9,6 +11,7 @@ import java.util.List;
 
 @Entity
 @Table(name="colaborator")
+@JsonIgnoreProperties({"projects", "colaboratorProjects"})
 public class Colaborator {
 
     @Id
@@ -54,6 +57,7 @@ public class Colaborator {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="id_workplace")
     private WorkPlace workPlace;
+
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "colaborator", cascade = CascadeType.ALL)
     List<ColaboratorProject> colaboratorProjects;

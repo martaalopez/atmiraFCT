@@ -3,18 +3,31 @@ package com.project.atmiraFCT.service;
 import com.project.atmiraFCT.controller.ColaboratorController;
 import com.project.atmiraFCT.exception.RecordNotFoundException;
 import com.project.atmiraFCT.model.domain.Colaborator;
+import com.project.atmiraFCT.model.domain.ColaboratorProject;
+import com.project.atmiraFCT.model.domain.Project;
 import com.project.atmiraFCT.repository.ColaboratorRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 /*import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;*/
 import org.springframework.stereotype.Service;
+
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class ColaboratorService  {
     @Autowired
     private ColaboratorRepository colaboratorRepository;
+
+
+    public Colaborator getColaboratorById(String colaboratorId) {
+        return colaboratorRepository.findById(colaboratorId)
+                .orElseThrow(() -> new EntityNotFoundException("Colaborator not found with id: " + colaboratorId));
+    }
 
   /*  private final PasswordEncoder passwordEncoder;
 
@@ -109,4 +122,6 @@ public class ColaboratorService  {
     }
 
 
-}
+
+
+    }

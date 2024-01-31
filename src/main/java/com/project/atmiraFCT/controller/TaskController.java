@@ -1,33 +1,41 @@
 package com.project.atmiraFCT.controller;
 
 import com.project.atmiraFCT.exception.RecordNotFoundException;
+import com.project.atmiraFCT.model.domain.Colaborator;
+import com.project.atmiraFCT.model.domain.Project;
 import com.project.atmiraFCT.model.domain.Task;
+import com.project.atmiraFCT.repository.ColaboratorRepository;
+import com.project.atmiraFCT.repository.ProjectRepository;
+import com.project.atmiraFCT.repository.TaskRepository;
 import com.project.atmiraFCT.service.TaskService;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.Optional;
+
 @RestController
 public class TaskController {
     @Autowired
     private TaskService taskService;
+    @Autowired
+    private ColaboratorRepository colaboratorRepository;
+    @Autowired
+    private ProjectRepository projectRepository;
+    @Autowired
+    private TaskRepository taskRepository;
 
-    @GetMapping("/task/list")
+    @GetMapping("/task/all")
     public List<Task> getTasks() {
         return taskService.getAllTasks();
     }
 
-    @PostMapping("/save")
-    public ResponseEntity<Task> saveTaskWithProjectAndColaborator(@RequestBody Task task,
-                                                                  @RequestParam Long projectId,
-                                                                  @RequestParam String colaboratorId) {
-        try {
-            Task savedTask = taskService.saveTaskWithProjectAndColaborator(task, projectId, colaboratorId);
-            return new ResponseEntity<>(savedTask, HttpStatus.CREATED);
-        } catch (RecordNotFoundException ex) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+
+    @PostMapping("/task/save")
+    public Task saveTask(@RequestBody Task task) {
+        return taskRepository.save(task);
     }
 
     @GetMapping("task/{id}")
