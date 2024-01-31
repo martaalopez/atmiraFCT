@@ -1,10 +1,11 @@
 package com.project.atmiraFCT.model.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.project.atmiraFCT.model.Enum.TypeOfService;
 import jakarta.persistence.*;
+
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -34,17 +35,18 @@ public class Project {
     private Boolean active;
 
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "project", cascade = CascadeType.MERGE)
-    @JsonManagedReference // Add this annotation
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "project")
+    @JsonManagedReference
     private List<Task> tasks;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "project")
-    @JsonManagedReference // Add this annotation
+    @JsonManagedReference
     private List<Expense> expenses;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "project")
-    @JsonManagedReference // Add this annotation
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "project", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<ColaboratorProject> colaboratorProjects;
+
 
 
 
@@ -58,7 +60,19 @@ public class Project {
         this.tasks = tasks;
         this.expenses = expenses;
         this.colaboratorProjects = colaboratorProjects;
+
+        if (colaboratorProjects == null) {
+            colaboratorProjects = new ArrayList<>();
+        }
+
+        this.colaboratorProjects = colaboratorProjects;
     }
+
+
+    public Project() {
+        this.colaboratorProjects = new ArrayList<>();
+    }
+
 
     public Long getId_code() {
         return id_code;
@@ -132,7 +146,5 @@ public class Project {
         this.colaboratorProjects = colaboratorProjects;
     }
 
-    public Project() {
 
-    }
 }
