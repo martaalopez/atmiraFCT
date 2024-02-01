@@ -2,7 +2,6 @@ package com.project.atmiraFCT.model.domain;
 import jakarta.persistence.*;
 
 @Entity
-
 @Table(name="task")
 public class Task {
     @Id
@@ -21,11 +20,13 @@ public class Task {
     @Column(name="task")
     private Long task;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name="id_code_project")
     private Project project;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name="id_colaborator")
     private Colaborator colaborator;
 
     public Task(Long id_code, String description, String objective, Boolean isClosed, Long task, Boolean active) {
@@ -34,6 +35,7 @@ public class Task {
         this.objective = objective;
         this.isClosed = isClosed;
         this.task = task;
+
     }
 
     public Task(Long id_code, String description, String objective, Boolean isClosed, Long task, Boolean active, Project project, Colaborator colaborator) {
