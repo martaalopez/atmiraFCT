@@ -49,18 +49,17 @@ public class Colaborator {
     private String responsible ;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "colaborator")
-    List<Expense> expenses;
+    private List<Expense> expenses;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "colaborator")
-    List<Task> task;
+    private List<Task> task;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="id_workplace")
+    @JoinColumn(name = "id_workplace")
     private WorkPlace workPlace;
 
-
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "colaborator", cascade = CascadeType.ALL)
-    List<ColaboratorProject> colaboratorProjects;
+    private List<ColaboratorProject> colaboratorProjects;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(

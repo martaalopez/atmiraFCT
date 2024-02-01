@@ -4,11 +4,12 @@ import com.project.atmiraFCT.exception.RecordNotFoundException;
 import com.project.atmiraFCT.model.domain.Colaborator;
 import com.project.atmiraFCT.model.domain.ColaboratorProject;
 import com.project.atmiraFCT.model.domain.Project;
+import com.project.atmiraFCT.repository.ColaboratorProjectRepository;
 import com.project.atmiraFCT.repository.ColaboratorRepository;
 import com.project.atmiraFCT.repository.ProjectRepository;
+import org.antlr.v4.runtime.misc.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -17,13 +18,18 @@ import java.util.stream.Collectors;
 @Service
 public class ProjectService {
 
+
     private final ColaboratorRepository colaboratorRepository;
 
     @Autowired
     private ProjectRepository projectRepository;
+    private final ColaboratorProjectRepository colaboratorProjectRepository;
 
-    public ProjectService(ColaboratorRepository colaboratorRepository) {
+    public ProjectService(ColaboratorRepository colaboratorRepository,
+                          ColaboratorProjectRepository colaboratorProjectRepository) {
         this.colaboratorRepository = colaboratorRepository;
+
+        this.colaboratorProjectRepository = colaboratorProjectRepository;
     }
 
     public Project saveProject(Project project) {
@@ -91,6 +97,29 @@ public class ProjectService {
             throw new RecordNotFoundException("No collaborator found with id: " + colaboratorId);
         }
     }
+
+    public Project createProjectWithExistingColaborator(String projectName, String colaboratorId) {
+        // Obtener el colaborador existente por su id
+        Colaborator colaborator = colaboratorRepository.findById(colaboratorId)
+                .orElseThrow(() -> new RuntimeException("Colaborator not found"));
+
+        // Crear el proyecto y asignar su nombre
+        Project project = new Project();
+        project.setName(projectName);
+
+        // Guardar el proyecto en la base de datos
+        Project savedProject = projectRepository.save(project);
+
+        // Crear la relación ColaboratorProject y asignar al proyecto y al colaborador
+        ColaboratorProject colaboratorProject = new ColaboratorProject(savedProject, colaborator);
+
+        colaboratorProjectRepository.save(colaboratorProject);
+        // Asignar la relación al proyecto
+        savedProject.getColaboratorProjects().add(colaboratorProject);
+
+        return savedProject;
+    }
+
 
 
 }
