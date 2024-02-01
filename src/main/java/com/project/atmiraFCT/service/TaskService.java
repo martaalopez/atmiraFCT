@@ -18,10 +18,28 @@ public class TaskService {
 
     @Autowired
     private TaskRepository taskRepository;
+    @Autowired
+    private ColaboratorRepository colaboratorRepository;
+    @Autowired
+    private ProjectRepository projectRepository;
 
 
-    public Task saveTask(Task task) {
-        return taskRepository.save(task);
+    public Task saveTaskexistingProyectColaborator(String description,String objective,Boolean isClosed,Long task,String colaboratorId,Long projectId) {
+    Optional<Colaborator> colaborator=colaboratorRepository.findById(colaboratorId);
+    Optional<Project> project=projectRepository.findById(projectId);
+    if(colaborator.isPresent() && project.isPresent()){
+        Task task1=new Task();
+        task1.setDescription(description);
+        task1.setObjective(objective);
+        task1.setClosed(isClosed);
+      task1.setTask(task);
+      task1.setColaborator(colaborator.get());
+      task1.setProject(project.get());
+        Task savedTask = taskRepository.save(task1);
+            return savedTask;
+    }else{
+            throw new RecordNotFoundException("Colaborator or project not found ");
+    }
     }
     public List<Task> getAllTasks() {
         return taskRepository.findAll();
@@ -44,31 +62,6 @@ public class TaskService {
             throw new RecordNotFoundException("No task found with id: " + id);
         }
     }
-
-    public Task createOrUpdateTask(Task task) {
-        Task resultado;
-
-        if (task.getId_code() != null) { // Actualización
-            Optional<Task> resultadoConsulta = taskRepository.findById(task.getId_code());
-            if (resultadoConsulta.isPresent()) {
-                Task desdeBD = resultadoConsulta.get();
-                desdeBD.setDescription(task.getDescription());
-                desdeBD.setObjective(task.getObjective());
-                desdeBD.setClosed(task.getClosed());
-                desdeBD.setTask(task.getTask());
-                // Actualiza otros campos según sea necesario
-
-                resultado = taskRepository.save(desdeBD);
-            } else {
-                throw new RecordNotFoundException("No se encontró ninguna tarea con id: " + task.getId_code());
-            }
-        } else { // Inserción
-            resultado = taskRepository.save(task);
-        }
-
-        return resultado;
-    }
-
 
 
 }

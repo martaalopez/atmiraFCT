@@ -92,36 +92,25 @@ public class ColaboratorService  {
             throw new RecordNotFoundException("No user found with id: " + id);
         }
     }
-    public Colaborator createOrUpdateColaborator(Colaborator colaborator) {
-        Colaborator end;
-
-        if (colaborator.getId_alias() != null) { // Update
-            Optional<Colaborator> result = colaboratorRepository.findById(colaborator.getId_alias());
-            if (result.isPresent()) {
-                Colaborator fromDB = result.get();
-                fromDB.setEmail(colaborator.getEmail());
-                fromDB.setActive(colaborator.getActive());
-                fromDB.setRelaseDate(colaborator.getRelaseDate());
-                fromDB.setHours(colaborator.getHours());
-                fromDB.setGuards(colaborator.getGuards());
-                fromDB.setExpense(colaborator.getExpense());
-                fromDB.setName(colaborator.getName());
-                fromDB.setSurname(colaborator.getSurname());
-                fromDB.setPassword(colaborator.getPassword());
-
-
-                end = colaboratorRepository.save(fromDB);
-            } else {
-                throw new RecordNotFoundException("No colaborator found with id: " + colaborator.getId_alias());
-            }
-        } else { // Insert
-            end = colaboratorRepository.save(colaborator);
-        }
-
-        return end;
+    public Colaborator updateColaborator(String id,Colaborator colaborator) throws Exception {
+      Optional<Colaborator> result=colaboratorRepository.findById(id);
+      if(result.isPresent()){
+         Colaborator fromDB=result.get();
+         fromDB.setEmail(colaborator.getEmail());
+         fromDB.setRelaseDate(colaborator.getRelaseDate());
+          fromDB.setHours(colaborator.getHours());
+          fromDB.setName(colaborator.getName());
+          fromDB.setSurname(colaborator.getSurname());
+          fromDB.setExpense(colaborator.getExpense());
+          fromDB.setActive(colaborator.getActive());
+          fromDB.setGuards(colaborator.getGuards());
+            /*modificar contraseña*/
+          return colaboratorRepository.save(colaborator);
+    }
+        else{
+        throw new Exception("No project found with id"+id);
+    }
+}
     }
 
 
-
-
-    }
