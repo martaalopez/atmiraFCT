@@ -51,8 +51,6 @@
             return ResponseEntity.ok(project);
         }
 
-
-
       /************/
       /*  @GetMapping("/projects/byColaborator")
         public List<Project> getProjectsByColaborator(@RequestParam("colaborator") String collaboratorName) {
@@ -101,7 +99,7 @@
 
         @PostMapping("/{id}/project")
         public ResponseEntity<Project> createProjectWithExistingColaborator(@RequestParam String  colaboratorId, @RequestBody Project project) {
-            Project createdProject = projectService.createProjectWithExistingColaborator(project.getName(), colaboratorId);
+            Project createdProject = projectService.createProjectWithExistingColaborator(project.getName(), project.getInitialDate(),project.getEndDate(),project.getActive(),project.getTypeOfService(),colaboratorId);
             return ResponseEntity.status(HttpStatus.CREATED).body(createdProject);
         }
 
