@@ -97,11 +97,10 @@ public class ProjectService {
     }
 
     public Project createProjectWithExistingColaborator(String projectName, Date initialDate, Date endDate, Boolean active, TypeOfService typeOfService, String colaboratorId) {
-        // Obtener el colaborador existente por su id
+
         Colaborator colaborator = colaboratorRepository.findById(colaboratorId)
                 .orElseThrow(() -> new RuntimeException("Colaborator not found"));
 
-        // Crear el proyecto y asignar su nombre
         Project project = new Project();
         project.setName(projectName);
         project.setInitialDate(initialDate);
