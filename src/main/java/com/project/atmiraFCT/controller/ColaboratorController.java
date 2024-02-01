@@ -11,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
@@ -34,20 +33,21 @@ public class ColaboratorController {
         return colaboratorRepository.findAll();
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteColaborator(@PathVariable String id) {
+    @DeleteMapping("colaborator/delete/{id}")
+    public ResponseEntity<Boolean> deleteColaborator(@PathVariable String id) {
         Optional<Colaborator> result = colaboratorRepository.findById(id);
         if (result.isPresent()) {
             colaboratorRepository.deleteById(id);
-            return ResponseEntity.ok("Colaborator with ID " + id + " has been deleted.");
+            return ResponseEntity.ok(true);
         } else {
             throw new RecordNotFoundException("No colaborator found with id: " + id);
         }
     }
 
-    @PutMapping("/colaboratorUpdate/{id}")
-    public ResponseEntity<Colaborator> updateColaborator(@PathVariable("id") Long id, @RequestBody Colaborator updatedColaborator) {
-        Colaborator updated = colaboratorService.createOrUpdateColaborator(updatedColaborator);
+
+    @PutMapping("/colaborator/update/{id}")
+    public ResponseEntity<Colaborator> updateColaborator(@PathVariable("id") String id, @RequestBody Colaborator updatedColaborator) throws Exception {
+        Colaborator updated = colaboratorService.updateColaborator(id,updatedColaborator);
         return ResponseEntity.ok(updated);
     }
 

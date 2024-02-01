@@ -13,6 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,10 +37,23 @@ public class TaskController {
     }
 
 
-    @PostMapping("/task/save")
-    public Task saveTask(@RequestBody Task task) {
-        return taskRepository.save(task);
-    }
+    /*@PostMapping("/task/save/{colaboratorId}/{projectId}/task")
+    public ResponseEntity<Task> createProjectWithExistingProjectColaborator(
+            @PathVariable String colaboratorId,
+            @PathVariable Long projectId,
+            @RequestBody Task tasks
+    ) {
+        Task createdTask = taskService.saveTaskexistingProyectColaborator(
+                task.getDescription(),
+                task.getObjective(),
+                task.getClosed(),
+                task.getTask(),
+                colaboratorId,
+                projectId
+        );
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdTask);
+    }*/
+
 
     @GetMapping("task/{id}")
     public ResponseEntity<Task> getTaskById(@PathVariable("id") Long id) {
@@ -53,10 +69,10 @@ public class TaskController {
             throw new RecordNotFoundException("No task found with id: " + id);
         }
     }
-    @PutMapping("/task/{id}")
+   /* @PutMapping("/task/{id}")
     public ResponseEntity<Task> updateTask(@PathVariable("id") Long id, @RequestBody Task updatedTask) {
         Task updated = taskService.createOrUpdateTask(updatedTask);
         return ResponseEntity.ok(updated);
-    }
+    }*/
 
 }
