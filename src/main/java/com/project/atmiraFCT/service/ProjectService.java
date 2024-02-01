@@ -8,10 +8,8 @@ import com.project.atmiraFCT.model.domain.Project;
 import com.project.atmiraFCT.repository.ColaboratorProjectRepository;
 import com.project.atmiraFCT.repository.ColaboratorRepository;
 import com.project.atmiraFCT.repository.ProjectRepository;
-import org.antlr.v4.runtime.misc.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -35,9 +33,6 @@ public class ProjectService {
         this.colaboratorProjectRepository = colaboratorProjectRepository;
     }
 
-    public Project saveProject(Project project) {
-        return projectRepository.save(project);
-    }
 
     public List<Project> getAllProjects() {
         return projectRepository.findAll();
@@ -60,27 +55,21 @@ public class ProjectService {
             throw new RecordNotFoundException("No user found with id: " + id);
         }
     }
-
-
-    public Project createOrUpdateProject(Project project) {
-        Project end;
-
-        if (project.getId_code() != null) { // Update
-            Optional<Project> result = projectRepository.findById(project.getId_code());
-            Project fromDB = result.get();
-            fromDB.setTypeOfService(project.getTypeOfService());
-            fromDB.setName(project.getName());
-            fromDB.setInitialDate(project.getInitialDate());
-            fromDB.setEndDate(project.getEndDate());
-            fromDB.setActive(project.getActive());
-            // Update other fields as needed
-
-            end = projectRepository.save(fromDB);
-        } else {
-            throw new RecordNotFoundException("No project found with id: " + project.getId_code());
+public Project updateProject(Long id,Project updateProject) throws Exception {
+        Optional<Project> result=projectRepository.findById(id);
+        if(result.isPresent()){
+            Project project=result.get();
+            project.setName(updateProject.getName());
+            project.setTypeOfService(updateProject.getTypeOfService());
+            project.setInitialDate(updateProject.getInitialDate());
+            project.setEndDate(updateProject.getEndDate());
+            project.setActive(updateProject.getActive());
+            return projectRepository.save(project);
         }
-        return end;
-    }
+        else{
+            throw new Exception("No project found with id"+id);
+        }
+}
 
     public List<Project> getProjectsByColaboratorId(String colaboratorId) {
         Optional<Colaborator> colaborator = colaboratorRepository.findById(colaboratorId);
@@ -108,20 +97,15 @@ public class ProjectService {
         project .setActive(active);
         project.setTypeOfService(typeOfService);
 
-        // Guardar el proyecto en la base de datos
         Project savedProject = projectRepository.save(project);
 
-        // Crear la relación ColaboratorProject y asignar al proyecto y al colaborador
         ColaboratorProject colaboratorProject = new ColaboratorProject(savedProject, colaborator);
 
      colaboratorProjectRepository.save(colaboratorProject);
-        // Asignar la relación al proyecto
         savedProject.getColaboratorProjects().add(colaboratorProject);
 
         return savedProject;
     }
-
-
 
 }
 

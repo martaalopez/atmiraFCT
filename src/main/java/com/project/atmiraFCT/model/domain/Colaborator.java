@@ -202,5 +202,4 @@ public class Colaborator {
         this.colaboratorProjects = colaboratorProjects;
     }
 
-
 }
