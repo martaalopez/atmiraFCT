@@ -1,7 +1,10 @@
 package com.project.atmiraFCT.model.domain;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 @Entity
+@JsonIgnoreProperties({"colaborator", "project"})
 @Table(name="task")
 public class Task {
     @Id
@@ -22,11 +25,12 @@ public class Task {
 
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name="id_code_project")
+    @JsonManagedReference
     private Project project;
-
 
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name="id_colaborator")
+    @JsonManagedReference
     private Colaborator colaborator;
 
     public Task(Long id_code, String description, String objective, Boolean isClosed, Long task, Boolean active) {
