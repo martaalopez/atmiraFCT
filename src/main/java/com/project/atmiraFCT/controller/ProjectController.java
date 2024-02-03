@@ -74,7 +74,7 @@
             return projectService.getProjectsByColaboratorId(colaboratorId);
         }
 
-        @PostMapping("project/save")
+        @PostMapping("project/save/{id}/project")
        public ResponseEntity<Project> save(@RequestParam String  colaboratorId, @RequestBody Project project) {
             LocalDate today = LocalDate.now();
             LocalDate initialDate = project.getInitialDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();

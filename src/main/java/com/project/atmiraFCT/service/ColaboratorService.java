@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 public class ColaboratorService  {
     @Autowired
     private ColaboratorRepository colaboratorRepository;
+   /* private final PasswordEncoder passwordEncoder;*/
 
 
     public Colaborator getColaboratorById(String colaboratorId) {
@@ -29,21 +30,19 @@ public class ColaboratorService  {
                 .orElseThrow(() -> new EntityNotFoundException("Colaborator not found with id: " + colaboratorId));
     }
 
-  /*  private final PasswordEncoder passwordEncoder;
-
     public ColaboratorService(ColaboratorRepository colaboratorRepository) {
         this.colaboratorRepository=colaboratorRepository;
-        this.passwordEncoder =new BCryptPasswordEncoder();
+       /* this.passwordEncoder =new BCryptPasswordEncoder();*/
 
-    }*/
+    }
 
     public Colaborator saveColaborator(Colaborator colaborator) {
-       /* String encoderPassword=this.passwordEncoder.encode(colaborator.getPassword());
+      /* String encoderPassword=this.passwordEncoder.encode(colaborator.getPassword());
         colaborator.setPassword(encoderPassword);*/
         return colaboratorRepository.save(colaborator);
     }
 
- /*   public void updatePassword(String id ,String password){
+    public void updatePassword(String id ,String password){
         Optional<Colaborator > result=colaboratorRepository.findById(id);
         if(result.isPresent()){
             Colaborator fromDB=result.get();
@@ -51,7 +50,7 @@ public class ColaboratorService  {
             colaboratorRepository.save(fromDB);
         }
     }
-   /* public void login(String email,String password){
+  /*  public void login(String email,String password){
         Optional<Colaborator> result=colaboratorRepository.findByEmailAndPassword(email,password);
         if(result.isPresent()) {
             Colaborator fromDB = result.get();
@@ -60,8 +59,8 @@ public class ColaboratorService  {
         }else{
             throw new RecordNotFoundException("No user found with email:"+email+" and password"+password);
         }
-    }*/
-
+    }
+*/
     public List<Colaborator> getAllColaborators() {
         return colaboratorRepository.findAll();
     }
@@ -112,5 +111,4 @@ public class ColaboratorService  {
     }
 }
     }
-
 

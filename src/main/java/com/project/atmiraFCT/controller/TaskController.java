@@ -37,11 +37,11 @@ public class TaskController {
     }
 
 
-    /*@PostMapping("/task/save/{colaboratorId}/{projectId}/task")
+    @PostMapping("/task/save/{colaboratorId}/{projectId}")
     public ResponseEntity<Task> createProjectWithExistingProjectColaborator(
             @PathVariable String colaboratorId,
             @PathVariable Long projectId,
-            @RequestBody Task tasks
+            @RequestBody Task task
     ) {
         Task createdTask = taskService.saveTaskexistingProyectColaborator(
                 task.getDescription(),
@@ -52,7 +52,7 @@ public class TaskController {
                 projectId
         );
         return ResponseEntity.status(HttpStatus.CREATED).body(createdTask);
-    }*/
+    }
 
 
     @GetMapping("task/{id}")
@@ -74,5 +74,26 @@ public class TaskController {
         Task updated = taskService.createOrUpdateTask(updatedTask);
         return ResponseEntity.ok(updated);
     }*/
+
+    @GetMapping("/task/byColaborator/{colaboratorId}")
+    public ResponseEntity<List<Task>> getTasksByColaborator(@PathVariable String colaboratorId) {
+        List<Task> tasks = taskService.getTasksByColaborator(colaboratorId);
+        return ResponseEntity.ok(tasks);
+    }
+
+    @GetMapping("/task/byProject/{projectId}")
+    public ResponseEntity<List<Task>> getTasksByProject(@PathVariable Long projectId) {
+        List<Task> tasks = taskService.getTasksByProject(projectId);
+        return ResponseEntity.ok(tasks);
+    }
+
+    @GetMapping("/task/byColaboratorAndProject/{colaboratorId}/{projectId}")
+    public ResponseEntity<List<Task>> getTasksByColaboratorAndProject(
+            @PathVariable String colaboratorId,
+            @PathVariable Long projectId
+    ) {
+        List<Task> tasks = taskService.getTasksByColaboratorAndProject(colaboratorId, projectId);
+        return ResponseEntity.ok(tasks);
+    }
 
 }
