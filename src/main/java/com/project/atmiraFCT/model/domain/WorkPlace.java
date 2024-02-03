@@ -18,8 +18,6 @@ public class WorkPlace {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "workPlace", cascade = CascadeType.ALL)
     List<Colaborator> colaborators;
 
-
-
     public WorkPlace(Long id, String code, List<Colaborator> colaborators) {
         this.id = id;
         this.code = code;
