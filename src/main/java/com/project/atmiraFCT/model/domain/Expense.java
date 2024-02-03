@@ -1,8 +1,11 @@
 package com.project.atmiraFCT.model.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 @Entity
+@JsonIgnoreProperties({"project", "colaborator"})
 @Table(name="expense")
 public class Expense {
 
@@ -32,11 +35,13 @@ public class Expense {
     private Boolean state;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonManagedReference
     @JoinColumn(name="id_code_project")
     private Project project;
 
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonManagedReference
     @JoinColumn(name="id_colaborator")
     private Colaborator colaborator;
 
