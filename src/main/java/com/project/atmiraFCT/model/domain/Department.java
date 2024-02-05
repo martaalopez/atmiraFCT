@@ -2,6 +2,7 @@ package com.project.atmiraFCT.model.domain;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -16,7 +17,7 @@ public class Department {
     private String code;
 
     @ManyToMany(mappedBy = "departments")
-    private List<Colaborator> colaborators;
+    private List<Colaborator> colaborators = new ArrayList<>();
 
 
     public Department(Long id, String code) {
