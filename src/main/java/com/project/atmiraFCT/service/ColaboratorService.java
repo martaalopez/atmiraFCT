@@ -5,7 +5,9 @@ import com.project.atmiraFCT.exception.RecordNotFoundException;
 import com.project.atmiraFCT.model.domain.Colaborator;
 import com.project.atmiraFCT.model.domain.ColaboratorProject;
 import com.project.atmiraFCT.model.domain.Project;
+import com.project.atmiraFCT.model.domain.WorkPlace;
 import com.project.atmiraFCT.repository.ColaboratorRepository;
+import com.project.atmiraFCT.repository.WorkPlaceRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 /*import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -24,6 +26,9 @@ public class ColaboratorService  {
     private ColaboratorRepository colaboratorRepository;
    /* private final PasswordEncoder passwordEncoder;*/
 
+    @Autowired
+    private WorkPlaceRepository workplaceRepository;
+
 
     public Colaborator getColaboratorById(String colaboratorId) {
         return colaboratorRepository.findById(colaboratorId)
@@ -36,11 +41,17 @@ public class ColaboratorService  {
 
     }
 
-    public Colaborator saveColaborator(Colaborator colaborator) {
+   /* public Colaborator saveColaborator(Colaborator colaborator) {
       /* String encoderPassword=this.passwordEncoder.encode(colaborator.getPassword());
-        colaborator.setPassword(encoderPassword);*/
+        colaborator.setPassword(encoderPassword);
         return colaboratorRepository.save(colaborator);
-    }
+    }*/
+public Colaborator saveColaborator(Colaborator colaborator, Long workplaceId) {
+        WorkPlace workplace = workplaceRepository.findById(workplaceId)
+        .orElseThrow(() -> new RecordNotFoundException("Workplace not found with id: " + workplaceId));
+        colaborator.setWorkPlace(workplace);
+        return colaboratorRepository.save(colaborator);
+        }
 
     public void updatePassword(String id ,String password){
         Optional<Colaborator > result=colaboratorRepository.findById(id);
