@@ -48,8 +48,6 @@ public class Project {
     private List<ColaboratorProject> colaboratorProjects;
 
 
-
-
     public Project(Long id_code, TypeOfService typeOfService, String name, Date initialDate, Date endDate, Boolean active, List<Task> tasks, List<Expense> expenses, List<ColaboratorProject> colaboratorProjects) {
         this.id_code = id_code;
         this.typeOfService = typeOfService;

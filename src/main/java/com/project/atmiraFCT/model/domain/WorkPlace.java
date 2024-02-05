@@ -1,7 +1,6 @@
 package com.project.atmiraFCT.model.domain;
-
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-
 import java.util.List;
 
 @Entity
@@ -16,13 +15,13 @@ public class WorkPlace {
     private String code;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "workPlace", cascade = CascadeType.ALL)
+    @JsonManagedReference
     List<Colaborator> colaborators;
 
     public WorkPlace(Long id, String code, List<Colaborator> colaborators) {
         this.id = id;
         this.code = code;
         this.colaborators = colaborators;
-
     }
 
     public WorkPlace() {

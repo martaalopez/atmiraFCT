@@ -18,4 +18,10 @@ public class ColaboratorDepartment {
     @JoinColumn(name = "department_id")
     private Department department;
 
+    public ColaboratorDepartment(Department savedDepartment, Colaborator colaborator) {
+    }
+
+    public ColaboratorDepartment() {
+
+    }
 }

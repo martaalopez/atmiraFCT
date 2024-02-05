@@ -45,4 +45,11 @@ public class Department {
         this.code = code;
     }
 
+    public List<Colaborator> getColaborators() {
+        return colaborators;
+    }
+
+    public void setColaborators(List<Colaborator> colaborators) {
+        this.colaborators = colaborators;
+    }
 }

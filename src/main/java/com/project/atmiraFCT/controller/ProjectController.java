@@ -27,9 +27,9 @@
 
 
 
-        @GetMapping("/{id}")
-        public ResponseEntity<Project> getUserById(@PathVariable("id") Long id){
-            Project project = service.getUserById(id);
+        @GetMapping("/project/list/{id}")
+        public ResponseEntity<Project> getProjectById(@PathVariable("id") Long id){
+            Project project = service.getProjectById(id);
             return ResponseEntity.ok(project);
         }
 

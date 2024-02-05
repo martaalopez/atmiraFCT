@@ -38,7 +38,7 @@ public class ProjectService {
         return projectRepository.findAll();
     }
 
-    public Project getUserById(Long id) {
+    public Project getProjectById(Long id) {
         Optional<Project> project = projectRepository.findById(id);
         if (project.isPresent()) {
             return project.get();
