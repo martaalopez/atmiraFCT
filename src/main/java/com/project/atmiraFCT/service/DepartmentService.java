@@ -23,8 +23,7 @@ public class DepartmentService {
     }
 
 
-    public Department createDeparmentWithExistingColaborator(Long id,String code, String colaboratorId) {
-
+    public Department createDeparmentWithExistingColaborator(Long id, String code, String colaboratorId) {
         Colaborator colaborator = colaboratorRepository.findById(colaboratorId)
                 .orElseThrow(() -> new RuntimeException("Colaborator not found"));
 
@@ -32,14 +31,16 @@ public class DepartmentService {
         department.setId(id);
         department.setCode(code);
 
-        Department savedDepartment= departmentRepository.save(department);
+        Department savedDepartment = departmentRepository.save(department);
 
-        ColaboratorDepartment colaboratorDepartment = new ColaboratorDepartment(savedDepartment, colaborator);
+        ColaboratorDepartment colaboratorDepartment = new ColaboratorDepartment();
+        colaboratorDepartment.setDepartment(savedDepartment);
+        colaboratorDepartment.setColaborator(colaborator);
 
         colaboratorDepartmentRepository.save(colaboratorDepartment);
-        savedDepartment.getColaborators().add(colaborator);
 
         return savedDepartment;
     }
+
 
 }
