@@ -14,12 +14,12 @@ import java.util.Optional;
 public interface ColaboratorRepository extends JpaRepository<Colaborator, String> {
 
 
-  /*  Optional<Colaborator> findByGmail(String gmail);*/
-
-    Optional<Colaborator> findByEmailAndPassword(String email, String password);
+    Optional<Colaborator> findByEmail(String email);
 
 
     Optional<Colaborator> findById(String idAlias);
+
+
 
 
     }

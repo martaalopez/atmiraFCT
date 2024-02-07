@@ -7,6 +7,8 @@ import com.project.atmiraFCT.repository.DepartmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class DepartmentService {
 
@@ -40,6 +42,10 @@ public class DepartmentService {
         colaboratorDepartmentRepository.save(colaboratorDepartment);
 
         return savedDepartment;
+    }
+
+    public List<Department> getAll(){
+        return departmentRepository.findAll();
     }
 
 

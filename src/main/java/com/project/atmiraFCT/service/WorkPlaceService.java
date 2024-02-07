@@ -22,4 +22,5 @@ public class WorkPlaceService {
     public List<WorkPlace> getAll(){
         return workPlaceRepository.findAll();
     }
+
 }
