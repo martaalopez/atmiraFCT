@@ -1,27 +1,63 @@
 package com.project.atmiraFCT.controller;
 
 import com.project.atmiraFCT.exception.RecordNotFoundException;
-import com.project.atmiraFCT.model.domain.Colaborator;
-import com.project.atmiraFCT.model.domain.Project;
 import com.project.atmiraFCT.model.domain.Task;
 import com.project.atmiraFCT.repository.ColaboratorRepository;
 import com.project.atmiraFCT.repository.ProjectRepository;
 import com.project.atmiraFCT.repository.TaskRepository;
+import com.project.atmiraFCT.service.StorageService;
 import com.project.atmiraFCT.service.TaskService;
-import jakarta.persistence.EntityNotFoundException;
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.time.LocalDate;
-import java.time.ZoneId;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
 public class TaskController {
+
+    private final StorageService storageService;
+    private final HttpServletRequest request;
+
+    @PostMapping("/upload")
+    public Map<String, String> uploadFile(@RequestParam("file") MultipartFile multipartFile) {
+        String path = storageService.store(multipartFile);
+        String host = request.getRequestURL().toString().replace(request.getRequestURI(), "");
+        String url = ServletUriComponentsBuilder
+                .fromHttpUrl(host)
+                .path("/media")
+                .path(path)
+                .toUriString();
+        return Map.of("url", url);
+    }
+
+    @GetMapping("{filename:.+}")
+    public ResponseEntity<org.springframework.core.io.Resource> getFile(@PathVariable String filename) {
+        org.springframework.core.io.Resource file = (org.springframework.core.io.Resource) storageService.loadAsResource(filename);
+        String contentType;
+        try {
+            contentType = Files.probeContentType(file.getFile().toPath());
+        } catch (IOException e) {
+            contentType = "application/octet-stream";
+        }
+        return ResponseEntity
+                .ok()
+                .header(HttpHeaders.CONTENT_TYPE, contentType)
+                .body(file);
+    }
+
+
+
     @Autowired
     private TaskService taskService;
     @Autowired
@@ -30,6 +66,23 @@ public class TaskController {
     private ProjectRepository projectRepository;
     @Autowired
     private TaskRepository taskRepository;
+
+    @Autowired
+    public TaskController(StorageService storageService, HttpServletRequest request, TaskService taskService,
+                          ColaboratorRepository colaboratorRepository, ProjectRepository projectRepository,
+                          TaskRepository taskRepository) {
+        this.storageService = storageService;
+        this.request = request;
+        this.taskService = taskService;
+        this.colaboratorRepository = colaboratorRepository;
+        this.projectRepository = projectRepository;
+        this.taskRepository = taskRepository;
+    }
+
+    public TaskController(StorageService storageService, HttpServletRequest request) {
+        this.storageService = storageService;
+        this.request = request;
+    }
 
     @GetMapping("/task/all")
     public List<Task> getTasks() {
@@ -53,6 +106,7 @@ public class TaskController {
         );
         return ResponseEntity.status(HttpStatus.CREATED).body(createdTask);
     }
+
 
 
     @GetMapping("task/{id}")
