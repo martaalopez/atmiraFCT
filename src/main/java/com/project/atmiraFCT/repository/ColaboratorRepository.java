@@ -20,6 +20,4 @@ public interface ColaboratorRepository extends JpaRepository<Colaborator, String
     Optional<Colaborator> findById(String idAlias);
 
 
-
-
-    }
+}

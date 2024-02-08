@@ -1,33 +1,38 @@
 package com.project.atmiraFCT.service;
 
-import com.project.atmiraFCT.controller.ColaboratorController;
 import com.project.atmiraFCT.exception.RecordNotFoundException;
 import com.project.atmiraFCT.model.domain.Colaborator;
-import com.project.atmiraFCT.model.domain.ColaboratorProject;
-import com.project.atmiraFCT.model.domain.Project;
 import com.project.atmiraFCT.model.domain.WorkPlace;
 import com.project.atmiraFCT.repository.ColaboratorRepository;
 import com.project.atmiraFCT.repository.WorkPlaceRepository;
+import com.project.atmiraFCT.security.TokenUtils;
+import com.project.atmiraFCT.security.UserDetailsImpl;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 /*import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;*/
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 public class ColaboratorService  {
     @Autowired
     private ColaboratorRepository colaboratorRepository;
-   /* private final PasswordEncoder passwordEncoder;*/
+   private final PasswordEncoder passwordEncoder;
 
     @Autowired
     private WorkPlaceRepository workplaceRepository;
+
+    private final TokenUtils tokenUtils;
+    private final AuthenticationManager authenticationManager;
 
 
     public Colaborator getColaboratorById(String colaboratorId) {
@@ -35,23 +40,24 @@ public class ColaboratorService  {
                 .orElseThrow(() -> new EntityNotFoundException("Colaborator not found with id: " + colaboratorId));
     }
 
-    public ColaboratorService(ColaboratorRepository colaboratorRepository) {
+    public ColaboratorService(ColaboratorRepository colaboratorRepository, TokenUtils tokenUtils, AuthenticationManager authenticationManager) {
         this.colaboratorRepository=colaboratorRepository;
-       /* this.passwordEncoder =new BCryptPasswordEncoder();*/
+        this.tokenUtils = tokenUtils;
+        this.authenticationManager = authenticationManager;
+        this.passwordEncoder =new BCryptPasswordEncoder();
 
     }
 
-   /* public Colaborator saveColaborator(Colaborator colaborator) {
-      /* String encoderPassword=this.passwordEncoder.encode(colaborator.getPassword());
-        colaborator.setPassword(encoderPassword);
-        return colaboratorRepository.save(colaborator);
-    }*/
-public Colaborator saveColaborator(Colaborator colaborator, Long workplaceId) {
+
+
+    public Colaborator saveColaborator(Colaborator colaborator, Long workplaceId) {
         WorkPlace workplace = workplaceRepository.findById(workplaceId)
-        .orElseThrow(() -> new RecordNotFoundException("Workplace not found with id: " + workplaceId));
+                .orElseThrow(() -> new RecordNotFoundException("Workplace not found with id: " + workplaceId));
         colaborator.setWorkPlace(workplace);
+        colaborator.setPassword(passwordEncoder.encode(colaborator.getPassword())); // Codificar la contraseña con BCrypt
         return colaboratorRepository.save(colaborator);
-        }
+    }
+
 
     public void updatePassword(String id ,String password){
         Optional<Colaborator > result=colaboratorRepository.findById(id);
@@ -61,17 +67,6 @@ public Colaborator saveColaborator(Colaborator colaborator, Long workplaceId) {
             colaboratorRepository.save(fromDB);
         }
     }
-  /*  public void login(String email,String password){
-        Optional<Colaborator> result=colaboratorRepository.findByEmailAndPassword(email,password);
-        if(result.isPresent()) {
-            Colaborator fromDB = result.get();
-            fromDB.getActive(true);
-            colaboratorRepository.save(fromDB);
-        }else{
-            throw new RecordNotFoundException("No user found with email:"+email+" and password"+password);
-        }
-    }
-*/
     public List<Colaborator> getAllColaborators() {
         return colaboratorRepository.findAll();
     }
@@ -121,5 +116,22 @@ public Colaborator saveColaborator(Colaborator colaborator, Long workplaceId) {
         throw new Exception("No project found with id"+id);
     }
 }
+
+
+
+
+
+    public String login(String email, String password) {
+        Colaborator colaborator = colaboratorRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        if (passwordEncoder.matches(password, colaborator.getPassword())) {
+            return tokenUtils.createToken(colaborator.getName(), colaborator.getEmail());
+        } else {
+            throw new RuntimeException("Contraseña incorrecta");
+        }
     }
+
+}
+
+
 
