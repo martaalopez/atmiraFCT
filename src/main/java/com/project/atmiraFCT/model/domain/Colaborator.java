@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 import java.util.Date;
 import java.util.List;
 
@@ -99,6 +101,7 @@ public class Colaborator {
     public void setPassword(String password) {
         this.password = password;
     }
+
 
     public String getId_alias() {
         return id_alias;
