@@ -69,12 +69,12 @@
             return new ResponseEntity<>(projects, HttpStatus.OK);
         }*/
 
-        @GetMapping("/collaborator/{colaboratorId}/projects")
+        @GetMapping("/colaborator/{colaboratorId}/projects")
         public List<Project> getProjectsByColaboratorId(@PathVariable String colaboratorId) {
             return projectService.getProjectsByColaboratorId(colaboratorId);
         }
 
-        @PostMapping("/project/save/colaboratorId={colaboratorId}")
+        @PostMapping("/project/save/colaboratorId/{colaboratorId}")
        public ResponseEntity<Project> save(@PathVariable String colaboratorId, @RequestBody Project project) {
             LocalDate today = LocalDate.now();
             LocalDate initialDate = project.getInitialDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
