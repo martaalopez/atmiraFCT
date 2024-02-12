@@ -53,34 +53,6 @@ public class ColaboratorController {
         return ResponseEntity.ok(updated);
     }
 
-   /* @PostMapping("colaborator/login")
-    public ResponseEntity<?> login(@RequestBody AuthCredentials credentials) {
-        try {
-            Colaborator colaborator = colaboratorService.authenticate(credentials.getEmail(), credentials.getPassword());
-            if (colaborator != null) {
-                String token = tokenUtils.createToken(colaborator.getName(), colaborator.getEmail());
-                return ResponseEntity.ok().header("Authorization", "Bearer " + token).build();
-            } else {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenciales inválidas");
-            }
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error interno del servidor");
-        }
-    }*/
-
-    @PostMapping("/colaborator/login")
-    public ResponseEntity<?> login(@RequestBody AuthCredentials credentials) {
-        try {
-            String token = colaboratorService.login(credentials.getEmail(), credentials.getPassword());
-            if (token != null) {
-                return ResponseEntity.ok().header("Authorization", "Bearer " + token).build();
-            } else {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenciales inválidas");
-            }
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error interno del servidor"+ e.getMessage());
-        }
-    }
 
 
 
