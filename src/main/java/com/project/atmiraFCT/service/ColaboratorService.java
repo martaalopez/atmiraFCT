@@ -2,7 +2,6 @@ package com.project.atmiraFCT.service;
 
 import com.project.atmiraFCT.exception.RecordNotFoundException;
 import com.project.atmiraFCT.model.domain.Colaborator;
-import com.project.atmiraFCT.model.domain.WorkPlace;
 import com.project.atmiraFCT.repository.ColaboratorRepository;
 import com.project.atmiraFCT.repository.WorkPlaceRepository;
 import jakarta.persistence.EntityNotFoundException;
