@@ -3,16 +3,29 @@ package com.project.atmiraFCT.model.domain;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.project.atmiraFCT.security.User.Role;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
+
+@Data
+@Builder
+@AllArgsConstructor
 @Entity
 @Table(name="colaborator")
 @JsonIgnoreProperties({"projects", "colaboratorProjects","task","expenses"})
-public class Colaborator {
+public class Colaborator  implements UserDetails {
 
     @Id
     @Column(name = "id_alias")
@@ -73,6 +86,30 @@ public class Colaborator {
     )
     private List<Department> departments;
 
+    @Enumerated(EnumType.STRING)
+    Role role;
+
+
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority((role.name())));
+    }
+
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    public boolean isEnabled() {
+        return true;
+    }
+
     public Colaborator(String id_alias, String email, Boolean isActive, Date relaseDate, Integer hours, Boolean guards, Boolean expense, String name, String surname, String password, List<Expense> expenses, List<Task> task, WorkPlace workPlace, List<ColaboratorProject> colaboratorProjects) {
         this.id_alias = id_alias;
         this.email = email;
@@ -96,6 +133,11 @@ public class Colaborator {
 
     public String getPassword() {
         return password;
+    }
+
+    @Override
+    public String getUsername() {
+        return null;
     }
 
     public void setPassword(String password) {

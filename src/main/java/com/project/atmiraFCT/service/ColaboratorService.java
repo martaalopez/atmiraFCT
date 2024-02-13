@@ -5,16 +5,9 @@ import com.project.atmiraFCT.model.domain.Colaborator;
 import com.project.atmiraFCT.model.domain.WorkPlace;
 import com.project.atmiraFCT.repository.ColaboratorRepository;
 import com.project.atmiraFCT.repository.WorkPlaceRepository;
-import com.project.atmiraFCT.security.TokenUtils;
-import com.project.atmiraFCT.security.UserDetailsImpl;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-/*import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;*/
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -31,7 +24,6 @@ public class ColaboratorService  {
     @Autowired
     private WorkPlaceRepository workplaceRepository;
 
-    private final TokenUtils tokenUtils;
     private final AuthenticationManager authenticationManager;
 
 
@@ -40,15 +32,12 @@ public class ColaboratorService  {
                 .orElseThrow(() -> new EntityNotFoundException("Colaborator not found with id: " + colaboratorId));
     }
 
-    public ColaboratorService(ColaboratorRepository colaboratorRepository, TokenUtils tokenUtils, AuthenticationManager authenticationManager) {
+    public ColaboratorService(ColaboratorRepository colaboratorRepository,AuthenticationManager authenticationManager) {
         this.colaboratorRepository=colaboratorRepository;
-        this.tokenUtils = tokenUtils;
         this.authenticationManager = authenticationManager;
         this.passwordEncoder =new BCryptPasswordEncoder();
 
     }
-
-
 
     public Colaborator saveColaborator(Colaborator colaborator, Long workplaceId) {
         WorkPlace workplace = workplaceRepository.findById(workplaceId)
@@ -118,18 +107,6 @@ public class ColaboratorService  {
 }
 
 
-
-
-
-    public String login(String email, String password) {
-        Colaborator colaborator = colaboratorRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
-        if (passwordEncoder.matches(password, colaborator.getPassword())) {
-            return tokenUtils.createToken(colaborator.getName(), colaborator.getEmail());
-        } else {
-            throw new RuntimeException("Contraseña incorrecta");
-        }
-    }
 
 }
 
