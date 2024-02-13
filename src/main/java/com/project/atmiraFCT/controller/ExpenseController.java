@@ -3,7 +3,6 @@ package com.project.atmiraFCT.controller;
 import com.project.atmiraFCT.model.domain.Expense;
 import com.project.atmiraFCT.model.domain.Task;
 import com.project.atmiraFCT.repository.ExpenseRepository;
-import com.project.atmiraFCT.repository.ProjectRepository;
 import com.project.atmiraFCT.service.ExpenseService;
 import com.project.atmiraFCT.service.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
