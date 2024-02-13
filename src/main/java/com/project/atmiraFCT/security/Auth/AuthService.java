@@ -11,12 +11,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.Date;
 
 @Service
 @RequiredArgsConstructor
@@ -35,10 +32,10 @@ public class AuthService {
             throw new BadCredentialsException("Credenciales inválidas");
         }
 
-        Colaborator userDetails = (Colaborator) colaboratorRepository.findByEmail(request.getEmail())
+        Colaborator userDetails = colaboratorRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
 
-        String token = jwtService.getToken((UserDetails) userDetails);
+        String token = jwtService.getToken(userDetails);
 
         return AuthResponse.builder()
                 .token(token)
@@ -49,27 +46,23 @@ public class AuthService {
         WorkPlace workplace = workPlaceRepository.findById(workplaceId)
                 .orElseThrow(() -> new RecordNotFoundException("Workplace not found with id: " + workplaceId));
 
-        // Crea un nuevo colaborador
         Colaborator colaborator = Colaborator.builder()
                 .id_alias(request.getId_alias())
                 .email(request.getEmail())
-                .isActive(true)
-                .relaseDate(new Date())
-                .hours(0)
-                .guards(false)
-                .expense(false)
+                .isActive(request.getIsActive())
+                .relaseDate(request.getRelaseDate())
+                .hours(request.getHours())
+                .guards(request.getGuards())
+                .expense(request.getExpense())
                 .name(request.getName())
                 .surname(request.getSurname())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .workPlace(workplace)
+                .responsible(request.getResponsible())
                 .role(Role.USER)
                 .build();
-
-        // Guarda el colaborador en la base de datos
         colaboratorRepository.save(colaborator);
-
-        // Genera y retorna el token para el nuevo colaborador
-        String token = jwtService.getToken((UserDetails) colaborator);
+        String token = jwtService.getToken(colaborator);
         return AuthResponse.builder()
                 .token(token)
                 .build();

@@ -2,8 +2,6 @@ package com.project.atmiraFCT.controller;
 
 
 import com.project.atmiraFCT.model.domain.Department;
-import com.project.atmiraFCT.model.domain.Project;
-import com.project.atmiraFCT.model.domain.WorkPlace;
 import com.project.atmiraFCT.repository.DepartmentRepository;
 import com.project.atmiraFCT.service.DepartmentService;
 import org.springframework.beans.factory.annotation.Autowired;

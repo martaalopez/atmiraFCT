@@ -1,6 +1,5 @@
 package com.project.atmiraFCT.security.Config;
 
-import com.project.atmiraFCT.model.domain.Colaborator;
 import com.project.atmiraFCT.repository.ColaboratorRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

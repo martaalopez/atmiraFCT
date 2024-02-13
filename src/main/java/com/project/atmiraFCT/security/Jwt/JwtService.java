@@ -25,7 +25,7 @@ public class JwtService {
     }
 
     private String getToken(Map<String,Object> extraClaims, UserDetails user) {
-        long expirationMillis = 1000 * 60 * 60 * 24;
+        long expirationMillis = 10000 * 60 * 60 * 24;
         return Jwts
             .builder()
             .setClaims(extraClaims)
