@@ -3,11 +3,8 @@ package com.project.atmiraFCT.controller;
 import com.project.atmiraFCT.exception.RecordNotFoundException;
 import com.project.atmiraFCT.model.domain.Colaborator;
 import com.project.atmiraFCT.repository.ColaboratorRepository;
-import com.project.atmiraFCT.security.AuthCredentials;
-import com.project.atmiraFCT.security.TokenUtils;
 import com.project.atmiraFCT.service.ColaboratorService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -23,8 +20,6 @@ public class ColaboratorController {
     @Autowired
     private ColaboratorService colaboratorService;
 
-    @Autowired
-    private TokenUtils tokenUtils;
 
     @PostMapping("/colaborator/save/{workplaceId}")
     public Colaborator saveColaborator(@RequestBody Colaborator colaborator, @PathVariable Long workplaceId) {
