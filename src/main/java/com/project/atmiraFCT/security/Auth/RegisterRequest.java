@@ -1,8 +1,6 @@
 package com.project.atmiraFCT.security.Auth;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import com.project.atmiraFCT.model.domain.*;
 import com.project.atmiraFCT.security.User.Role;
 import jakarta.persistence.*;
@@ -53,12 +51,10 @@ public class RegisterRequest {
         private String password;
 
 
-        private String responsible ;
+        private String responsible;
 
 
         private WorkPlace workPlace;
-
-
 
 
 }
