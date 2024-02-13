@@ -35,10 +35,10 @@ public class AuthService {
             throw new BadCredentialsException("Credenciales inválidas");
         }
 
-        Colaborator userDetails = (Colaborator) colaboratorRepository.findByEmail(request.getEmail())
+        Colaborator userDetails = colaboratorRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
 
-        String token = jwtService.getToken((UserDetails) userDetails);
+        String token = jwtService.getToken(userDetails);
 
         return AuthResponse.builder()
                 .token(token)
@@ -67,7 +67,7 @@ public class AuthService {
 
         colaboratorRepository.save(colaborator);
 
-        String token = jwtService.getToken((UserDetails) colaborator);
+        String token = jwtService.getToken(colaborator);
         return AuthResponse.builder()
                 .token(token)
                 .build();

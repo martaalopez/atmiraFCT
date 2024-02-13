@@ -39,13 +39,13 @@ public class ColaboratorService  {
 
     }
 
-    public Colaborator saveColaborator(Colaborator colaborator, Long workplaceId) {
+   /* public Colaborator saveColaborator(Colaborator colaborator, Long workplaceId) {
         WorkPlace workplace = workplaceRepository.findById(workplaceId)
                 .orElseThrow(() -> new RecordNotFoundException("Workplace not found with id: " + workplaceId));
         colaborator.setWorkPlace(workplace);
         colaborator.setPassword(passwordEncoder.encode(colaborator.getPassword())); // Codificar la contraseña con BCrypt
         return colaboratorRepository.save(colaborator);
-    }
+    }*/
 
 
     public void updatePassword(String id ,String password){
@@ -69,14 +69,6 @@ public class ColaboratorService  {
         }
     }
 
-   /* public Colaborator getUserByGmail(String gmail) {
-        Optional<Colaborator> colaborator = colaboratorRepository.findByGmail(gmail);
-        if(colaborator.isPresent()){
-            return colaborator.get();
-        }else{
-            throw new RecordNotFoundException("No user found with gmail" +": " + gmail);
-        }
-    }*/
 
     public void deleteColaborator(String id) {
         Optional<Colaborator> result = colaboratorRepository.findById(id);
