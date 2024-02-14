@@ -27,21 +27,6 @@ public class RegisterRequest {
         private String email;
 
 
-        private Boolean isActive;
-
-
-        private Date relaseDate;
-
-
-        private Integer hours;
-
-
-        private Boolean guards;
-
-
-        private Boolean expense;
-
-
         private String name;
 
 
@@ -51,10 +36,6 @@ public class RegisterRequest {
         private String password;
 
 
-        private String responsible;
-
-
-        private WorkPlace workPlace;
 
 
 }

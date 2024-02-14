@@ -9,7 +9,9 @@ import com.project.atmiraFCT.service.StorageService;
 import com.project.atmiraFCT.service.TaskService;
 import jakarta.servlet.http.HttpServletRequest;
 
+import org.apache.tika.Tika;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -50,13 +52,13 @@ public class TaskController {
         this.taskRepository = taskRepository;
     }
 
-    @PostMapping("/upload")
+    @PostMapping("/media/upload")
     public Map<String, String> uploadFile(@RequestParam("file") MultipartFile multipartFile) {
         String path = storageService.store(multipartFile);
         String host = request.getRequestURL().toString().replace(request.getRequestURI(), "");
         String url = ServletUriComponentsBuilder
                 .fromHttpUrl(host)
-                .path("/media")
+                .path("/media/")
                 .path(path)
                 .toUriString();
         return Map.of("url", url);
@@ -64,10 +66,11 @@ public class TaskController {
 
     @GetMapping("/media/{filename:.+}")
     public ResponseEntity<org.springframework.core.io.Resource> getFile(@PathVariable String filename) {
-        org.springframework.core.io.Resource file = (org.springframework.core.io.Resource) storageService.loadAsResource(filename);
+        org.springframework.core.io.Resource file = (Resource) storageService.loadAsResource(filename);
         String contentType;
         try {
-            contentType = Files.probeContentType(file.getFile().toPath());
+            Tika tika = new Tika();
+            contentType = tika.detect(file.getInputStream());
         } catch (IOException e) {
             contentType = "application/octet-stream";
         }
