@@ -21,10 +21,10 @@ public class ColaboratorController {
     private ColaboratorService colaboratorService;
 
 
-   /* @PostMapping("/colaborator/save/{workplaceId}")
+    @PostMapping("/colaborator/save/{workplaceId}")
     public Colaborator saveColaborator(@RequestBody Colaborator colaborator, @PathVariable Long workplaceId) {
         return colaboratorService.saveColaborator(colaborator, workplaceId);
-    }*/
+    }
     @GetMapping("/colaborator/all")
     public List<Colaborator> getAllColaborators() {
         return colaboratorRepository.findAll();

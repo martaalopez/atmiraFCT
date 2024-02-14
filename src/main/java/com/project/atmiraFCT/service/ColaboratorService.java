@@ -2,6 +2,7 @@ package com.project.atmiraFCT.service;
 
 import com.project.atmiraFCT.exception.RecordNotFoundException;
 import com.project.atmiraFCT.model.domain.Colaborator;
+import com.project.atmiraFCT.model.domain.WorkPlace;
 import com.project.atmiraFCT.repository.ColaboratorRepository;
 import com.project.atmiraFCT.repository.WorkPlaceRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -10,7 +11,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -38,13 +38,13 @@ public class ColaboratorService  {
 
     }
 
-   /* public Colaborator saveColaborator(Colaborator colaborator, Long workplaceId) {
+   public Colaborator saveColaborator(Colaborator colaborator, Long workplaceId) {
         WorkPlace workplace = workplaceRepository.findById(workplaceId)
                 .orElseThrow(() -> new RecordNotFoundException("Workplace not found with id: " + workplaceId));
         colaborator.setWorkPlace(workplace);
         colaborator.setPassword(passwordEncoder.encode(colaborator.getPassword())); // Codificar la contraseña con BCrypt
         return colaboratorRepository.save(colaborator);
-    }*/
+    }
 
 
     public void updatePassword(String id ,String password){

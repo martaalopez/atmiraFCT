@@ -42,23 +42,14 @@ public class AuthService {
                 .build();
     }
 
-    public AuthResponse register(RegisterRequest request, Long workplaceId) {
-        WorkPlace workplace = workPlaceRepository.findById(workplaceId)
-                .orElseThrow(() -> new RecordNotFoundException("Workplace not found with id: " + workplaceId));
+    public AuthResponse register(RegisterRequest request) {
 
         Colaborator colaborator = Colaborator.builder()
                 .id_alias(request.getId_alias())
                 .email(request.getEmail())
-                .isActive(request.getIsActive())
-                .relaseDate(request.getRelaseDate())
-                .hours(request.getHours())
-                .guards(request.getGuards())
-                .expense(request.getExpense())
                 .name(request.getName())
                 .surname(request.getSurname())
                 .password(passwordEncoder.encode(request.getPassword()))
-                .workPlace(workplace)
-                .responsible(request.getResponsible())
                 .role(Role.USER)
                 .build();
         colaboratorRepository.save(colaborator);
