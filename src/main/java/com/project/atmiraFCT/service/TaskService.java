@@ -146,13 +146,13 @@ public class TaskService  implements StorageService{
 
     /*recuperar un archivo a partir de su nombre*/
     @Override
-    public jakarta.annotation.Resource loadAsResource(String filename) {
+    public Resource loadAsResource(String filename) {
         try {
             Path file = rootLocation.resolve(filename);
             Resource resource = new UrlResource(file.toUri());
 
             if (resource.exists() && resource.isReadable()) { // Verifica existencia y legibilidad
-                return (jakarta.annotation.Resource) resource;
+                return resource;
             } else {
                 throw new RuntimeException("Could not read file: " + filename);
             }

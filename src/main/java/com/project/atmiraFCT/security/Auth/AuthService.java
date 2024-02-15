@@ -1,6 +1,7 @@
 package com.project.atmiraFCT.security.Auth;
 
 import com.project.atmiraFCT.exception.RecordNotFoundException;
+import com.project.atmiraFCT.exception.Validator;
 import com.project.atmiraFCT.model.domain.Colaborator;
 import com.project.atmiraFCT.model.domain.WorkPlace;
 import com.project.atmiraFCT.repository.ColaboratorRepository;
@@ -43,6 +44,11 @@ public class AuthService {
     }
 
     public AuthResponse register(RegisterRequest request) {
+        String email = request.getEmail();
+
+        if (!Validator.isValidGmail(email)) {
+            throw new IllegalArgumentException("La dirección de correo electrónico no es válida.");
+        }
 
         Colaborator colaborator = Colaborator.builder()
                 .id_alias(request.getId_alias())
