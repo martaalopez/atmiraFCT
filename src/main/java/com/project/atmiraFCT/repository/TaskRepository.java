@@ -9,10 +9,11 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface TaskRepository extends JpaRepository<Task, Long> {
+public interface TaskRepository extends JpaRepository<Task, String> {
     List<Task> findByColaborator(Colaborator colaborator);
 
     List<Task> findByProject(Project project);
 
     List<Task> findByColaboratorAndProject(Colaborator colaborator, Project project);
+
 }

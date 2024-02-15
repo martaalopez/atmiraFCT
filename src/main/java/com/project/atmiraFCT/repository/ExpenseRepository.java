@@ -12,6 +12,7 @@ import java.util.List;
 
 @Repository
 public interface ExpenseRepository  extends JpaRepository<Expense, Integer> {
+
     List<Expense> findByColaborator(Colaborator colaborator);
 
     List<Expense> findByProject(Project project);

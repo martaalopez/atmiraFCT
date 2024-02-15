@@ -11,7 +11,7 @@ import java.util.List;
 
 @Entity
 @Table(name="project")
-@JsonIgnoreProperties({"colaboratorProjects", "tasks", "expenses"})
+@JsonIgnoreProperties({"colaboratorProjects","tasks","expenses"})
 public class Project {
 
     @Id
@@ -35,15 +35,15 @@ public class Project {
     private Boolean active;
 
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "project")
-    @JsonManagedReference
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "project",cascade = CascadeType.ALL)
+   @JsonManagedReference
     private List<Task> tasks;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "project")
     @JsonManagedReference
     private List<Expense> expenses;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "project", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "project")
     @JsonManagedReference
     private List<ColaboratorProject> colaboratorProjects;
 
@@ -121,6 +121,9 @@ public class Project {
     }
 
     public List<Task> getTasks() {
+       if(tasks == null){
+           tasks = new ArrayList<>();
+       }
         return tasks;
     }
 
@@ -144,5 +147,15 @@ public class Project {
         this.colaboratorProjects = colaboratorProjects;
     }
 
+    public void incrementarContadorTareas(){
+        if(this.tasks == null){
+            this.tasks = new ArrayList<>();
+        }
+        this.tasks.add(new Task());
+    }
+
+    public String getContadorTareas() {
+      return Integer.toString(this.tasks.size());
+    }
 
 }

@@ -1,6 +1,8 @@
 package com.project.atmiraFCT.controller;
 
+import com.project.atmiraFCT.exception.RecordNotFoundException;
 import com.project.atmiraFCT.model.domain.Expense;
+import com.project.atmiraFCT.model.domain.Project;
 import com.project.atmiraFCT.model.domain.Task;
 import com.project.atmiraFCT.repository.ExpenseRepository;
 import com.project.atmiraFCT.service.ExpenseService;
@@ -11,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
@@ -61,5 +64,18 @@ public class ExpenseController {
         List<Expense> expenses= expenseService.getExpenseByColaboratorAndProject(colaboratorId, projectId);
         return ResponseEntity.ok(expenses);
     }
+
+
+    @DeleteMapping("/expense/delete/{id}")
+    public ResponseEntity<Boolean> deleteExpense(@PathVariable Integer id) {
+        Optional<Expense> result =expenseRepository.findById(id);
+        if (result.isPresent()) {
+            expenseRepository.deleteById(id);
+            return ResponseEntity.ok(true);
+        } else {
+            throw new RecordNotFoundException("No project found with id: " + id);
+        }
+    }
+
 
 }

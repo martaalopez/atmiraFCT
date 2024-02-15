@@ -8,6 +8,7 @@ import com.project.atmiraFCT.repository.ColaboratorRepository;
 import com.project.atmiraFCT.repository.ProjectRepository;
 import com.project.atmiraFCT.repository.TaskRepository;
 import jakarta.annotation.PostConstruct;
+import jakarta.persistence.PrePersist;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.UrlResource;
@@ -18,6 +19,7 @@ import org.springframework.core.io.Resource;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Field;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -42,9 +44,7 @@ public class TaskService  implements StorageService{
     private ProjectRepository projectRepository;
 
 
-
-   public Task saveTaskexistingProyectColaborator(String description, String objective, Boolean isClosed,
-                                                   Long taskValue, String colaboratorId, Long projectId) {
+   public Task saveTaskexistingProyectColaborator(String description, String objective, Boolean isClosed, String colaboratorId, Long projectId) {
         Optional<Colaborator> colaboratorOptional = colaboratorRepository.findById(colaboratorId);
         Optional<Project> projectOptional = projectRepository.findById(projectId);
 
@@ -53,9 +53,28 @@ public class TaskService  implements StorageService{
             task.setDescription(description);
             task.setObjective(objective);
             task.setClosed(isClosed);
-            task.setTask(taskValue);
             task.setColaborator(colaboratorOptional.get());
             task.setProject(projectOptional.get());
+
+            Task savedTask = taskRepository.save(task);
+            return savedTask;
+        } else {
+            throw new RecordNotFoundException("Colaborator or project not found");
+        }
+    }
+    public Task saveSubTaskexistingProyectColaboratorTask(String description, String objective, Boolean isClosed, String colaboratorId, Long projectId,String id_code) {
+        Optional<Colaborator> colaboratorOptional = colaboratorRepository.findById(colaboratorId);
+        Optional<Project> projectOptional = projectRepository.findById(projectId);
+        Optional<Task> taskOptional=taskRepository.findById(id_code);
+
+        if (colaboratorOptional.isPresent() && projectOptional.isPresent() && taskOptional.isPresent()) {
+            Task task = new Task();
+            task.setDescription(description);
+            task.setObjective(objective);
+            task.setClosed(isClosed);
+            task.setColaborator(colaboratorOptional.get());
+            task.setProject(projectOptional.get());
+            task.setId_code(taskOptional.get().getId_code());
 
             Task savedTask = taskRepository.save(task);
             return savedTask;
@@ -69,7 +88,7 @@ public class TaskService  implements StorageService{
         return taskRepository.findAll();
     }
 
-    public Task getTaskById(Long id) {
+    public Task getTaskById(String id) {
         Optional<Task> task = taskRepository.findById(id);
         if (task.isPresent()) {
             return task.get();
@@ -78,7 +97,7 @@ public class TaskService  implements StorageService{
         }
     }
 
-    public void deleteTask(Long id) {
+    public void deleteTask(String id) {
         Optional<Task> result = taskRepository.findById(id);
         if (result.isPresent()) {
             taskRepository.deleteById(id);
@@ -145,14 +164,15 @@ public class TaskService  implements StorageService{
 
 
     /*recuperar un archivo a partir de su nombre*/
-    @Override
+   @Override
     public Resource loadAsResource(String filename) {
         try {
             Path file = rootLocation.resolve(filename);
             Resource resource = new UrlResource(file.toUri());
 
-            if (resource.exists() && resource.isReadable()) { // Verifica existencia y legibilidad
+            if (resource.exists() && resource.isReadable()) {
                 return resource;
+
             } else {
                 throw new RuntimeException("Could not read file: " + filename);
             }
@@ -161,4 +181,30 @@ public class TaskService  implements StorageService{
         }
     }
 
-}
+
+        public String generarId(Task task) throws IllegalAccessException {
+            Class<?> clazz = task.getClass();
+            Field field;
+            String id = "";
+
+            try {
+                field = clazz.getDeclaredField("task");
+                field.setAccessible(true);
+
+                if (field.get(task) != null) {
+                    id = (field.get(task)) + "_" + task.getId_code();
+                } else {
+
+                    id = task.getId_code().toString();
+                }
+            } catch (NoSuchFieldException e) {
+                e.printStackTrace();
+            }
+
+            return id;
+        }
+
+    }
+
+
+
