@@ -3,25 +3,26 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
+import java.lang.reflect.Field;
+
 @Entity
 @JsonIgnoreProperties({"colaborator", "project"})
 @Table(name="task")
 public class Task {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id_code;
+    private String id_code;
 
     @Column(name="description",length = 256)
     private String description;
 
-    @Column(name="objective ",length = 256)
+    @Column(name="objective",length = 256)
     private String objective;
 
     @Column(name="isClosed")
     private Boolean isClosed;
 
     @Column(name="task")
-    private Long task;
+    private String task;
 
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name="id_code_project")
@@ -33,7 +34,7 @@ public class Task {
     @JsonManagedReference
     private Colaborator colaborator;
 
-    public Task(Long id_code, String description, String objective, Boolean isClosed, Long task, Boolean active) {
+    public Task(String id_code, String description, String objective, Boolean isClosed, String task, Boolean active) {
         this.id_code = id_code;
         this.description = description;
         this.objective = objective;
@@ -42,7 +43,7 @@ public class Task {
 
     }
 
-    public Task(Long id_code, String description, String objective, Boolean isClosed, Long task, Boolean active, Project project, Colaborator colaborator) {
+    public Task(String id_code, String description, String objective, Boolean isClosed, String task, Boolean active, Project project, Colaborator colaborator) {
         this.id_code = id_code;
         this.description = description;
         this.objective = objective;
@@ -56,11 +57,11 @@ public class Task {
 
     }
 
-    public Long getId_code() {
+    public String getId_code() {
         return id_code;
     }
 
-    public void setId_code(Long id_code) {
+    public void setId_code(String id_code) {
         this.id_code = id_code;
     }
 
@@ -88,11 +89,11 @@ public class Task {
         isClosed = closed;
     }
 
-    public Long getTask() {
+    public String getTask() {
         return task;
     }
 
-    public void setTask(Long task) {
+    public void setTask(String task) {
         this.task = task;
     }
 
@@ -112,6 +113,16 @@ public class Task {
     public void setColaborator(Colaborator colaborator) {
         this.colaborator = colaborator;
     }
+
+    @PrePersist
+    public void generarId() {
+        if (this.id_code == null && this.project != null) {
+            this.id_code = this.project.getId_code() + "_" + this.project.getContadorTareas();
+            this.project.incrementarContadorTareas();
+        }
+    }
+
+
 
 
 }

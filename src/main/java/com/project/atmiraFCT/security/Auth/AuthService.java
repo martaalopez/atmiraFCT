@@ -40,6 +40,11 @@ public class AuthService {
 
         return AuthResponse.builder()
                 .token(token)
+                .email(userDetails.getEmail())
+                .name(userDetails.getName())
+                .id_alias(userDetails.getId_alias())
+                .surname(userDetails.getSurname())
+                .role(userDetails.getRole().name())
                 .build();
     }
 
@@ -62,6 +67,11 @@ public class AuthService {
         String token = jwtService.getToken(colaborator);
         return AuthResponse.builder()
                 .token(token)
+                .email(colaborator.getEmail())
+                .name(colaborator.getName())
+                .id_alias(colaborator.getId_alias())
+                .surname(colaborator.getSurname())
+                .role(colaborator.getRole().name())
                 .build();
     }
 }

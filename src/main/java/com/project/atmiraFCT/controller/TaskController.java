@@ -96,22 +96,38 @@ public class TaskController {
                 task.getDescription(),
                 task.getObjective(),
                 task.getClosed(),
-                task.getTask(),
                 colaboratorId,
                 projectId
         );
         return ResponseEntity.status(HttpStatus.CREATED).body(createdTask);
     }
 
+    @PostMapping("/task/save/{colaboratorId}/{projectId}/{taskid}")
+    public ResponseEntity<Task> createsubTaskWithExistingProjectColaboratorTask(
+            @PathVariable String colaboratorId,
+            @PathVariable Long projectId,
+            @PathVariable String taskid,
+            @RequestBody Task task
+    ) {
+        Task createdTask = taskService.saveSubTaskexistingProyectColaboratorTask(
+                task.getDescription(),
+                task.getObjective(),
+                task.getClosed(),
+                colaboratorId,
+                projectId,
+                taskid
+        );
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdTask);
+    }
 
 
     @GetMapping("task/{id}")
-    public ResponseEntity<Task> getTaskById(@PathVariable("id") Long id) {
+    public ResponseEntity<Task> getTaskById(@PathVariable("id") String id) {
         Task task = taskService.getTaskById(id);
         return ResponseEntity.ok(task);
     }
     @DeleteMapping("taskDelete/{id}")
-    public ResponseEntity<Boolean> deleteTask(@PathVariable Long id) {
+    public ResponseEntity<Boolean> deleteTask(@PathVariable String id) {
         try {
             taskService.deleteTask(id);
             return ResponseEntity.ok(true);
