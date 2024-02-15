@@ -1,6 +1,7 @@
     package com.project.atmiraFCT.controller;
 
     import com.project.atmiraFCT.exception.RecordNotFoundException;
+    import com.project.atmiraFCT.exception.Validator;
     import com.project.atmiraFCT.model.domain.Project;
     import com.project.atmiraFCT.repository.ProjectRepository;
     import com.project.atmiraFCT.service.ProjectService;
@@ -24,7 +25,6 @@
 
         @Autowired
         private ProjectService projectService;
-
 
 
         @GetMapping("/project/list/{id}")
@@ -76,15 +76,16 @@
 
         @PostMapping("/project/save/colaboratorId/{colaboratorId}")
        public ResponseEntity<Project> save(@PathVariable String colaboratorId, @RequestBody Project project) {
-            LocalDate today = LocalDate.now();
             LocalDate initialDate = project.getInitialDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
             LocalDate endDate = project.getEndDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 
-            if (initialDate.isBefore(today)) {
+
+            if (!Validator.isInitialDateValid(initialDate)) {
                 throw new IllegalArgumentException("La fecha inicial debe ser el día de hoy o posterior.");
             }
 
-            if (endDate.isBefore(initialDate)) {
+
+            if (!Validator.isEndDateValid(initialDate, endDate)) {
                 throw new IllegalArgumentException("La fecha de finalización no puede ser anterior a la fecha inicial.");
             }
 

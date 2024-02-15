@@ -9,7 +9,6 @@ import com.project.atmiraFCT.service.StorageService;
 import com.project.atmiraFCT.service.TaskService;
 import jakarta.servlet.http.HttpServletRequest;
 
-import org.apache.tika.Tika;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -65,15 +64,10 @@ public class TaskController {
     }
 
     @GetMapping("/media/{filename:.+}")
-    public ResponseEntity<org.springframework.core.io.Resource> getFile(@PathVariable String filename) {
-        org.springframework.core.io.Resource file = (Resource) storageService.loadAsResource(filename);
-        String contentType;
-        try {
-            Tika tika = new Tika();
-            contentType = tika.detect(file.getInputStream());
-        } catch (IOException e) {
-            contentType = "application/octet-stream";
-        }
+    public ResponseEntity<Resource> getFile(@PathVariable String filename) throws IOException {
+        Resource file = (Resource) storageService.loadAsResource(filename);
+        String contentType=Files.probeContentType(file.getFile().toPath());
+
         return ResponseEntity
                 .ok()
                 .header(HttpHeaders.CONTENT_TYPE, contentType)

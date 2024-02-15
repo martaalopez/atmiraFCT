@@ -18,7 +18,7 @@ import java.util.Optional;
 public class ColaboratorService  {
     @Autowired
     private ColaboratorRepository colaboratorRepository;
-   private final PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
     private WorkPlaceRepository workplaceRepository;
@@ -89,8 +89,8 @@ public class ColaboratorService  {
           fromDB.setExpense(colaborator.getExpense());
           fromDB.setActive(colaborator.getActive());
           fromDB.setGuards(colaborator.getGuards());
-            /*modificar contraseña*/
-          return colaboratorRepository.save(colaborator);
+
+          return colaboratorRepository.save(fromDB);
     }
         else{
         throw new Exception("No project found with id"+id);

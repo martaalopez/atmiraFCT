@@ -2,7 +2,6 @@ package com.project.atmiraFCT.security.Auth;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import lombok.RequiredArgsConstructor;
 
 @RestController

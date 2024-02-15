@@ -1,9 +1,9 @@
 package com.project.atmiraFCT.service;
 
-import jakarta.annotation.Resource;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.core.io.Resource; // Importar Resource de Spring
 
 import java.io.IOException;
+import org.springframework.web.multipart.MultipartFile;
 
 public interface StorageService {
 
@@ -11,5 +11,6 @@ public interface StorageService {
 
     String store(MultipartFile file);
 
-    Resource loadAsResource(String filename);
+    Resource loadAsResource(String filename); // Cambiar el tipo de retorno a Resource de Spring
 }
+
