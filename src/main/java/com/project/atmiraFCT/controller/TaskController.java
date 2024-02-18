@@ -86,6 +86,7 @@ public class TaskController {
     }
 
 
+
     @PostMapping("/task/save/{colaboratorId}/{projectId}")
     public ResponseEntity<Task> createProjectWithExistingProjectColaborator(
             @PathVariable String colaboratorId,
@@ -102,25 +103,27 @@ public class TaskController {
         return ResponseEntity.status(HttpStatus.CREATED).body(createdTask);
     }
 
-    @PostMapping("/task/save/{colaboratorId}/{projectId}/{taskid}")
-    public ResponseEntity<Task> createsubTaskWithExistingProjectColaboratorTask(
+    @PostMapping("/saveSubTask/{colaboratorId}/{projectId}/{id_code}")
+    public ResponseEntity<Task> saveSubTaskInExistingProjectColaboratorTask(
+            @RequestBody Map<String, Object> requestBody,
             @PathVariable String colaboratorId,
             @PathVariable Long projectId,
-            @PathVariable String taskid,
-            @RequestBody Task task
-    ) {
-        Task createdTask = taskService.saveSubTaskexistingProyectColaboratorTask(
-                task.getDescription(),
-                task.getObjective(),
-                task.getClosed(),
+            @PathVariable String id_code) {
+
+        String description = (String) requestBody.get("description");
+        String objective = (String) requestBody.get("objective");
+        Boolean isClosed = (Boolean) requestBody.get("isClosed");
+
+        Task savedTask = taskService.saveSubTaskExistingProjectColaboratorTask(
+                description,
+                objective,
+                isClosed,
                 colaboratorId,
                 projectId,
-                taskid
-        );
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdTask);
+                id_code);
+
+        return new ResponseEntity<>(savedTask, HttpStatus.CREATED);
     }
-
-
     @GetMapping("task/{id}")
     public ResponseEntity<Task> getTaskById(@PathVariable("id") String id) {
         Task task = taskService.getTaskById(id);

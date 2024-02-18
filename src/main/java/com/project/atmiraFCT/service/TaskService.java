@@ -8,7 +8,6 @@ import com.project.atmiraFCT.repository.ColaboratorRepository;
 import com.project.atmiraFCT.repository.ProjectRepository;
 import com.project.atmiraFCT.repository.TaskRepository;
 import jakarta.annotation.PostConstruct;
-import jakarta.persistence.PrePersist;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.UrlResource;
@@ -19,14 +18,12 @@ import org.springframework.core.io.Resource;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Field;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class TaskService  implements StorageService{
@@ -44,7 +41,7 @@ public class TaskService  implements StorageService{
     private ProjectRepository projectRepository;
 
 
-   public Task saveTaskexistingProyectColaborator(String description, String objective, Boolean isClosed, String colaboratorId, Long projectId) {
+    public Task saveTaskexistingProyectColaborator(String description, String objective, Boolean isClosed, String colaboratorId, Long projectId) {
         Optional<Colaborator> colaboratorOptional = colaboratorRepository.findById(colaboratorId);
         Optional<Project> projectOptional = projectRepository.findById(projectId);
 
@@ -56,32 +53,93 @@ public class TaskService  implements StorageService{
             task.setColaborator(colaboratorOptional.get());
             task.setProject(projectOptional.get());
 
+            // Generar el idCode de la tarea
+            String idCode = generateTaskIdCode(projectOptional.get());
+            task.setIdCode(idCode);
+
             Task savedTask = taskRepository.save(task);
             return savedTask;
         } else {
             throw new RecordNotFoundException("Colaborator or project not found");
         }
     }
-    public Task saveSubTaskexistingProyectColaboratorTask(String description, String objective, Boolean isClosed, String colaboratorId, Long projectId,String id_code) {
+
+    private String generateTaskIdCode(Project project) {
+
+        int numberOfTasks = project.getTasks().size() + 1;
+
+        return project.getId_code() + "_" + numberOfTasks;
+    }
+
+    public Task saveSubTaskExistingProjectColaboratorTask(String description, String objective, Boolean isClosed, String colaboratorId, Long projectId, String parentTaskIdCode) {
         Optional<Colaborator> colaboratorOptional = colaboratorRepository.findById(colaboratorId);
         Optional<Project> projectOptional = projectRepository.findById(projectId);
-        Optional<Task> taskOptional=taskRepository.findById(id_code);
 
-        if (colaboratorOptional.isPresent() && projectOptional.isPresent() && taskOptional.isPresent()) {
-            Task task = new Task();
-            task.setDescription(description);
-            task.setObjective(objective);
-            task.setClosed(isClosed);
-            task.setColaborator(colaboratorOptional.get());
-            task.setProject(projectOptional.get());
-            task.setId_code(taskOptional.get().getId_code());
+        if (colaboratorOptional.isPresent() && projectOptional.isPresent()) {
 
-            Task savedTask = taskRepository.save(task);
-            return savedTask;
+            if (!isValidParentTaskIdCodeFormat(parentTaskIdCode)) {
+                throw new IllegalArgumentException("Invalid parentTaskIdCode format: " + parentTaskIdCode);
+            }
+
+            String[] ids = parentTaskIdCode.split("_");
+            Long parentProjectId = Long.parseLong(ids[0]);
+            Long parentTaskId = Long.parseLong(ids[1]);
+
+            int nextSubTaskNumber = getNextSubTaskNumber(parentTaskIdCode);
+
+            Task subTask = new Task();
+            subTask.setDescription(description);
+            subTask.setObjective(objective);
+            subTask.setClosed(isClosed);
+            subTask.setColaborator(colaboratorOptional.get());
+            subTask.setProject(projectOptional.get());
+
+
+            String subTaskIdCode = parentProjectId + "_" + parentTaskId + "_" + nextSubTaskNumber;
+            subTask.setIdCode(subTaskIdCode);
+
+            Task parentTask = taskRepository.findByIdCode(parentTaskIdCode).orElseThrow(() -> new RecordNotFoundException("Parent task not found"));
+
+
+            subTask.setTareaPrincipal(parentTask);
+
+
+            Task savedSubTask = taskRepository.save(subTask);
+
+            List<Task> subTasks = parentTask.getSubtareas();
+
+            subTasks.add(savedSubTask);
+
+            parentTask.setSubtareas(subTasks);
+
+            taskRepository.save(parentTask);
+
+            return savedSubTask;
         } else {
             throw new RecordNotFoundException("Colaborator or project not found");
         }
     }
+
+
+    // Método para verificar el formato del parentTaskIdCode
+    private boolean isValidParentTaskIdCodeFormat(String parentTaskIdCode) {
+        String[] parts = parentTaskIdCode.split("_");
+        return parts.length == 2; // Verificar si tiene exactamente dos partes
+    }
+
+
+    public int getNextSubTaskNumber(String parentTaskIdCode) {
+
+        Task parentTask = taskRepository.findByIdCode(parentTaskIdCode)
+                .orElseThrow(() -> new RecordNotFoundException("Parent task not found"));
+
+        List<Task> subTasks = parentTask.getSubtareas();
+
+        int nextSubTaskNumber = subTasks.size() + 1;
+
+        return nextSubTaskNumber;
+    }
+
 
 
     public List<Task> getAllTasks() {
@@ -146,16 +204,16 @@ public class TaskService  implements StorageService{
 
     @Override
     public String store(MultipartFile file) {
-            try{
+        try{
             if (file.isEmpty()) {
                 throw new RuntimeException("Faited to store entity file.");
             }
-        String filename =file.getOriginalFilename();
-        Path destinationFile =rootLocation.resolve(Paths.get(filename))
-                        .normalize().toAbsolutePath();
-        try (InputStream inputStream =file.getInputStream()) {
-            Files.copy(inputStream, destinationFile, StandardCopyOption.REPLACE_EXISTING);
-        }
+            String filename =file.getOriginalFilename();
+            Path destinationFile =rootLocation.resolve(Paths.get(filename))
+                    .normalize().toAbsolutePath();
+            try (InputStream inputStream =file.getInputStream()) {
+                Files.copy(inputStream, destinationFile, StandardCopyOption.REPLACE_EXISTING);
+            }
             return filename;
         } catch (IOException e) {
             throw new RuntimeException("Failed to store file", e);
@@ -164,7 +222,7 @@ public class TaskService  implements StorageService{
 
 
     /*recuperar un archivo a partir de su nombre*/
-   @Override
+    @Override
     public Resource loadAsResource(String filename) {
         try {
             Path file = rootLocation.resolve(filename);
@@ -182,29 +240,8 @@ public class TaskService  implements StorageService{
     }
 
 
-        public String generarId(Task task) throws IllegalAccessException {
-            Class<?> clazz = task.getClass();
-            Field field;
-            String id = "";
 
-            try {
-                field = clazz.getDeclaredField("task");
-                field.setAccessible(true);
 
-                if (field.get(task) != null) {
-                    id = (field.get(task)) + "_" + task.getId_code();
-                } else {
-
-                    id = task.getId_code().toString();
-                }
-            } catch (NoSuchFieldException e) {
-                e.printStackTrace();
-            }
-
-            return id;
-        }
-
-    }
-
+}
 
 
