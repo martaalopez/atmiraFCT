@@ -1,68 +1,55 @@
 package com.project.atmiraFCT.model.domain;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import jakarta.persistence.*;
 
-import java.lang.reflect.Field;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
+import java.util.List;
 
 @Entity
-@JsonIgnoreProperties({"colaborator", "project"})
 @Table(name="task")
 public class Task {
-    @Id
-    private String id_code;
 
-    @Column(name="description",length = 256)
+    @Id
+    @Column(name = "id_code")
+    private String idCode;
+
+    @Column(name="description", length = 256)
     private String description;
 
-    @Column(name="objective",length = 256)
+    @Column(name="objective", length = 256)
     private String objective;
 
     @Column(name="isClosed")
     private Boolean isClosed;
 
-    @Column(name="task")
-    private String task;
+    // Relación OneToMany para las subtareas de una tarea
+    @OneToMany(mappedBy = "tareaPrincipal", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<Task> subtareas;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne
+    @JoinColumn(name = "tarea_principal_id")
+   /* @JsonBackReference*/
+    private Task tareaPrincipal;
+
+    @ManyToOne
     @JoinColumn(name="id_code_project")
-    @JsonManagedReference
     private Project project;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne
     @JoinColumn(name="id_colaborator")
-    @JsonManagedReference
     private Colaborator colaborator;
-
-    public Task(String id_code, String description, String objective, Boolean isClosed, String task, Boolean active) {
-        this.id_code = id_code;
-        this.description = description;
-        this.objective = objective;
-        this.isClosed = isClosed;
-        this.task = task;
-
-    }
-
-    public Task(String id_code, String description, String objective, Boolean isClosed, String task, Boolean active, Project project, Colaborator colaborator) {
-        this.id_code = id_code;
-        this.description = description;
-        this.objective = objective;
-        this.isClosed = isClosed;
-        this.task = task;
-        this.project = project;
-        this.colaborator = colaborator;
-    }
 
     public Task() {
 
     }
 
-    public String getId_code() {
-        return id_code;
+    public String getIdCode() {
+        return idCode;
     }
 
-    public void setId_code(String id_code) {
-        this.id_code = id_code;
+    public void setIdCode(String idCode) {
+        this.idCode = idCode;
     }
 
     public String getDescription() {
@@ -89,14 +76,21 @@ public class Task {
         isClosed = closed;
     }
 
-    public String getTask() {
-        return task;
+    public List<Task> getSubtareas() {
+        return subtareas;
     }
 
-    public void setTask(String task) {
-        this.task = task;
+    public void setSubtareas(List<Task> subtareas) {
+        this.subtareas = subtareas;
     }
 
+    public Task getTareaPrincipal() {
+        return tareaPrincipal;
+    }
+
+    public void setTareaPrincipal(Task tareaPrincipal) {
+        this.tareaPrincipal = tareaPrincipal;
+    }
 
     public Project getProject() {
         return project;
@@ -114,14 +108,15 @@ public class Task {
         this.colaborator = colaborator;
     }
 
-    @PrePersist
-    public void generarId() {
-        if (this.id_code == null && this.project != null) {
-            this.id_code = this.project.getId_code() + "_" + this.project.getContadorTareas();
-            this.project.incrementarContadorTareas();
-        }
+    @Override
+    public String toString() {
+        return "Task{" +
+                "idCode='" + idCode + '\'' +
+                ", description='" + description + '\'' +
+                ", objective='" + objective + '\'' +
+                ", isClosed=" + isClosed +
+                '}';
     }
-
 
 
 

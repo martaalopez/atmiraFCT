@@ -34,9 +34,8 @@ public class Project {
     @Column(name="active")
     private Boolean active;
 
-
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "project",cascade = CascadeType.ALL)
-   @JsonManagedReference
+    @JsonManagedReference
     private List<Task> tasks;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "project")
@@ -47,7 +46,6 @@ public class Project {
     @JsonManagedReference
     private List<ColaboratorProject> colaboratorProjects;
 
-
     public Project(Long id_code, TypeOfService typeOfService, String name, Date initialDate, Date endDate, Boolean active, List<Task> tasks, List<Expense> expenses, List<ColaboratorProject> colaboratorProjects) {
         this.id_code = id_code;
         this.typeOfService = typeOfService;
@@ -55,20 +53,17 @@ public class Project {
         this.initialDate = initialDate;
         this.endDate = endDate;
         this.active = active;
-        this.tasks = tasks;
+        this.tasks = tasks; // No inicializar aquí
         this.expenses = expenses;
-        this.colaboratorProjects = colaboratorProjects;
-
-        if (colaboratorProjects == null) {
-            colaboratorProjects = new ArrayList<>();
-        }
-
         this.colaboratorProjects = colaboratorProjects;
     }
 
 
+
     public Project() {
         this.colaboratorProjects = new ArrayList<>();
+  // Llama al método getTasks() en lugar de acceder directamente al atributo tasks
+
     }
 
 
@@ -121,9 +116,9 @@ public class Project {
     }
 
     public List<Task> getTasks() {
-       if(tasks == null){
-           tasks = new ArrayList<>();
-       }
+        if(tasks == null) {
+            tasks = new ArrayList<>();
+        }
         return tasks;
     }
 
@@ -147,15 +142,7 @@ public class Project {
         this.colaboratorProjects = colaboratorProjects;
     }
 
-    public void incrementarContadorTareas(){
-        if(this.tasks == null){
-            this.tasks = new ArrayList<>();
-        }
-        this.tasks.add(new Task());
-    }
 
-    public String getContadorTareas() {
-      return Integer.toString(this.tasks.size());
-    }
+
 
 }
