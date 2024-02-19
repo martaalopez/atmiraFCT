@@ -25,7 +25,7 @@ public class ExpenseService {
     private ProjectRepository projectRepository;
 
     public Expense saveExpenseExistingProyectColaborator(Integer day, Integer month, Integer year, Integer hours, Integer cost,
-                                                         String description, Boolean state, String colaboratorId, Long projectId) {
+                                                         String description, Boolean state, String colaboratorId, String projectId) {
         Optional<Colaborator> colaboratorOptional = colaboratorRepository.findById(colaboratorId);
         Optional<Project> projectOptional = projectRepository.findById(projectId);
 
@@ -66,7 +66,7 @@ public class ExpenseService {
         }
     }
 
-    public List<Expense> getExpenseByProject(Long projectId) {
+    public List<Expense> getExpenseByProject(String projectId) {
         Optional<Project> projectOptional = projectRepository.findById(projectId);
         if (projectOptional.isPresent()) {
             return expenseRepository.findByProject(projectOptional.get());
@@ -75,7 +75,7 @@ public class ExpenseService {
         }
     }
 
-    public List<Expense> getExpenseByColaboratorAndProject(String colaboratorId, Long projectId) {
+    public List<Expense> getExpenseByColaboratorAndProject(String colaboratorId, String projectId) {
         Optional<Colaborator> colaboratorOptional = colaboratorRepository.findById(colaboratorId);
         Optional<Project> projectOptional = projectRepository.findById(projectId);
 

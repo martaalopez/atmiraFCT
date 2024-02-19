@@ -38,7 +38,7 @@ public class ProjectService {
         return projectRepository.findAll();
     }
 
-    public Project getProjectById(Long id) {
+    public Project getProjectById(String id) {
         Optional<Project> project = projectRepository.findById(id);
         if (project.isPresent()) {
             return project.get();
@@ -47,7 +47,7 @@ public class ProjectService {
         }
     }
 
-    public void deleteProject(Long id) {
+    public void deleteProject(String id) {
         Optional<Project> result = projectRepository.findById(id);
         if (result.isPresent()) {
             projectRepository.deleteById(id);
@@ -55,7 +55,7 @@ public class ProjectService {
             throw new RecordNotFoundException("No user found with id: " + id);
         }
     }
-public Project updateProject(Long id,Project updateProject) throws Exception {
+public Project updateProject(String id,Project updateProject) throws Exception {
         Optional<Project> result=projectRepository.findById(id);
         if(result.isPresent()){
             Project project=result.get();
@@ -85,12 +85,14 @@ public Project updateProject(Long id,Project updateProject) throws Exception {
         }
     }
 
-    public Project createProjectWithExistingColaborator(String projectName, Date initialDate, Date endDate, Boolean active, TypeOfService typeOfService, String colaboratorId) {
+    public Project createProjectWithExistingColaborator(String id_code,String projectName, Date initialDate, Date endDate, Boolean active, TypeOfService typeOfService, String colaboratorId) {
 
         Colaborator colaborator = colaboratorRepository.findById(colaboratorId)
                 .orElseThrow(() -> new RuntimeException("Colaborator not found"));
 
         Project project = new Project();
+        String idCode = generateProjectIdCode();
+        project.setId_code(idCode);
         project.setName(projectName);
         project.setInitialDate(initialDate);
         project.setEndDate(endDate);
@@ -106,6 +108,18 @@ public Project updateProject(Long id,Project updateProject) throws Exception {
 
         return savedProject;
     }
+
+    private String generateProjectIdCode() {
+        for(int i=0;i<100;i++){
+            String idCode = String.valueOf(i);
+            if(projectRepository.findById(idCode).isEmpty()){
+                return idCode;
+            }
+        }
+        return null;
+
+    }
+
 
 
 }

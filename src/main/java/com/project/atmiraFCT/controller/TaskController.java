@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
@@ -85,45 +86,46 @@ public class TaskController {
         return taskService.getAllTasks();
     }
 
-
-
-    @PostMapping("/task/save/{colaboratorId}/{projectId}")
-    public ResponseEntity<Task> createProjectWithExistingProjectColaborator(
+    @PostMapping("/task/save/{colaboratorId}/{identifier}")
+    public ResponseEntity<Task> saveTask(
+            @RequestBody Task task,
             @PathVariable String colaboratorId,
-            @PathVariable Long projectId,
-            @RequestBody Task task
+            @PathVariable String identifier
     ) {
-        Task createdTask = taskService.saveTaskexistingProyectColaborator(
-                task.getDescription(),
-                task.getObjective(),
-                task.getClosed(),
-                colaboratorId,
-                projectId
-        );
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdTask);
-    }
+        Task savedTask;
+        if (identifier.contains("_")) {
+            String[] parts = identifier.split("_");
+            if (parts.length != 2) {
+                throw new IllegalArgumentException("Invalid identifier format: " + identifier);
+            }
+            String projectId = parts[0];
+            String parentTaskIdCode = parts[0]+"_"+parts[1];
 
-    @PostMapping("/saveSubTask/{colaboratorId}/{projectId}/{id_code}")
-    public ResponseEntity<Task> saveSubTaskInExistingProjectColaboratorTask(
-            @RequestBody Map<String, Object> requestBody,
-            @PathVariable String colaboratorId,
-            @PathVariable Long projectId,
-            @PathVariable String id_code) {
 
-        String description = (String) requestBody.get("description");
-        String objective = (String) requestBody.get("objective");
-        Boolean isClosed = (Boolean) requestBody.get("isClosed");
-
-        Task savedTask = taskService.saveSubTaskExistingProjectColaboratorTask(
-                description,
-                objective,
-                isClosed,
-                colaboratorId,
-                projectId,
-                id_code);
+            savedTask = taskService.saveSubTask(
+                    task.getDescription(),
+                    task.getObjective(),
+                    task.getClosed(),
+                    colaboratorId,
+                    projectId,
+                    parentTaskIdCode
+            );
+        }  else {
+            // Si no contiene una barra baja, se trata de una tarea principal
+            savedTask = taskService.saveTask(
+                    task.getDescription(),
+                    task.getObjective(),
+                    task.getClosed(),
+                    colaboratorId,
+                    identifier
+            );
+        }
 
         return new ResponseEntity<>(savedTask, HttpStatus.CREATED);
     }
+
+
+
     @GetMapping("task/{id}")
     public ResponseEntity<Task> getTaskById(@PathVariable("id") String id) {
         Task task = taskService.getTaskById(id);
@@ -153,7 +155,7 @@ public class TaskController {
     }
 
     @GetMapping("/task/byProject/{projectId}")
-    public ResponseEntity<List<Task>> getTasksByProject(@PathVariable Long projectId) {
+    public ResponseEntity<List<Task>> getTasksByProject(@PathVariable String projectId) {
         List<Task> tasks = taskService.getTasksByProject(projectId);
         return ResponseEntity.ok(tasks);
     }
@@ -161,7 +163,7 @@ public class TaskController {
     @GetMapping("/task/byColaboratorAndProject/{colaboratorId}/{projectId}")
     public ResponseEntity<List<Task>> getTasksByColaboratorAndProject(
             @PathVariable String colaboratorId,
-            @PathVariable Long projectId
+            @PathVariable String projectId
     ) {
         List<Task> tasks = taskService.getTasksByColaboratorAndProject(colaboratorId, projectId);
         return ResponseEntity.ok(tasks);

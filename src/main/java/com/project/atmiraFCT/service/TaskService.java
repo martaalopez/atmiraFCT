@@ -41,7 +41,7 @@ public class TaskService  implements StorageService{
     private ProjectRepository projectRepository;
 
 
-    public Task saveTaskexistingProyectColaborator(String description, String objective, Boolean isClosed, String colaboratorId, Long projectId) {
+    public Task saveTask( String description, String objective, Boolean isClosed,String colaboratorId, String projectId) {
         Optional<Colaborator> colaboratorOptional = colaboratorRepository.findById(colaboratorId);
         Optional<Project> projectOptional = projectRepository.findById(projectId);
 
@@ -53,7 +53,6 @@ public class TaskService  implements StorageService{
             task.setColaborator(colaboratorOptional.get());
             task.setProject(projectOptional.get());
 
-            // Generar el idCode de la tarea
             String idCode = generateTaskIdCode(projectOptional.get());
             task.setIdCode(idCode);
 
@@ -64,14 +63,7 @@ public class TaskService  implements StorageService{
         }
     }
 
-    private String generateTaskIdCode(Project project) {
-
-        int numberOfTasks = project.getTasks().size() + 1;
-
-        return project.getId_code() + "_" + numberOfTasks;
-    }
-
-    public Task saveSubTaskExistingProjectColaboratorTask(String description, String objective, Boolean isClosed, String colaboratorId, Long projectId, String parentTaskIdCode) {
+    public Task saveSubTask(String description, String objective, Boolean isClosed, String colaboratorId, String projectId, String parentTaskIdCode) {
         Optional<Colaborator> colaboratorOptional = colaboratorRepository.findById(colaboratorId);
         Optional<Project> projectOptional = projectRepository.findById(projectId);
 
@@ -120,12 +112,19 @@ public class TaskService  implements StorageService{
         }
     }
 
+    private String generateTaskIdCode(Project project) {
+
+        int numberOfTasks = project.getTasks().size() + 1;
+
+        return project.getId_code() + "_" + numberOfTasks;
+    }
 
     // Método para verificar el formato del parentTaskIdCode
     private boolean isValidParentTaskIdCodeFormat(String parentTaskIdCode) {
         String[] parts = parentTaskIdCode.split("_");
-        return parts.length == 2; // Verificar si tiene exactamente dos partes
+        return parts.length == 2;
     }
+
 
 
     public int getNextSubTaskNumber(String parentTaskIdCode) {
@@ -174,7 +173,7 @@ public class TaskService  implements StorageService{
         }
     }
 
-    public List<Task> getTasksByProject(Long projectId) {
+    public List<Task> getTasksByProject(String projectId) {
         Optional<Project> projectOptional = projectRepository.findById(projectId);
         if (projectOptional.isPresent()) {
             return taskRepository.findByProject(projectOptional.get());
@@ -183,7 +182,7 @@ public class TaskService  implements StorageService{
         }
     }
 
-    public List<Task> getTasksByColaboratorAndProject(String colaboratorId, Long projectId) {
+    public List<Task> getTasksByColaboratorAndProject(String colaboratorId, String projectId) {
         Optional<Colaborator> colaboratorOptional = colaboratorRepository.findById(colaboratorId);
         Optional<Project> projectOptional = projectRepository.findById(projectId);
 
