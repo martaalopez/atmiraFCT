@@ -172,7 +172,6 @@ public class TaskService  implements StorageService{
             throw new RecordNotFoundException("Colaborator not found with id: " + colaboratorId);
         }
     }
-
     public List<Task> getTasksByProject(String projectId) {
         Optional<Project> projectOptional = projectRepository.findById(projectId);
         if (projectOptional.isPresent()) {

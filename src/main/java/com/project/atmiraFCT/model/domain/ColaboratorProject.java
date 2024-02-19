@@ -1,6 +1,7 @@
 package com.project.atmiraFCT.model.domain;
 
 import jakarta.persistence.*;
+import org.hibernate.engine.internal.Cascade;
 
 @Entity
 @Table(name = "colaborator_project")

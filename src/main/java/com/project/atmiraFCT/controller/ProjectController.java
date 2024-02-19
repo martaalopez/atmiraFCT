@@ -45,7 +45,7 @@
         public ResponseEntity<Boolean> deleteProject(@PathVariable String id) {
             Optional<Project> result = projectRepository.findById(id);
             if (result.isPresent()) {
-                projectRepository.deleteById(id);
+                projectService.deleteProject(id);
                 return ResponseEntity.ok(true);
             } else {
                 throw new RecordNotFoundException("No project found with id: " + id);

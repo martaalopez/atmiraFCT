@@ -43,9 +43,11 @@ public class Project {
     @JsonManagedReference
     private List<Expense> expenses;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "project")
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "project", cascade = CascadeType.ALL)
     @JsonManagedReference
     private List<ColaboratorProject> colaboratorProjects;
+
 
     public Project(String id_code, TypeOfService typeOfService, String name, Date initialDate, Date endDate, Boolean active, List<Task> tasks, List<Expense> expenses, List<ColaboratorProject> colaboratorProjects) {
         this.id_code =  id_code;
