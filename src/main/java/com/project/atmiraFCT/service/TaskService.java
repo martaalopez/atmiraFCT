@@ -93,7 +93,7 @@ public class TaskService  implements StorageService{
             Task parentTask = taskRepository.findByIdCode(parentTaskIdCode).orElseThrow(() -> new RecordNotFoundException("Parent task not found"));
 
 
-            subTask.setTareaPrincipal(parentTask);
+            subTask.setTask(parentTask);
 
 
             Task savedSubTask = taskRepository.save(subTask);

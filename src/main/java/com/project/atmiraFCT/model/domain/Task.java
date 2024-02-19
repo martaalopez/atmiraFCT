@@ -1,6 +1,5 @@
 package com.project.atmiraFCT.model.domain;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.util.List;
@@ -23,21 +22,21 @@ public class Task {
     private Boolean isClosed;
 
     // Relación OneToMany para las subtareas de una tarea
-    @OneToMany(mappedBy = "tareaPrincipal", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "task", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Task> subtareas;
 
     @ManyToOne
-    @JoinColumn(name = "tarea_principal_id")
+    @JoinColumn(name = "task")
    /* @JsonBackReference*/
-    private Task tareaPrincipal;
+    private Task task;
 
     @ManyToOne
     @JoinColumn(name="id_code_project")
     private Project project;
 
     @ManyToOne
-    @JoinColumn(name="id_colaborator")
+    @JoinColumn(name="asigned")
     private Colaborator colaborator;
 
     public Task() {
@@ -84,12 +83,12 @@ public class Task {
         this.subtareas = subtareas;
     }
 
-    public Task getTareaPrincipal() {
-        return tareaPrincipal;
+    public Task getTask() {
+        return task;
     }
 
-    public void setTareaPrincipal(Task tareaPrincipal) {
-        this.tareaPrincipal = tareaPrincipal;
+    public void setTask(Task tareaPrincipal) {
+        this.task = tareaPrincipal;
     }
 
     public Project getProject() {
