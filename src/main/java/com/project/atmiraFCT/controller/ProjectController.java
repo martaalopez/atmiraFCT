@@ -28,21 +28,21 @@
 
 
         @GetMapping("/project/list/{id}")
-        public ResponseEntity<Project> getProjectById(@PathVariable("id") Long id){
+        public ResponseEntity<Project> getProjectById(@PathVariable("id") String id){
             Project project = service.getProjectById(id);
             return ResponseEntity.ok(project);
         }
 
 
         @PutMapping("/projects/{id}")
-        public ResponseEntity<Project> updateProject(@PathVariable("id") Long id, @RequestBody Project updatedProject) throws Exception {
+        public ResponseEntity<Project> updateProject(@PathVariable("id") String id, @RequestBody Project updatedProject) throws Exception {
             Project updated = service.updateProject(id,updatedProject);
             return ResponseEntity.ok(updated);
         }
 
 
         @DeleteMapping("/project/delete/{id}")
-        public ResponseEntity<Boolean> deleteProject(@PathVariable Long id) {
+        public ResponseEntity<Boolean> deleteProject(@PathVariable String id) {
             Optional<Project> result = projectRepository.findById(id);
             if (result.isPresent()) {
                 projectRepository.deleteById(id);
@@ -89,7 +89,7 @@
                 throw new IllegalArgumentException("La fecha de finalización no puede ser anterior a la fecha inicial.");
             }
 
-            Project createdProject = projectService.createProjectWithExistingColaborator(project.getName(), project.getInitialDate(),project.getEndDate(),project.getActive(),project.getTypeOfService(),colaboratorId);
+            Project createdProject = projectService.createProjectWithExistingColaborator(project.getId_code(),project.getName(), project.getInitialDate(),project.getEndDate(),project.getActive(),project.getTypeOfService(),colaboratorId);
             return ResponseEntity.status(HttpStatus.CREATED).body(createdProject);
         }
 

@@ -8,6 +8,7 @@ import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Table(name="project")
@@ -15,8 +16,8 @@ import java.util.List;
 public class Project {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id_code;
+    @Column(name = "id_code",length = 256)
+    private String id_code;
 
     @Enumerated(EnumType.STRING)
     @Column(name="typeOfService", length = 20)
@@ -46,8 +47,8 @@ public class Project {
     @JsonManagedReference
     private List<ColaboratorProject> colaboratorProjects;
 
-    public Project(Long id_code, TypeOfService typeOfService, String name, Date initialDate, Date endDate, Boolean active, List<Task> tasks, List<Expense> expenses, List<ColaboratorProject> colaboratorProjects) {
-        this.id_code = id_code;
+    public Project(String id_code, TypeOfService typeOfService, String name, Date initialDate, Date endDate, Boolean active, List<Task> tasks, List<Expense> expenses, List<ColaboratorProject> colaboratorProjects) {
+        this.id_code =  id_code;
         this.typeOfService = typeOfService;
         this.name = name;
         this.initialDate = initialDate;
@@ -67,11 +68,11 @@ public class Project {
     }
 
 
-    public Long getId_code() {
+    public String getId_code() {
         return id_code;
     }
 
-    public void setId_code(Long id_code) {
+    public void setId_code(String id_code) {
         this.id_code = id_code;
     }
 
@@ -141,6 +142,7 @@ public class Project {
     public void setColaboratorProjects(List<ColaboratorProject> colaboratorProjects) {
         this.colaboratorProjects = colaboratorProjects;
     }
+
 
 
 

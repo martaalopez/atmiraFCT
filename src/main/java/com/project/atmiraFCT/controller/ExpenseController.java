@@ -28,7 +28,7 @@ public class ExpenseController {
     @PostMapping("/expense/save/{colaboratorId}/{projectId}")
     public ResponseEntity<Expense> createExpenseWithExistingProjectColaborator(
             @PathVariable String colaboratorId,
-            @PathVariable Long projectId,
+            @PathVariable String projectId,
             @RequestBody Expense expense
     ) {
         Expense createdExpense = expenseService.saveExpenseExistingProyectColaborator(
@@ -51,7 +51,7 @@ public class ExpenseController {
     }
 
     @GetMapping("/expense/byProject/{projectId}")
-    public ResponseEntity<List<Expense>> getExpensesByProject(@PathVariable Long projectId) {
+    public ResponseEntity<List<Expense>> getExpensesByProject(@PathVariable String projectId) {
         List<Expense> expenses = expenseService.getExpenseByProject(projectId);
         return ResponseEntity.ok(expenses);
     }
@@ -59,7 +59,7 @@ public class ExpenseController {
     @GetMapping("/expense/byColaboratorAndProject/{colaboratorId}/{projectId}")
     public ResponseEntity<List<Expense>> getExpensesByColaboratorAndProject(
             @PathVariable String colaboratorId,
-            @PathVariable Long projectId
+            @PathVariable String projectId
     ) {
         List<Expense> expenses= expenseService.getExpenseByColaboratorAndProject(colaboratorId, projectId);
         return ResponseEntity.ok(expenses);
