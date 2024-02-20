@@ -164,6 +164,12 @@ public class TaskService  implements StorageService{
     }
 
 
+
+   /* public List<Task> getSubtasksByTaskId(String taskId) {
+        return taskRepository.findByParentTaskId(taskId);
+    }*/
+
+
     public List<Task> getTasksByColaborator(String colaboratorId) {
         Optional<Colaborator> colaboratorOptional = colaboratorRepository.findById(colaboratorId);
         if (colaboratorOptional.isPresent()) {
@@ -174,8 +180,16 @@ public class TaskService  implements StorageService{
     }
     public List<Task> getTasksByProject(String projectId) {
         Optional<Project> projectOptional = projectRepository.findById(projectId);
+
         if (projectOptional.isPresent()) {
-            return taskRepository.findByProject(projectOptional.get());
+            // Obtener el proyecto
+            Project project = projectOptional.get();
+
+            // Buscar las tareas que cumplen con la estructura deseada
+            List<Task> taskParent = taskRepository.findAllTasks(project.getId_code());
+
+            // Devolver las tareas relacionadas con el proyecto
+            return taskParent;
         } else {
             throw new RecordNotFoundException("Project not found with id: " + projectId);
         }

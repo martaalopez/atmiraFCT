@@ -22,7 +22,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
@@ -140,13 +139,6 @@ public class TaskController {
             throw new RecordNotFoundException("No task found with id: " + id);
         }
     }
-
-
-   /* @PutMapping("/task/{id}")
-    public ResponseEntity<Task> updateTask(@PathVariable("id") Long id, @RequestBody Task updatedTask) {
-        Task updated = taskService.createOrUpdateTask(updatedTask);
-        return ResponseEntity.ok(updated);
-    }*/
 
     @GetMapping("/task/byColaborator/{colaboratorId}")
     public ResponseEntity<List<Task>> getTasksByColaborator(@PathVariable String colaboratorId) {
