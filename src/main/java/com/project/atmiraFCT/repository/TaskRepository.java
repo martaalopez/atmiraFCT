@@ -4,6 +4,7 @@ import com.project.atmiraFCT.model.domain.Colaborator;
 import com.project.atmiraFCT.model.domain.Project;
 import com.project.atmiraFCT.model.domain.Task;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -24,9 +25,8 @@ public interface TaskRepository extends JpaRepository<Task, String> {
     @Query("SELECT u FROM Task u WHERE u.task IS NULL")
     List<Task> findAllTasks(String startNumber);
 
-
-    /*@Query("SELECT u FROM Task u WHERE u.task IS NOT NULL")
-    List<Task> findSubtasksByParentTaskId(String parentTaskId);*/
+    @Query("SELECT t FROM Task t WHERE t.idCode LIKE CONCAT(:prefix, '_%')")
+    List<Task> findSubtasksByParentTaskId(@Param("prefix") String prefix);
 
     /*List<Task> findByParentTaskId(String parentTaskId);*/
 
