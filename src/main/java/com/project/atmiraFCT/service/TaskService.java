@@ -96,7 +96,6 @@ public class TaskService  implements StorageService{
             subTask.setTask(parentTask);
 
 
-
             Task savedSubTask = taskRepository.save(subTask);
 
             List<Task> subTasks = parentTask.getSubtareas();
@@ -175,46 +174,12 @@ public class TaskService  implements StorageService{
     }
     public List<Task> getTasksByProject(String projectId) {
         Optional<Project> projectOptional = projectRepository.findById(projectId);
-
         if (projectOptional.isPresent()) {
-            // Obtener el proyecto
-            Project project = projectOptional.get();
-
-            // Buscar las tareas que cumplen con la estructura deseada
-            List<Task> taskParent = taskRepository.findAllTasks(project.getId_code());
-
-            // Devolver las tareas relacionadas con el proyecto
-            return taskParent;
+            return taskRepository.findByProject(projectOptional.get());
         } else {
             throw new RecordNotFoundException("Project not found with id: " + projectId);
         }
     }
-    public List<Task> getSubtasksByTaskId(String taskId) {
-        return taskRepository.findByParentTaskId(taskId);
-    }
-
-
-
-
-    public List<Task> getSubtasksByParentTaskId(String parentTaskId) {
-        Optional<Task> parentTaskOptional = taskRepository.findById(parentTaskId);
-
-        if (parentTaskOptional.isPresent()) {
-            Task parentTask = parentTaskOptional.get();
-
-            // Obtener el prefijo del idCode de la tarea padre
-            String prefix = parentTask.getIdCode();
-
-            // Buscar las subtareas que cumplen con la estructura deseada
-            List<Task> subtasks = taskRepository.findSubtasksByParentTaskId(prefix);
-
-            return subtasks;
-        } else {
-            throw new RecordNotFoundException("Parent task not found with id: " + parentTaskId);
-        }
-    }
-
-
 
     public List<Task> getTasksByColaboratorAndProject(String colaboratorId, String projectId) {
         Optional<Colaborator> colaboratorOptional = colaboratorRepository.findById(colaboratorId);
