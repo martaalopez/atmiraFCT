@@ -119,7 +119,6 @@ public class TaskService  implements StorageService{
         return project.getId_code() + "_" + numberOfTasks;
     }
 
-    // Método para verificar el formato del parentTaskIdCode
     private boolean isValidParentTaskIdCodeFormat(String parentTaskIdCode) {
         String[] parts = parentTaskIdCode.split("_");
         return parts.length == 2;
@@ -165,9 +164,10 @@ public class TaskService  implements StorageService{
 
 
 
-   /* public List<Task> getSubtasksByTaskId(String taskId) {
-        return taskRepository.findByParentTaskId(taskId);
-    }*/
+    public List<Task> getSubTasksByPrefix(String prefix) {
+        return taskRepository.findSubtasksByParentTaskId(prefix);
+    }
+
 
 
     public List<Task> getTasksByColaborator(String colaboratorId) {

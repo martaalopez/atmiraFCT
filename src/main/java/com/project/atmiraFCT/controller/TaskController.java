@@ -152,6 +152,12 @@ public class TaskController {
         return ResponseEntity.ok(tasks);
     }
 
+    @GetMapping("/task/bySubTask/{taskId}")
+    public ResponseEntity<List<Task>> getSubTasksByParentTask(@PathVariable String taskId) {
+        List<Task> tasks = taskService.getSubTasksByPrefix(taskId);
+        return ResponseEntity.ok(tasks);
+    }
+
     @GetMapping("/task/byColaboratorAndProject/{colaboratorId}/{projectId}")
     public ResponseEntity<List<Task>> getTasksByColaboratorAndProject(
             @PathVariable String colaboratorId,
