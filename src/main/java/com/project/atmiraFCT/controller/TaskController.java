@@ -160,6 +160,12 @@ public class TaskController {
         return ResponseEntity.ok(tasks);
     }
 
+   /* @GetMapping("/task/byTask/{taskId}")
+    public ResponseEntity<List<Task>> getSubTasksByTask(@PathVariable String taskId) {
+        List<Task> subtasks = taskService.getSubtasksByParentTaskId(taskId);
+        return ResponseEntity.ok(subtasks);
+    }*/
+
     @GetMapping("/task/byColaboratorAndProject/{colaboratorId}/{projectId}")
     public ResponseEntity<List<Task>> getTasksByColaboratorAndProject(
             @PathVariable String colaboratorId,
@@ -168,5 +174,12 @@ public class TaskController {
         List<Task> tasks = taskService.getTasksByColaboratorAndProject(colaboratorId, projectId);
         return ResponseEntity.ok(tasks);
     }
+
+    @GetMapping("/task/byTask/{taskId}")
+    public ResponseEntity<List<Task>> getSubTasksByTask(@PathVariable String taskId) {
+        List<Task> subtasks = taskService.getSubtasksByTaskId(taskId);
+        return ResponseEntity.ok(subtasks);
+    }
+
 
 }
