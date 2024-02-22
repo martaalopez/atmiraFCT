@@ -1,6 +1,7 @@
 package com.project.atmiraFCT.controller;
 
 import com.project.atmiraFCT.exception.RecordNotFoundException;
+import com.project.atmiraFCT.model.domain.Colaborator;
 import com.project.atmiraFCT.model.domain.Task;
 import com.project.atmiraFCT.repository.ColaboratorRepository;
 import com.project.atmiraFCT.repository.ProjectRepository;
@@ -38,6 +39,13 @@ public class TaskController {
     private ProjectRepository projectRepository;
     @Autowired
     private TaskRepository taskRepository;
+
+    @GetMapping("/tasks/{projectId}")
+    public ResponseEntity<List<Task>> getTasksByProjectId(@PathVariable String projectId) {
+        List<Task> tasks = taskService.getTasksByProjectId(projectId);
+        return ResponseEntity.ok(tasks);
+    }
+
 
     @Autowired
     public TaskController(StorageService storageService, HttpServletRequest request, TaskService taskService,
@@ -123,6 +131,13 @@ public class TaskController {
         return new ResponseEntity<>(savedTask, HttpStatus.CREATED);
     }
 
+    @PutMapping("/{taskId}/{isClosed}")
+    public ResponseEntity<Task> updateTaskStatus(
+            @PathVariable String taskId,
+            @PathVariable boolean isClosed) {
+        Task updatedTask = taskService.updateTask(taskId, isClosed);
+        return ResponseEntity.ok(updatedTask);
+    }
 
 
     @GetMapping("task/{id}")
@@ -141,8 +156,14 @@ public class TaskController {
     }
 
     @GetMapping("/task/byColaborator/{colaboratorId}")
-    public ResponseEntity<List<Task>> getTasksByColaborator(@PathVariable String colaboratorId) {
+    public ResponseEntity<List<Task>> getTasksByColaborator(@PathVariable Colaborator colaboratorId) {
         List<Task> tasks = taskService.getTasksByColaborator(colaboratorId);
+        return ResponseEntity.ok(tasks);
+    }
+
+    @GetMapping("/taskAndSubtask/byColaborator/{colaboratorId}")
+    public ResponseEntity<List<Task>> getSubTasksByColaborator(@PathVariable String colaboratorId) {
+        List<Task> tasks = taskService.getTasksSubtaskByColaborator(colaboratorId);
         return ResponseEntity.ok(tasks);
     }
 
@@ -166,5 +187,6 @@ public class TaskController {
         List<Task> tasks = taskService.getTasksByColaboratorAndProject(colaboratorId, projectId);
         return ResponseEntity.ok(tasks);
     }
+
 
 }
