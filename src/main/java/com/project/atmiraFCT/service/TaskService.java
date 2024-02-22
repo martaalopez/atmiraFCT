@@ -13,9 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
 import org.springframework.core.io.Resource;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -28,6 +26,10 @@ import java.util.*;
 @Service
 public class TaskService  implements StorageService{
 
+    public List<Task> getTasksByProjectId(String projectId) {
+        return taskRepository.findByProjectId(projectId);
+    }
+
     @Value("${media.location}")
     private String mediaLocation;
 
@@ -39,7 +41,6 @@ public class TaskService  implements StorageService{
     private ColaboratorRepository colaboratorRepository;
     @Autowired
     private ProjectRepository projectRepository;
-
 
     public Task saveTask( String description, String objective, Boolean isClosed,String colaboratorId, String projectId) {
         Optional<Colaborator> colaboratorOptional = colaboratorRepository.findById(colaboratorId);
@@ -124,8 +125,6 @@ public class TaskService  implements StorageService{
         return parts.length == 2;
     }
 
-
-
     public int getNextSubTaskNumber(String parentTaskIdCode) {
 
         Task parentTask = taskRepository.findByIdCode(parentTaskIdCode)
@@ -137,8 +136,6 @@ public class TaskService  implements StorageService{
 
         return nextSubTaskNumber;
     }
-
-
 
     public List<Task> getAllTasks() {
         return taskRepository.findAll();
@@ -153,6 +150,12 @@ public class TaskService  implements StorageService{
         }
     }
 
+    /*mostrar tareas por proyecto*/
+    public Task getTaskByProjectIdAndTaskIdCode(String projectId, String taskIdCode) {
+        Optional<Task> taskOptional = taskRepository.findByProjectIdAndTaskIdCode(projectId, taskIdCode);
+        return taskOptional.orElseThrow(() -> new RecordNotFoundException("Task not found"));
+    }
+
     public void deleteTask(String id) {
         Optional<Task> result = taskRepository.findById(id);
         if (result.isPresent()) {
@@ -162,15 +165,7 @@ public class TaskService  implements StorageService{
         }
     }
 
-/*obtiene las subtareas de una tarea*/
-
-    public List<Task> getSubTasksByPrefix(String prefix) {
-        return taskRepository.findSubtasksByParentTaskId(prefix);
-    }
-
-
-
-    public List<Task> getTasksByColaborator(String colaboratorId) {
+    public List<Task> getTasksSubtaskByColaborator(String colaboratorId) {
         Optional<Colaborator> colaboratorOptional = colaboratorRepository.findById(colaboratorId);
         if (colaboratorOptional.isPresent()) {
             return taskRepository.findByColaborator(colaboratorOptional.get());
@@ -178,6 +173,29 @@ public class TaskService  implements StorageService{
             throw new RecordNotFoundException("Colaborator not found with id: " + colaboratorId);
         }
     }
+
+    /*obtiene las subtareas de una tarea*/
+
+    public List<Task> getSubTasksByPrefix(String prefix) {
+        return taskRepository.findSubtasksByParentTaskId(prefix);
+    }
+
+    /*actualizar el atributo isClosed de una tarea y una subtarea*/
+
+    public Task updateTask(String taskId, boolean isClosed) {
+        Optional<Task> taskOptional = taskRepository.findById(taskId);
+        if (taskOptional.isPresent()) {
+            Task task = taskOptional.get();
+            if (task.getClosed() == isClosed) {
+                throw new IllegalArgumentException("You cannot set the task status to the same value");
+            }
+            task.setClosed(isClosed);
+            return taskRepository.save(task); // Guardar los cambios y devolver la tarea actualizada
+        } else {
+            throw new RecordNotFoundException("Task not found with id: " + taskId);
+        }
+    }
+
     public List<Task> getTasksByProject(String projectId) {
         Optional<Project> projectOptional = projectRepository.findById(projectId);
 
@@ -206,6 +224,10 @@ public class TaskService  implements StorageService{
         }
     }
 
+
+    public List<Task> getTasksByColaborator(Colaborator colaboratorId) {
+            return  taskRepository.findAllTasksByColaborator(colaboratorId);
+    }
 
     @Override
     @PostConstruct
@@ -250,6 +272,8 @@ public class TaskService  implements StorageService{
             throw new RuntimeException("Could not read file: " + filename, e);
         }
     }
+
+
 
 
 
