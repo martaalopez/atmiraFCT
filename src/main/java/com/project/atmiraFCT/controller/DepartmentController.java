@@ -1,6 +1,5 @@
 package com.project.atmiraFCT.controller;
 
-
 import com.project.atmiraFCT.model.domain.Department;
 import com.project.atmiraFCT.repository.DepartmentRepository;
 import com.project.atmiraFCT.service.DepartmentService;
@@ -21,17 +20,27 @@ public class DepartmentController {
     @Autowired
     private DepartmentRepository departmentRepository;
 
-
+    /**
+     * Guarda un nuevo departamento asociado a un colaborador existente.
+     *
+     * @param colaboratorId El ID del colaborador existente al que se asociará el nuevo departamento.
+     * @param department    El objeto Department a guardar.
+     * @return              El departamento creado.
+     */
     @PostMapping("/deparment/save/colaboratorId={colaboratorId}")
-    public ResponseEntity<Department> save(@PathVariable String colaboratorId, @RequestBody  Department deparment) {
-
-        Department createdDeparment = departmentService.createDeparmentWithExistingColaborator(deparment.getId(),deparment.getCode(),colaboratorId);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdDeparment);
+    public ResponseEntity<Department> save(@PathVariable String colaboratorId, @RequestBody Department department) {
+        Department createdDepartment = departmentService.createDeparmentWithExistingColaborator(department.getId(), department.getCode(), colaboratorId);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdDepartment);
     }
 
+    /**
+     * Obtiene todos los departamentos.
+     *
+     * @return Lista de todos los departamentos.
+     */
     @GetMapping("/department/all")
     public List<Department> getAll() {
-        return  departmentRepository.findAll();
+        return departmentRepository.findAll();
     }
 
 }

@@ -11,6 +11,6 @@ public interface StorageService {
 
     String store(MultipartFile file);
 
-    Resource loadAsResource(String filename); // Cambiar el tipo de retorno a Resource de Spring
+    Resource loadAsResource(String filename);
 }
 

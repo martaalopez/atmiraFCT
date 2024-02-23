@@ -19,11 +19,28 @@ public class ExpenseService {
 
     @Autowired
     private ExpenseRepository expenseRepository;
+
     @Autowired
     private ColaboratorRepository colaboratorRepository;
+
     @Autowired
     private ProjectRepository projectRepository;
 
+    /**
+     * Guarda un gasto asociado a un colaborador y proyecto existente.
+     *
+     * @param day             Día del gasto.
+     * @param month           Mes del gasto.
+     * @param year            Año del gasto.
+     * @param hours           Horas del gasto.
+     * @param cost            Costo del gasto.
+     * @param description     Descripción del gasto.
+     * @param state           Estado del gasto.
+     * @param colaboratorId   ID del colaborador asociado al gasto.
+     * @param projectId       ID del proyecto asociado al gasto.
+     * @return                El gasto guardado.
+     * @throws RecordNotFoundException Si el colaborador o el proyecto no se encuentran.
+     */
     public Expense saveExpenseExistingProyectColaborator(Integer day, Integer month, Integer year, Integer hours, Integer cost,
                                                          String description, Boolean state, String colaboratorId, String projectId) {
         Optional<Colaborator> colaboratorOptional = colaboratorRepository.findById(colaboratorId);
@@ -48,8 +65,14 @@ public class ExpenseService {
         }
     }
 
+    /**
+     * Elimina un gasto por su ID.
+     *
+     * @param id El ID del gasto a eliminar.
+     * @throws RecordNotFoundException Si no se encuentra el gasto.
+     */
     public void deleteExpense(Integer id) {
-        Optional<Expense> result =expenseRepository.findById(id);
+        Optional<Expense> result = expenseRepository.findById(id);
         if (result.isPresent()) {
             expenseRepository.deleteById(id);
         } else {
@@ -57,6 +80,13 @@ public class ExpenseService {
         }
     }
 
+    /**
+     * Obtiene todos los gastos asociados a un colaborador.
+     *
+     * @param colaboratorId ID del colaborador.
+     * @return Lista de gastos asociados al colaborador.
+     * @throws RecordNotFoundException Si no se encuentra el colaborador.
+     */
     public List<Expense> getExpenseByColaborator(String colaboratorId) {
         Optional<Colaborator> colaboratorOptional = colaboratorRepository.findById(colaboratorId);
         if (colaboratorOptional.isPresent()) {
@@ -66,6 +96,13 @@ public class ExpenseService {
         }
     }
 
+    /**
+     * Obtiene todos los gastos asociados a un proyecto.
+     *
+     * @param projectId ID del proyecto.
+     * @return Lista de gastos asociados al proyecto.
+     * @throws RecordNotFoundException Si no se encuentra el proyecto.
+     */
     public List<Expense> getExpenseByProject(String projectId) {
         Optional<Project> projectOptional = projectRepository.findById(projectId);
         if (projectOptional.isPresent()) {
@@ -75,6 +112,14 @@ public class ExpenseService {
         }
     }
 
+    /**
+     * Obtiene todos los gastos asociados a un colaborador y proyecto.
+     *
+     * @param colaboratorId ID del colaborador.
+     * @param projectId     ID del proyecto.
+     * @return Lista de gastos asociados al colaborador y proyecto.
+     * @throws RecordNotFoundException Si no se encuentra el colaborador o el proyecto.
+     */
     public List<Expense> getExpenseByColaboratorAndProject(String colaboratorId, String projectId) {
         Optional<Colaborator> colaboratorOptional = colaboratorRepository.findById(colaboratorId);
         Optional<Project> projectOptional = projectRepository.findById(projectId);

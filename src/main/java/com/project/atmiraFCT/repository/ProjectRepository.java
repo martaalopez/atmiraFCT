@@ -17,7 +17,6 @@ public interface ProjectRepository extends JpaRepository<Project, String> {
 
     List<Project> findByName(String name);
 
-   /* List<Project> findByColaboratorProjects_ColaboratorName(String collaboratorName);*/
 
 
 }

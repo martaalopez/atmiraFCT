@@ -23,13 +23,9 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.*;
 
+
 @Service
-public class TaskService  implements StorageService{
-
-    public List<Task> getTasksByProjectId(String projectId) {
-        return taskRepository.findByProjectId(projectId);
-    }
-
+public class TaskService implements StorageService {
     @Value("${media.location}")
     private String mediaLocation;
 
@@ -42,6 +38,28 @@ public class TaskService  implements StorageService{
     @Autowired
     private ProjectRepository projectRepository;
 
+
+    /**
+     * Obtiene una lista de tareas por ID de proyecto.
+     *
+     * @param projectId El ID del proyecto.
+     * @return La lista de tareas asociadas al proyecto.
+     */
+    public List<Task> getTasksByProjectId(String projectId) {
+        return taskRepository.findByProjectId(projectId);
+    }
+
+    /**
+     * Guarda una nueva tarea.
+     *
+     * @param description  La descripción de la tarea.
+     * @param objective    El objetivo de la tarea.
+     * @param isClosed     Indica si la tarea está cerrada.
+     * @param colaboratorId El ID del colaborador asignado a la tarea.
+     * @param projectId    El ID del proyecto al que pertenece la tarea.
+     * @return La tarea guardada.
+     * @throws RecordNotFoundException Si no se encuentra el colaborador o el proyecto.
+     */
     public Task saveTask( String description, String objective, Boolean isClosed,String colaboratorId, String projectId) {
         Optional<Colaborator> colaboratorOptional = colaboratorRepository.findById(colaboratorId);
         Optional<Project> projectOptional = projectRepository.findById(projectId);
@@ -58,12 +76,24 @@ public class TaskService  implements StorageService{
             task.setIdCode(idCode);
 
             Task savedTask = taskRepository.save(task);
-            return savedTask;
+             return savedTask;
         } else {
             throw new RecordNotFoundException("Colaborator or project not found");
         }
     }
 
+    /**
+     * Guarda una nueva subtarea.
+     *
+     * @param description      La descripción de la subtarea.
+     * @param objective        El objetivo de la subtarea.
+     * @param isClosed         Indica si la subtarea está cerrada.
+     * @param colaboratorId    El ID del colaborador asignado a la subtarea.
+     * @param projectId        El ID del proyecto al que pertenece la subtarea.
+     * @param parentTaskIdCode El código de identificación de la tarea padre.
+     * @return La subtarea guardada.
+     * @throws RecordNotFoundException Si no se encuentra el colaborador, el proyecto o la tarea padre.
+     */
     public Task saveSubTask(String description, String objective, Boolean isClosed, String colaboratorId, String projectId, String parentTaskIdCode) {
         Optional<Colaborator> colaboratorOptional = colaboratorRepository.findById(colaboratorId);
         Optional<Project> projectOptional = projectRepository.findById(projectId);
@@ -113,18 +143,34 @@ public class TaskService  implements StorageService{
         }
     }
 
+    /**
+     * Genera un código de identificación para la tarea basado en el proyecto.
+     *
+     * @param project El proyecto al que pertenece la tarea.
+     * @return El código de identificación generado.
+     */
     private String generateTaskIdCode(Project project) {
-
         int numberOfTasks = project.getTasks().size() + 1;
-
         return project.getId_code() + "_" + numberOfTasks;
     }
 
+    /**
+     * Verifica si el formato del código de identificación de la tarea padre es válido.
+     *
+     * @param parentTaskIdCode El código de identificación de la tarea padre.
+     * @return true si el formato es válido, false de lo contrario.
+     */
     private boolean isValidParentTaskIdCodeFormat(String parentTaskIdCode) {
         String[] parts = parentTaskIdCode.split("_");
         return parts.length == 2;
     }
 
+    /**
+     * Obtiene el número de la siguiente subtarea.
+     *
+     * @param parentTaskIdCode El código de identificación de la tarea padre.
+     * @return El número de la siguiente subtarea.
+     */
     public int getNextSubTaskNumber(String parentTaskIdCode) {
 
         Task parentTask = taskRepository.findByIdCode(parentTaskIdCode)
@@ -137,10 +183,22 @@ public class TaskService  implements StorageService{
         return nextSubTaskNumber;
     }
 
+    /**
+     * Obtiene todas las tareas.
+     *
+     * @return La lista de todas las tareas.
+     */
     public List<Task> getAllTasks() {
         return taskRepository.findAll();
     }
 
+    /**
+     * Obtiene una tarea por su ID.
+     *
+     * @param id El ID de la tarea.
+     * @return La tarea encontrada.
+     * @throws RecordNotFoundException Si no se encuentra la tarea.
+     */
     public Task getTaskById(String id) {
         Optional<Task> task = taskRepository.findById(id);
         if (task.isPresent()) {
@@ -150,12 +208,25 @@ public class TaskService  implements StorageService{
         }
     }
 
-    /*mostrar tareas por proyecto*/
+    /**
+     * Obtiene una tarea por su ID de proyecto y su código de identificación.
+     *
+     * @param projectId  El ID del proyecto.
+     * @param taskIdCode El código de identificación de la tarea.
+     * @return La tarea encontrada.
+     * @throws RecordNotFoundException Si no se encuentra la tarea.
+     */
     public Task getTaskByProjectIdAndTaskIdCode(String projectId, String taskIdCode) {
         Optional<Task> taskOptional = taskRepository.findByProjectIdAndTaskIdCode(projectId, taskIdCode);
         return taskOptional.orElseThrow(() -> new RecordNotFoundException("Task not found"));
     }
 
+    /**
+     * Elimina una tarea por su ID.
+     *
+     * @param id El ID de la tarea a eliminar.
+     * @throws RecordNotFoundException Si no se encuentra la tarea.
+     */
     public void deleteTask(String id) {
         Optional<Task> result = taskRepository.findById(id);
         if (result.isPresent()) {
@@ -165,6 +236,13 @@ public class TaskService  implements StorageService{
         }
     }
 
+    /**
+     * Obtiene las subtareas de una tarea por el ID del colaborador.
+     *
+     * @param colaboratorId El ID del colaborador.
+     * @return La lista de subtareas asociadas al colaborador.
+     * @throws RecordNotFoundException Si no se encuentra el colaborador.
+     */
     public List<Task> getTasksSubtaskByColaborator(String colaboratorId) {
         Optional<Colaborator> colaboratorOptional = colaboratorRepository.findById(colaboratorId);
         if (colaboratorOptional.isPresent()) {
@@ -174,14 +252,24 @@ public class TaskService  implements StorageService{
         }
     }
 
-    /*obtiene las subtareas de una tarea*/
-
+    /**
+     * Obtiene las subtareas de una tarea por el prefijo.
+     *
+     * @param prefix El prefijo del código de identificación de la tarea padre.
+     * @return La lista de subtareas que coinciden con el prefijo.
+     */
     public List<Task> getSubTasksByPrefix(String prefix) {
         return taskRepository.findSubtasksByParentTaskId(prefix);
     }
 
-    /*actualizar el atributo isClosed de una tarea y una subtarea*/
-
+    /**
+     * Actualiza el atributo 'isClosed' de una tarea.
+     *
+     * @param taskId  El ID de la tarea a actualizar.
+     * @param isClosed El nuevo valor del atributo 'isClosed'.
+     * @return La tarea actualizada.
+     * @throws RecordNotFoundException Si no se encuentra la tarea.
+     */
     public Task updateTask(String taskId, boolean isClosed) {
         Optional<Task> taskOptional = taskRepository.findById(taskId);
         if (taskOptional.isPresent()) {
@@ -196,6 +284,13 @@ public class TaskService  implements StorageService{
         }
     }
 
+    /**
+     * Obtiene todas las tareas por ID de proyecto.
+     *
+     * @param projectId El ID del proyecto.
+     * @return La lista de tareas asociadas al proyecto.
+     * @throws RecordNotFoundException Si no se encuentra el proyecto.
+     */
     public List<Task> getTasksByProject(String projectId) {
         Optional<Project> projectOptional = projectRepository.findById(projectId);
 
@@ -213,10 +308,17 @@ public class TaskService  implements StorageService{
         }
     }
 
+    /**
+     * Obtiene todas las tareas por ID de colaborador y de proyecto.
+     *
+     * @param colaboratorId El ID del colaborador.
+     * @param projectId     El ID del proyecto.
+     * @return La lista de tareas asociadas al colaborador y al proyecto.
+     * @throws RecordNotFoundException Si no se encuentra el colaborador o el proyecto.
+     */
     public List<Task> getTasksByColaboratorAndProject(String colaboratorId, String projectId) {
         Optional<Colaborator> colaboratorOptional = colaboratorRepository.findById(colaboratorId);
         Optional<Project> projectOptional = projectRepository.findById(projectId);
-
         if (colaboratorOptional.isPresent() && projectOptional.isPresent()) {
             return taskRepository.findByColaboratorAndProject(colaboratorOptional.get(), projectOptional.get());
         } else {
@@ -224,11 +326,21 @@ public class TaskService  implements StorageService{
         }
     }
 
-
+    /**
+     * Obtiene todas las tareas por ID de colaborador.
+     *
+     * @param colaboratorId El ID del colaborador.
+     * @return La lista de tareas asociadas al colaborador.
+     */
     public List<Task> getTasksByColaborator(Colaborator colaboratorId) {
-            return  taskRepository.findAllTasksByColaborator(colaboratorId);
+        return taskRepository.findAllTasksByColaborator(colaboratorId);
     }
 
+    /**
+     * Inicializa el servicio de almacenamiento.
+     *
+     * @throws IOException Si hay un error al crear el directorio raíz.
+     */
     @Override
     @PostConstruct
     public void init() throws IOException {
@@ -236,16 +348,22 @@ public class TaskService  implements StorageService{
         Files.createDirectories(rootLocation);
     }
 
+    /**
+     * Almacena un archivo en el sistema.
+     *
+     * @param file El archivo a almacenar.
+     * @return El nombre del archivo almacenado.
+     * @throws RuntimeException Si el archivo está vacío o si ocurre un error al almacenar el archivo.
+     */
     @Override
     public String store(MultipartFile file) {
-        try{
+        try {
             if (file.isEmpty()) {
-                throw new RuntimeException("Faited to store entity file.");
+                throw new RuntimeException("Failed to store entity file.");
             }
-            String filename =file.getOriginalFilename();
-            Path destinationFile =rootLocation.resolve(Paths.get(filename))
-                    .normalize().toAbsolutePath();
-            try (InputStream inputStream =file.getInputStream()) {
+            String filename = file.getOriginalFilename();
+            Path destinationFile = rootLocation.resolve(Paths.get(filename)).normalize().toAbsolutePath();
+            try (InputStream inputStream = file.getInputStream()) {
                 Files.copy(inputStream, destinationFile, StandardCopyOption.REPLACE_EXISTING);
             }
             return filename;
@@ -254,17 +372,20 @@ public class TaskService  implements StorageService{
         }
     }
 
-
-    /*recuperar un archivo a partir de su nombre*/
+    /**
+     * Carga un archivo como recurso.
+     *
+     * @param filename El nombre del archivo a cargar.
+     * @return El recurso cargado.
+     * @throws RuntimeException Si no se puede leer el archivo.
+     */
     @Override
     public Resource loadAsResource(String filename) {
         try {
             Path file = rootLocation.resolve(filename);
             Resource resource = new UrlResource(file.toUri());
-
             if (resource.exists() && resource.isReadable()) {
                 return resource;
-
             } else {
                 throw new RuntimeException("Could not read file: " + filename);
             }
@@ -272,12 +393,4 @@ public class TaskService  implements StorageService{
             throw new RuntimeException("Could not read file: " + filename, e);
         }
     }
-
-
-
-
-
-
 }
-
-
