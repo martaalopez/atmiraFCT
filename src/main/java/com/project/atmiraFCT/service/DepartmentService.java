@@ -24,7 +24,15 @@ public class DepartmentService {
         this.colaboratorDepartmentRepository = colaboratorDepartmentRepository;
     }
 
-
+    /**
+     * Crea un departamento con un colaborador existente.
+     *
+     * @param id             El ID del departamento.
+     * @param code           El código del departamento.
+     * @param colaboratorId  El ID del colaborador para asociar con el departamento.
+     * @return               El departamento creado.
+     * @throws RuntimeException Si el colaborador no se encuentra.
+     */
     public Department createDeparmentWithExistingColaborator(Long id, String code, String colaboratorId) {
         Colaborator colaborator = colaboratorRepository.findById(colaboratorId)
                 .orElseThrow(() -> new RuntimeException("Colaborator not found"));
@@ -44,9 +52,12 @@ public class DepartmentService {
         return savedDepartment;
     }
 
+    /**
+     * Obtiene todos los departamentos.
+     *
+     * @return La lista de todos los departamentos.
+     */
     public List<Department> getAll(){
         return departmentRepository.findAll();
     }
-
-
 }

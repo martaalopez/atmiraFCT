@@ -8,15 +8,11 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
 import com.project.atmiraFCT.security.Jwt.JwtAuthenticationFilter;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-
 import java.util.Arrays;
 
 @Configuration
@@ -27,6 +23,13 @@ public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final AuthenticationProvider authProvider;
 
+    /**
+     * Configura la cadena de filtros de seguridad.
+     *
+     * @param http La configuración de seguridad HTTP.
+     * @return La cadena de filtros de seguridad configurada.
+     * @throws Exception Si hay un error al configurar la cadena de filtros de seguridad.
+     */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
@@ -50,6 +53,12 @@ public class SecurityConfig {
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
+
+    /**
+     * Configura la fuente de configuración CORS.
+     *
+     * @return Fuente de configuración CORS configurada.
+     */
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
@@ -62,4 +71,3 @@ public class SecurityConfig {
         return source;
     }
 }
-

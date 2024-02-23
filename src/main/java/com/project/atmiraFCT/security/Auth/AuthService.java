@@ -26,6 +26,14 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
 
+    /**
+     * Método para realizar el inicio de sesión.
+     *
+     * @param request El objeto LoginRequest que contiene los detalles del inicio de sesión.
+     * @return Un objeto AuthResponse con el token de autenticación y la información del usuario.
+     * @throws BadCredentialsException si las credenciales son inválidas.
+     * @throws UsernameNotFoundException si el usuario no se encuentra en la base de datos.
+     */
     public AuthResponse login(LoginRequest request) {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
@@ -48,6 +56,13 @@ public class AuthService {
                 .build();
     }
 
+    /**
+     * Método para registrar un nuevo usuario.
+     *
+     * @param request El objeto RegisterRequest contiene los detalles del usuario a registrar.
+     * @return Un objeto AuthResponse con el token de autenticación y la información del usuario registrado.
+     * @throws IllegalArgumentException si la dirección de correo electrónico no es válida.
+     */
     public AuthResponse register(RegisterRequest request) {
         String email = request.getEmail();
 

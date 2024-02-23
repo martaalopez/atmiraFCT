@@ -11,12 +11,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AuthResponse {
-    String token;
-    String email;
-    String name;
-    String surname;
-    String id_alias;
+    String token;   // Token de autenticación
+    String email;   // Correo electrónico del colaborador
+    String name;    // Nombre del colaborador
+    String surname; // Apellido del colaborador
+    String id_alias; // ID del colaborador
 
-    String role;
-
+    String role;    // Rol del colaborador
 }

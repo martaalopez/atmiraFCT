@@ -20,6 +20,12 @@ public class JwtService {
 
     private static final String SECRET_KEY="586E3272357538782F413F4428472B4B6250655368566B597033733676397924";
 
+    /**
+     * Genera un token JWT para el usuario proporcionado.
+     *
+     * @param user  UserDetails del usuario para el que se generará el token.
+     * @return El token JWT generado.
+     */
     public String getToken(UserDetails user) {
         return getToken(new HashMap<>(), user);
     }
@@ -27,24 +33,37 @@ public class JwtService {
     private String getToken(Map<String,Object> extraClaims, UserDetails user) {
         long expirationMillis = 10000 * 60 * 60 * 24;
         return Jwts
-            .builder()
-            .setClaims(extraClaims)
-            .setSubject(user.getUsername())
-            .setIssuedAt(new Date(System.currentTimeMillis()))
-            .setExpiration(new Date(System.currentTimeMillis()+expirationMillis))
-            .signWith(getKey(), SignatureAlgorithm.HS256)
-            .compact();
+                .builder()
+                .setClaims(extraClaims)
+                .setSubject(user.getUsername())
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis()+expirationMillis))
+                .signWith(getKey(), SignatureAlgorithm.HS256)
+                .compact();
     }
 
     private Key getKey() {
-       byte[] keyBytes=Decoders.BASE64.decode(SECRET_KEY);
-       return Keys.hmacShaKeyFor(keyBytes);
+        byte[] keyBytes=Decoders.BASE64.decode(SECRET_KEY);
+        return Keys.hmacShaKeyFor(keyBytes);
     }
 
+    /**
+     * Obtiene el nombre de usuario (subject) del token JWT.
+     *
+     * @param token El token JWT.
+     * @return El nombre de usuario extraído del token.
+     */
     public String getUsernameFromToken(String token) {
         return getClaim(token, Claims::getSubject);
     }
 
+    /**
+     * Verifica si el token JWT es válido para el UserDetails proporcionado.
+     *
+     * @param token       El token JWT.
+     * @param userDetails El UserDetails para verificar el token.
+     * @return true si el token es válido para el UserDetails dado, de lo contrario false.
+     */
     public boolean isTokenValid(String token, UserDetails userDetails) {
         final String username=getUsernameFromToken(token);
         return (username.equals(userDetails.getUsername())&& !isTokenExpired(token));
@@ -53,11 +72,11 @@ public class JwtService {
     private Claims getAllClaims(String token)
     {
         return Jwts
-            .parserBuilder()
-            .setSigningKey(getKey())
-            .build()
-            .parseClaimsJws(token)
-            .getBody();
+                .parserBuilder()
+                .setSigningKey(getKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
     }
 
     public <T> T getClaim(String token, Function<Claims,T> claimsResolver)
@@ -75,5 +94,4 @@ public class JwtService {
     {
         return getExpiration(token).before(new Date());
     }
-    
 }
