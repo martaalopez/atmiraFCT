@@ -34,8 +34,10 @@ public interface TaskRepository extends JpaRepository<Task, String> {
     List<Task> findAllTasks(String startNumber);
 
 
-    @Query("SELECT t FROM Task t WHERE t.idCode LIKE CONCAT(:prefix, '_%')")
-    List<Task> findSubtasksByParentTaskId(@Param("prefix") String prefix);
+  /*  @Query("SELECT t FROM Task t WHERE t.idCode LIKE CONCAT(:prefix, '_%')")
+    List<Task> findSubtasksByParentTaskId(@Param("prefix") String prefix);*/
+  @Query("SELECT t FROM Task t WHERE t.project.id_code = :projectId AND t.task IS NOT  NULL")
+  List<Task> findSubtasksByParentTaskId(@Param("projectId") String projectId);
 
 
     @Query("SELECT u FROM Task u WHERE u.colaborator = :colaborator AND  u.task IS NULL")
