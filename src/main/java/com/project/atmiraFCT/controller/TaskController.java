@@ -164,7 +164,7 @@ public class TaskController {
      * @param isClosed Nuevo estado de la tarea (cerrada o abierta).
      * @return La tarea actualizada.
      */
-    @PutMapping("/{taskId}/{isClosed}")
+    @PutMapping("task/{taskId}/{isClosed}")
     public ResponseEntity<Task> updateTaskStatus(
             @PathVariable String taskId,
             @PathVariable boolean isClosed) {
@@ -262,5 +262,12 @@ public class TaskController {
     ) {
         List<Task> tasks = taskService.getTasksByColaboratorAndProject(colaboratorId, projectId);
         return ResponseEntity.ok(tasks);
+    }
+
+    @PutMapping("/task/{taskId}/colaborator/{colaboratorId}")
+    public ResponseEntity<Task> assignTaskToColaborator(
+            @PathVariable String taskId, @PathVariable String colaboratorId) {
+        Task task = taskService.assignTaskToColaborator(taskId, colaboratorId);
+        return ResponseEntity.ok(task);
     }
 }

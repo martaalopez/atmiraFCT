@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.data.jpa.repository.Query;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -17,7 +18,7 @@ import java.util.Optional;
 public interface TaskRepository extends JpaRepository<Task, String> {
 
 
-    @Query("SELECT t FROM Task t WHERE t.project.id_code = :projectId AND t.task IS NULL")
+    @Query("SELECT t FROM Task t WHERE t.project.id_code like :projectId and t.task IS NULL")
     List<Task> findByProjectId(@Param("projectId") String projectId);
 
 
@@ -34,10 +35,8 @@ public interface TaskRepository extends JpaRepository<Task, String> {
     List<Task> findAllTasks(String startNumber);
 
 
-  /*  @Query("SELECT t FROM Task t WHERE t.idCode LIKE CONCAT(:prefix, '_%')")
-    List<Task> findSubtasksByParentTaskId(@Param("prefix") String prefix);*/
-  @Query("SELECT t FROM Task t WHERE t.project.id_code = :projectId AND t.task IS NOT  NULL")
-  List<Task> findSubtasksByParentTaskId(@Param("projectId") String projectId);
+    @Query("SELECT t.task,t.colaborator,t.description,t.idCode,t.isClosed,t.objective,t.project,t.task FROM Task t WHERE  t.task.task.idCode LIKE :prefix")
+    List<Task> findSubtasksByParentTaskId(@Param("prefix") String prefix);
 
 
     @Query("SELECT u FROM Task u WHERE u.colaborator = :colaborator AND  u.task IS NULL")
@@ -46,4 +45,5 @@ public interface TaskRepository extends JpaRepository<Task, String> {
 
     @Query("SELECT t FROM Task t WHERE t.project.id_code = :projectId AND t.idCode = :taskIdCode")
     Optional<Task> findByProjectIdAndTaskIdCode(@Param("projectId") String projectId, @Param("taskIdCode") String taskIdCode);
+
 }

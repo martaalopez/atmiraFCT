@@ -2,6 +2,7 @@ package com.project.atmiraFCT.service;
 
 import com.project.atmiraFCT.exception.RecordNotFoundException;
 import com.project.atmiraFCT.model.domain.Colaborator;
+import com.project.atmiraFCT.model.domain.ColaboratorProject;
 import com.project.atmiraFCT.model.domain.Project;
 import com.project.atmiraFCT.model.domain.Task;
 import com.project.atmiraFCT.repository.ColaboratorRepository;
@@ -294,17 +295,11 @@ public class TaskService implements StorageService {
     public List<Task> getTasksByProject(String projectId) {
         Optional<Project> projectOptional = projectRepository.findById(projectId);
 
-        if (projectOptional.isPresent()) {
-            // Obtener el proyecto
-            Project project = projectOptional.get();
-
-            // Buscar las tareas que cumplen con la estructura deseada
-            List<Task> taskParent = taskRepository.findAllTasks(project.getId_code());
-
-            // Devolver las tareas relacionadas con el proyecto
-            return taskParent;
-        } else {
+        if (projectOptional.isEmpty()) {
             throw new RecordNotFoundException("Project not found with id: " + projectId);
+
+        } else {
+            return taskRepository.findByProjectId(projectId);
         }
     }
 
@@ -393,4 +388,27 @@ public class TaskService implements StorageService {
             throw new RuntimeException("Could not read file: " + filename, e);
         }
     }
+
+    public Task assignTaskToColaborator(String taskId, String colaboratorId) {
+        Optional<Task> taskOptional = taskRepository.findById(taskId);
+        Optional<Colaborator> colaboratorOptional = colaboratorRepository.findById(colaboratorId);
+        if(taskOptional.isPresent() && colaboratorOptional.isPresent()) {
+            List<Colaborator> colaborators = new ArrayList<>();
+
+            for (ColaboratorProject aux:taskOptional.get().getProject().getColaboratorProjects()){
+                colaborators.add(aux.getColaborator());
+            }
+
+            if(!colaborators.isEmpty() && colaborators.contains(colaboratorOptional.get())){
+                Task task = taskOptional.get();
+                task.setColaborator(colaboratorOptional.get());
+                return taskRepository.save(task);
+            }else{
+                throw new RecordNotFoundException("Colaborator not invited to the project");
+            }
+        } else {
+            throw new RecordNotFoundException("Task or colaborator not found");
+        }
+    }
+
 }

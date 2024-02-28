@@ -14,8 +14,8 @@ public class Validator {
      * @return true si la dirección de correo electrónico es válida, false de lo contrario.
      */
     public static boolean isValidGmail(String email) {
-        String gmailRegex = "^[a-zA-Z0-9_]+(\\.[a-zA-Z0-9_]+)*@gmail.com$";
-        return email.matches(gmailRegex);
+        String correoRegex = "^[a-zA-Z0-9_]+(\\.[a-zA-Z0-9_]+)*@[a-zA-Z0-9]+(\\.[a-zA-Z0-9]+)*(\\.[a-zA-Z]{2,})$";
+        return email.matches(correoRegex);
     }
 
     /**
