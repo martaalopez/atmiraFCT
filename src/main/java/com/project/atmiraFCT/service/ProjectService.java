@@ -169,4 +169,18 @@ public class ProjectService {
         return null;
 
     }
+
+
+    public List<Colaborator> getColaboratorsByProject(String id) {
+        Optional<Project> project = projectRepository.findById(id);
+        if (project.isPresent()) {
+            List<ColaboratorProject> colaboratorProjects = project.get().getColaboratorProjects();
+            List<Colaborator> colaborators = colaboratorProjects.stream()
+                    .map(ColaboratorProject::getColaborator)
+                    .collect(Collectors.toList());
+            return colaborators;
+        } else {
+            throw new RecordNotFoundException("No project found with id: " + id);
+        }
+    }
 }

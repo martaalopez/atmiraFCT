@@ -2,6 +2,7 @@ package com.project.atmiraFCT.controller;
 
 import com.project.atmiraFCT.exception.RecordNotFoundException;
 import com.project.atmiraFCT.exception.Validator;
+import com.project.atmiraFCT.model.domain.Colaborator;
 import com.project.atmiraFCT.model.domain.Project;
 import com.project.atmiraFCT.repository.ProjectRepository;
 import com.project.atmiraFCT.service.ProjectService;
@@ -106,5 +107,10 @@ public class ProjectController {
 
         Project createdProject = projectService.createProjectWithExistingColaborator(project.getId_code(),project.getName(), project.getInitialDate(),project.getEndDate(),project.getActive(),project.getTypeOfService(),colaboratorId);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdProject);
+    }
+
+    @GetMapping("/project/{id}/colaborators")
+    public List<Colaborator> getColaboratorsByProject(@PathVariable String id) {
+        return projectService.getColaboratorsByProject(id);
     }
 }

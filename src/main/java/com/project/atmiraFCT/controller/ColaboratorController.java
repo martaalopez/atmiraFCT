@@ -74,4 +74,10 @@ public class ColaboratorController {
         Colaborator updated = colaboratorService.updateColaborator(id, updatedColaborator);
         return ResponseEntity.ok(updated);
     }
+
+    @GetMapping("/auth/user/{id_alias}")
+    public ResponseEntity<Colaborator> getColaboratorById(@PathVariable("id_alias") String id){
+        Colaborator colaborator = colaboratorService.getColaboratorById(id);
+        return ResponseEntity.ok(colaborator);
+    }
 }
