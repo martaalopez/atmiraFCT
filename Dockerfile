@@ -6,6 +6,6 @@ RUN mvn clean package
 
 
 FROM openjdk:17-jdk-slim
-COPY --from=build /target/atmiraFCT-0.0.1-SNAPSHOT.jar atmiraFCT.jar
+COPY --from=build /target/atmiraFCT-0.0.1-SNAPSHOT.jar /app/atmiraFCT.jar
 EXPOSE 8080
-ENTRYPOINT ["java","-jar","demo.jar"]
+CMD ["java", "-jar", "/app/atmiraFCT.jar"]
