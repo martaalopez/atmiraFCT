@@ -24,7 +24,7 @@ import java.nio.file.Files;
 import java.util.List;
 import java.util.Map;
 
-@CrossOrigin(origins = "https://fct-atmira-front.vercel.app:443")
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 public class TaskController {
 
