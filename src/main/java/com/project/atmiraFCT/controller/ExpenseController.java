@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
-@CrossOrigin(origins = "https://fct-atmira-front.vercel.app:443")
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 public class ExpenseController {
 
@@ -30,7 +30,6 @@ public class ExpenseController {
      * @param expense           El objeto Expense a ser guardado.
      * @return                  ResponseEntity con el gasto creado.
      */
-    @CrossOrigin
     @PostMapping("/expense/save/{colaboratorId}/{projectId}")
     public ResponseEntity<Expense> createExpenseWithExistingProjectColaborator(
             @PathVariable String colaboratorId,
@@ -57,7 +56,6 @@ public class ExpenseController {
      * @param colaboratorId     El ID del colaborador.
      * @return                  ResponseEntity con una lista de gastos.
      */
-    @CrossOrigin
     @GetMapping("/expense/byColaborator/{colaboratorId}")
     public ResponseEntity<List<Expense>> getExpensesByColaborator(@PathVariable String colaboratorId) {
         List<Expense> expenses = expenseService.getExpenseByColaborator(colaboratorId);
@@ -70,7 +68,6 @@ public class ExpenseController {
      * @param projectId     El ID del proyecto.
      * @return              ResponseEntity con una lista de gastos.
      */
-    @CrossOrigin
     @GetMapping("/expense/byProject/{projectId}")
     public ResponseEntity<List<Expense>> getExpensesByProject(@PathVariable String projectId) {
         List<Expense> expenses = expenseService.getExpenseByProject(projectId);
@@ -84,7 +81,6 @@ public class ExpenseController {
      * @param projectId         El ID del proyecto.
      * @return                  ResponseEntity con una lista de gastos.
      */
-    @CrossOrigin
     @GetMapping("/expense/byColaboratorAndProject/{colaboratorId}/{projectId}")
     public ResponseEntity<List<Expense>> getExpensesByColaboratorAndProject(
             @PathVariable String colaboratorId,
@@ -102,7 +98,6 @@ public class ExpenseController {
      *              Devuelve true si el gasto se eliminó correctamente, false en caso contrario.
      * @throws RecordNotFoundException   Si no se encuentra ningún gasto con el ID proporcionado.
      */
-    @CrossOrigin
     @DeleteMapping("/expense/delete/{id}")
     public ResponseEntity<Boolean> deleteExpense(@PathVariable Integer id) {
         Optional<Expense> result =expenseRepository.findById(id);

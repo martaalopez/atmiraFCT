@@ -24,7 +24,7 @@ import java.nio.file.Files;
 import java.util.List;
 import java.util.Map;
 
-@CrossOrigin(origins = "https://fct-atmira-front.vercel.app:443")
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 public class TaskController {
 
@@ -61,7 +61,6 @@ public class TaskController {
      * @param projectId El ID del proyecto del que se desean obtener las tareas.
      * @return Lista de tareas asociadas al proyecto especificado.
      */
-    @CrossOrigin
     @GetMapping("/tasks/{projectId}")
     public ResponseEntity<List<Task>> getTasksByProjectId(@PathVariable String projectId) {
         List<Task> tasks = taskService.getTasksByProjectId(projectId);
@@ -74,7 +73,6 @@ public class TaskController {
      * @param multipartFile Archivo a subir.
      * @return Mapa que contiene la URL del archivo subido.
      */
-    @CrossOrigin
     @PostMapping("/media/upload")
     public Map<String, String> uploadFile(@RequestParam("file") MultipartFile multipartFile) {
         String path = storageService.store(multipartFile);
@@ -94,7 +92,6 @@ public class TaskController {
      * @return El archivo como un recurso.
      * @throws IOException Si ocurre un error al cargar el archivo.
      */
-    @CrossOrigin
     @GetMapping("/media/{filename:.+}")
     public ResponseEntity<Resource> getFile(@PathVariable String filename) throws IOException {
         Resource file = (Resource) storageService.loadAsResource(filename);
@@ -111,7 +108,6 @@ public class TaskController {
      *
      * @return Lista de todas las tareas.
      */
-    @CrossOrigin
     @GetMapping("/task/all")
     public List<Task> getTasks() {
         return taskService.getAllTasks();
@@ -125,7 +121,6 @@ public class TaskController {
      * @param identifier    El identificador de la tarea (puede ser el ID del proyecto o el ID de la tarea padre).
      * @return La tarea guardada.
      */
-    @CrossOrigin
     @PostMapping("/task/save/{colaboratorId}/{identifier}")
     public ResponseEntity<Task> saveTask(
             @RequestBody Task task,
@@ -169,7 +164,6 @@ public class TaskController {
      * @param isClosed Nuevo estado de la tarea (cerrada o abierta).
      * @return La tarea actualizada.
      */
-    @CrossOrigin
     @PutMapping("task/{taskId}/{isClosed}")
     public ResponseEntity<Task> updateTaskStatus(
             @PathVariable String taskId,
@@ -184,7 +178,6 @@ public class TaskController {
      * @param id ID de la tarea.
      * @return La tarea correspondiente al ID especificado.
      */
-    @CrossOrigin
     @GetMapping("task/{id}")
     public ResponseEntity<Task> getTaskById(@PathVariable("id") String id) {
         Task task = taskService.getTaskById(id);
@@ -197,7 +190,6 @@ public class TaskController {
      * @param id ID de la tarea a eliminar.
      * @return True si la tarea fue eliminada con éxito, False en caso contrario.
      */
-    @CrossOrigin
     @DeleteMapping("taskDelete/{id}")
     public ResponseEntity<Boolean> deleteTask(@PathVariable String id) {
         try {
@@ -214,7 +206,6 @@ public class TaskController {
      * @param colaboratorId ID del colaborador.
      * @return Lista de tareas asociadas al colaborador.
      */
-    @CrossOrigin
     @GetMapping("/task/byColaborator/{colaboratorId}")
     public ResponseEntity<List<Task>> getTasksByColaborator(@PathVariable Colaborator colaboratorId) {
         List<Task> tasks = taskService.getTasksByColaborator(colaboratorId);
@@ -227,7 +218,6 @@ public class TaskController {
      * @param colaboratorId ID del colaborador.
      * @return Lista de sub-tareas asociadas al colaborador.
      */
-    @CrossOrigin
     @GetMapping("/taskAndSubtask/byColaborator/{colaboratorId}")
     public ResponseEntity<List<Task>> getSubTasksByColaborator(@PathVariable String colaboratorId) {
         List<Task> tasks = taskService.getTasksSubtaskByColaborator(colaboratorId);
@@ -240,7 +230,6 @@ public class TaskController {
      * @param projectId ID del proyecto.
      * @return Lista de tareas asociadas al proyecto.
      */
-    @CrossOrigin
     @GetMapping("/task/byProject/{projectId}")
     public ResponseEntity<List<Task>> getTasksByProject(@PathVariable String projectId) {
         List<Task> tasks = taskService.getTasksByProject(projectId);
@@ -253,7 +242,6 @@ public class TaskController {
      * @param taskId ID de la tarea principal.
      * @return Lista de sub-tareas asociadas a la tarea principal.
      */
-    @CrossOrigin
     @GetMapping("/task/bySubTask/{taskId}")
     public ResponseEntity<List<Task>> getSubTasksByParentTask(@PathVariable String taskId) {
         List<Task> tasks = taskService.getSubTasksByPrefix(taskId);
@@ -267,7 +255,6 @@ public class TaskController {
      * @param projectId     ID del proyecto.
      * @return Lista de tareas asociadas al colaborador y proyecto especificados.
      */
-    @CrossOrigin
     @GetMapping("/task/byColaboratorAndProject/{colaboratorId}/{projectId}")
     public ResponseEntity<List<Task>> getTasksByColaboratorAndProject(
             @PathVariable String colaboratorId,
@@ -276,7 +263,6 @@ public class TaskController {
         List<Task> tasks = taskService.getTasksByColaboratorAndProject(colaboratorId, projectId);
         return ResponseEntity.ok(tasks);
     }
-    @CrossOrigin
     @PutMapping("/task/{taskId}/colaborator/{colaboratorId}")
     public ResponseEntity<Task> assignTaskToColaborator(
             @PathVariable String taskId, @PathVariable String colaboratorId) {

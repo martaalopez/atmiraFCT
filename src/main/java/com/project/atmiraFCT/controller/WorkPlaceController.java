@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@CrossOrigin(origins = "https://fct-atmira-front.vercel.app:443")
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 public class WorkPlaceController {
 
@@ -26,7 +26,6 @@ public class WorkPlaceController {
      * @param workPlace El objeto WorkPlace a guardar.
      * @return          El lugar de trabajo creado.
      */
-    @CrossOrigin
     @PostMapping("/workplace/save")
     public ResponseEntity<WorkPlace> saveWorkPlace(@RequestBody WorkPlace workPlace) {
         workPlaceService.save(workPlace);
@@ -38,7 +37,6 @@ public class WorkPlaceController {
      *
      * @return Lista de todos los lugares de trabajo.
      */
-    @CrossOrigin
     @GetMapping("/workplace/all")
     public List<WorkPlace> getAll() {
         return workPlaceRepository.findAll();

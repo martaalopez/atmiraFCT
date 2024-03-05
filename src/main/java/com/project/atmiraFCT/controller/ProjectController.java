@@ -16,7 +16,7 @@ import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 
-@CrossOrigin(origins = "https://fct-atmira-front.vercel.app:443")
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 public class ProjectController {
 
@@ -34,7 +34,6 @@ public class ProjectController {
      * @param id    El ID del proyecto a obtener.
      * @return      ResponseEntity con el proyecto encontrado.
      */
-    @CrossOrigin
     @GetMapping("/project/list/{id}")
     public ResponseEntity<Project> getProjectById(@PathVariable("id") String id){
         Project project = service.getProjectById(id);
@@ -49,7 +48,6 @@ public class ProjectController {
      * @return                  ResponseEntity con el proyecto actualizado.
      * @throws Exception        Si ocurre algún error durante el proceso de actualización.
      */
-    @CrossOrigin
     @PutMapping("/projects/{id}")
     public ResponseEntity<Project> updateProject(@PathVariable("id") String id, @RequestBody Project updatedProject) throws Exception {
         Project updated = service.updateProject(id,updatedProject);
@@ -64,7 +62,6 @@ public class ProjectController {
      *              Devuelve true si el proyecto se eliminó correctamente, false en caso contrario.
      * @throws RecordNotFoundException   Si no se encuentra ningún proyecto con el ID proporcionado.
      */
-    @CrossOrigin
     @DeleteMapping("/project/delete/{id}")
     public ResponseEntity<Boolean> deleteProject(@PathVariable String id) {
         Optional<Project> result = projectRepository.findById(id);
@@ -81,7 +78,6 @@ public class ProjectController {
      * @param colaboratorId     El ID del colaborador.
      * @return                  Lista de proyectos asociados al colaborador.
      */
-    @CrossOrigin
     @GetMapping("/colaborator/{colaboratorId}/projects")
     public List<Project> getProjectsByColaboratorId(@PathVariable String colaboratorId) {
         return projectService.getProjectsByColaboratorId(colaboratorId);
@@ -94,7 +90,6 @@ public class ProjectController {
      * @param project           El objeto Project a ser guardado.
      * @return                  ResponseEntity con el proyecto creado.
      */
-    @CrossOrigin
     @PostMapping("/project/save/colaboratorId/{colaboratorId}")
     public ResponseEntity<Project> save(@PathVariable String colaboratorId, @RequestBody Project project) {
         LocalDate initialDate = project.getInitialDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
@@ -113,7 +108,6 @@ public class ProjectController {
         Project createdProject = projectService.createProjectWithExistingColaborator(project.getId_code(),project.getName(), project.getInitialDate(),project.getEndDate(),project.getActive(),project.getTypeOfService(),colaboratorId);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdProject);
     }
-    @CrossOrigin
     @GetMapping("/project/{id}/colaborators")
     public List<Colaborator> getColaboratorsByProject(@PathVariable String id) {
         return projectService.getColaboratorsByProject(id);
