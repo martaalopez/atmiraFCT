@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
-@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 public class ColaboratorController {
 
@@ -27,6 +26,7 @@ public class ColaboratorController {
      * @param workplaceId   El ID del lugar de trabajo para asociar con el Colaborador.
      * @return              El objeto Colaborador guardado.
      */
+    @CrossOrigin
     @PostMapping("/colaborator/save/{workplaceId}")
     public Colaborator saveColaborator(@RequestBody Colaborator colaborator, @PathVariable Long workplaceId) {
         return colaboratorService.saveColaborator(colaborator, workplaceId);
@@ -37,6 +37,7 @@ public class ColaboratorController {
      *
      * @return  Una lista de todos los Colaboradores.
      */
+    @CrossOrigin
     @GetMapping("/colaborator/all")
     public List<Colaborator> getAllColaborators() {
         return colaboratorRepository.findAll();
@@ -50,6 +51,7 @@ public class ColaboratorController {
      *              Devuelve true si el Colaborador se eliminó correctamente, false en caso contrario.
      * @throws RecordNotFoundException   Si no se encuentra ningún Colaborador con el ID proporcionado.
      */
+    @CrossOrigin
     @DeleteMapping("colaborator/delete/{id}")
     public ResponseEntity<Boolean> deleteColaborator(@PathVariable String id) {
         Optional<Colaborator> result = colaboratorRepository.findById(id);
@@ -69,12 +71,13 @@ public class ColaboratorController {
      * @return                      ResponseEntity con el Colaborador actualizado.
      * @throws Exception            Si ocurre algún error durante el proceso de actualización.
      */
+    @CrossOrigin
     @PutMapping("/colaborator/update/{id}")
     public ResponseEntity<Colaborator> updateColaborator(@PathVariable("id") String id, @RequestBody Colaborator updatedColaborator) throws Exception {
         Colaborator updated = colaboratorService.updateColaborator(id, updatedColaborator);
         return ResponseEntity.ok(updated);
     }
-
+    @CrossOrigin
     @GetMapping("/auth/user/{id_alias}")
     public ResponseEntity<Colaborator> getColaboratorById(@PathVariable("id_alias") String id){
         Colaborator colaborator = colaboratorService.getColaboratorById(id);
