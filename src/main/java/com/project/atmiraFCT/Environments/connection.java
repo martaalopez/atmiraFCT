@@ -10,4 +10,7 @@ public class connection {
 
     @Value("${DB_PASSWORD}")
     private String password;
+
+    @Value("${Front_URL}")
+    private String frontURL;
 }
