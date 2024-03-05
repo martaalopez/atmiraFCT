@@ -26,6 +26,7 @@ public class WorkPlaceController {
      * @param workPlace El objeto WorkPlace a guardar.
      * @return          El lugar de trabajo creado.
      */
+    @CrossOrigin
     @PostMapping("/workplace/save")
     public ResponseEntity<WorkPlace> saveWorkPlace(@RequestBody WorkPlace workPlace) {
         workPlaceService.save(workPlace);
@@ -37,6 +38,7 @@ public class WorkPlaceController {
      *
      * @return Lista de todos los lugares de trabajo.
      */
+    @CrossOrigin
     @GetMapping("/workplace/all")
     public List<WorkPlace> getAll() {
         return workPlaceRepository.findAll();
