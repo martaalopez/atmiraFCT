@@ -35,7 +35,7 @@ public interface TaskRepository extends JpaRepository<Task, String> {
     List<Task> findAllTasks(String startNumber);
 
 
-    @Query(value = "SELECT * FROM Task t WHERE  t.task LIKE :prefix",nativeQuery = true)
+    @Query(value = "SELECT * FROM task t WHERE  t.task LIKE :prefix",nativeQuery = true)
     List<Task> findSubtasksByParentTaskId(@Param("prefix") String prefix);
 
 
