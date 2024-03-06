@@ -27,7 +27,6 @@ public class DepartmentController {
      * @param department    El objeto Department a guardar.
      * @return              El departamento creado.
      */
-    @CrossOrigin
     @PostMapping("/deparment/save/colaboratorId={colaboratorId}")
     public ResponseEntity<Department> save(@PathVariable String colaboratorId, @RequestBody Department department) {
         Department createdDepartment = departmentService.createDeparmentWithExistingColaborator(department.getId(), department.getCode(), colaboratorId);
@@ -39,7 +38,6 @@ public class DepartmentController {
      *
      * @return Lista de todos los departamentos.
      */
-    @CrossOrigin
     @GetMapping("/department/all")
     public List<Department> getAll() {
         return departmentRepository.findAll();
