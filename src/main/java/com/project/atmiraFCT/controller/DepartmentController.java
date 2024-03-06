@@ -9,8 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
-@CrossOrigin(origins = "https://fct-atmira-front.vercel.app:443")
+@CrossOrigin(origins = "${Front_URL}")
 @RestController
 public class DepartmentController {
 
@@ -27,6 +26,7 @@ public class DepartmentController {
      * @param department    El objeto Department a guardar.
      * @return              El departamento creado.
      */
+    @CrossOrigin(origins = "${Front_URL}")
     @PostMapping("/deparment/save/colaboratorId={colaboratorId}")
     public ResponseEntity<Department> save(@PathVariable String colaboratorId, @RequestBody Department department) {
         Department createdDepartment = departmentService.createDeparmentWithExistingColaborator(department.getId(), department.getCode(), colaboratorId);
@@ -38,6 +38,7 @@ public class DepartmentController {
      *
      * @return Lista de todos los departamentos.
      */
+    @CrossOrigin(origins = "${Front_URL}")
     @GetMapping("/department/all")
     public List<Department> getAll() {
         return departmentRepository.findAll();
