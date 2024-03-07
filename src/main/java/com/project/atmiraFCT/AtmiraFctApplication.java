@@ -18,10 +18,10 @@ public class AtmiraFctApplication {
 	@Bean
 	public WebMvcConfigurer corsConfigurer() {
 		return new WebMvcConfigurer() {
-			/*@Override
+			@Override
 			public void addCorsMappings(CorsRegistry registry) {
-				registry.addMapping("/*").allowedOrigins("");
-			}*/
+				registry.addMapping("/**").allowedOrigins(System.getenv("Front_URL")).allowedMethods("*").allowedHeaders("*");
+			}
 		};
 	}
 }
