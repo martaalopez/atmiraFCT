@@ -2,6 +2,7 @@ package com.project.atmiraFCT.controller;
 
 import com.project.atmiraFCT.exception.RecordNotFoundException;
 import com.project.atmiraFCT.model.domain.Colaborator;
+import com.project.atmiraFCT.model.domain.Project;
 import com.project.atmiraFCT.model.domain.Task;
 import com.project.atmiraFCT.repository.ColaboratorRepository;
 import com.project.atmiraFCT.repository.ProjectRepository;
@@ -283,4 +284,21 @@ public class TaskController {
         Task task = taskService.assignTaskToColaborator(taskId, colaboratorId);
         return ResponseEntity.ok(task);
     }
+
+
+    /**
+     * Actualiza una tarea  existente.
+     *
+     * @param id                El ID del task a actualizar.
+     * @param updatedTask     La tarea actualizada.
+     * @return                  ResponseEntity con el task actualizado.
+     * @throws Exception        Si ocurre algún error durante el proceso de actualización.
+     */
+    @CrossOrigin(origins = "${Front_URL}")
+    @PutMapping("/task/update/{id_code}")
+    public ResponseEntity<Task> updatetask(@PathVariable("id_code") String id, @RequestBody Task updatedTask) throws Exception {
+        Task updated = taskService.updateTask(id, updatedTask);
+        return ResponseEntity.ok(updated);
+    }
+
 }
