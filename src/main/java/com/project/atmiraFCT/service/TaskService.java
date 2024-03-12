@@ -419,17 +419,18 @@ public class TaskService implements StorageService {
      * @return La tarea actualizada.
      * @throws Exception Si no se encuentra el proyecto.
      */
-    public Task updateTask(String id,Task updateTask) throws Exception {
+    public Task updateTask(String id, Task updateTask) throws Exception {
         Optional<Task> result = taskRepository.findById(id);
         if (result.isPresent()) {
             Task task = result.get();
             task.setDescription(updateTask.getDescription());
-           task.setObjective(updateTask.getObjective());
-          task.setClosed(updateTask.getClosed());
+            task.setObjective(updateTask.getObjective());
+            task.setClosed(updateTask.getClosed());
             return taskRepository.save(task);
         } else {
             throw new Exception("No task found with id" + id);
         }
     }
+
 
 }

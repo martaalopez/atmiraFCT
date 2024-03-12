@@ -27,6 +27,7 @@ import java.util.Map;
 
 @CrossOrigin(origins = "${Front_URL}")
 @RestController
+
 public class TaskController {
 
     private final StorageService storageService;
@@ -75,6 +76,7 @@ public class TaskController {
      * @param multipartFile Archivo a subir.
      * @return Mapa que contiene la URL del archivo subido.
      */
+
     @CrossOrigin(origins = "${Front_URL}")
     @PostMapping("/media/upload")
     public Map<String, String> uploadFile(@RequestParam("file") MultipartFile multipartFile) {
@@ -112,6 +114,7 @@ public class TaskController {
      *
      * @return Lista de todas las tareas.
      */
+
     @CrossOrigin(origins = "${Front_URL}")
     @GetMapping("/task/all")
     public List<Task> getTasks() {
@@ -126,6 +129,7 @@ public class TaskController {
      * @param identifier    El identificador de la tarea (puede ser el ID del proyecto o el ID de la tarea padre).
      * @return La tarea guardada.
      */
+
     @CrossOrigin(origins = "${Front_URL}")
     @PostMapping("/task/save/{colaboratorId}/{identifier}")
     public ResponseEntity<Task> saveTask(
@@ -170,6 +174,7 @@ public class TaskController {
      * @param isClosed Nuevo estado de la tarea (cerrada o abierta).
      * @return La tarea actualizada.
      */
+
     @CrossOrigin(origins = "${Front_URL}")
     @PutMapping("task/{taskId}/{isClosed}")
     public ResponseEntity<Task> updateTaskStatus(
@@ -185,6 +190,7 @@ public class TaskController {
      * @param id ID de la tarea.
      * @return La tarea correspondiente al ID especificado.
      */
+
     @CrossOrigin(origins = "${Front_URL}")
     @GetMapping("task/{id}")
     public ResponseEntity<Task> getTaskById(@PathVariable("id") String id) {
@@ -198,6 +204,7 @@ public class TaskController {
      * @param id ID de la tarea a eliminar.
      * @return True si la tarea fue eliminada con éxito, False en caso contrario.
      */
+
     @CrossOrigin(origins = "${Front_URL}")
     @DeleteMapping("taskDelete/{id}")
     public ResponseEntity<Boolean> deleteTask(@PathVariable String id) {
@@ -228,6 +235,7 @@ public class TaskController {
      * @param colaboratorId ID del colaborador.
      * @return Lista de sub-tareas asociadas al colaborador.
      */
+
     @CrossOrigin(origins = "${Front_URL}")
     @GetMapping("/taskAndSubtask/byColaborator/{colaboratorId}")
     public ResponseEntity<List<Task>> getSubTasksByColaborator(@PathVariable String colaboratorId) {
@@ -254,6 +262,7 @@ public class TaskController {
      * @param taskId ID de la tarea principal.
      * @return Lista de sub-tareas asociadas a la tarea principal.
      */
+
     @CrossOrigin(origins = "${Front_URL}")
     @GetMapping("/task/bySubTask/{taskId}")
     public ResponseEntity<List<Task>> getSubTasksByParentTask(@PathVariable String taskId) {
@@ -268,6 +277,7 @@ public class TaskController {
      * @param projectId     ID del proyecto.
      * @return Lista de tareas asociadas al colaborador y proyecto especificados.
      */
+
     @CrossOrigin(origins = "${Front_URL}")
     @GetMapping("/task/byColaboratorAndProject/{colaboratorId}/{projectId}")
     public ResponseEntity<List<Task>> getTasksByColaboratorAndProject(
@@ -295,8 +305,8 @@ public class TaskController {
      * @throws Exception        Si ocurre algún error durante el proceso de actualización.
      */
     @CrossOrigin(origins = "${Front_URL}")
-    @PutMapping("/task/update/{id_code}")
-    public ResponseEntity<Task> updatetask(@PathVariable("id_code") String id, @RequestBody Task updatedTask) throws Exception {
+    @PutMapping("/task/update/{id}")
+    public ResponseEntity<Task> updatetask(@PathVariable String id, @RequestBody Task updatedTask) throws Exception {
         Task updated = taskService.updateTask(id, updatedTask);
         return ResponseEntity.ok(updated);
     }
