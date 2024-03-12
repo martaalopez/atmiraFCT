@@ -3,6 +3,7 @@ package com.project.atmiraFCT;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -19,7 +20,7 @@ public class AtmiraFctApplication {
 		return new WebMvcConfigurer() {
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
-				registry.addMapping("/**").allowedOrigins(System.getenv("Front_URL")).allowedMethods("*").allowedHeaders("*");
+				registry.addMapping("/**").allowedOrigins("https://fct-atmira-front.vercel.app").allowedMethods("*").allowedHeaders("*");
 			}
 		};
 	}
