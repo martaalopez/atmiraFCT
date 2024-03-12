@@ -20,7 +20,7 @@ public class AtmiraFctApplication {
 		return new WebMvcConfigurer() {
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
-				registry.addMapping("/**").allowedOrigins("https://fct-atmira-front.vercel.app").allowedMethods("*").allowedHeaders("*");
+				registry.addMapping("/**").allowedOrigins("http://localhost:4200").allowedMethods("*").allowedHeaders("*");
 			}
 		};
 	}
