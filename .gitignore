@@ -17,12 +17,13 @@ HELP.md
 *.iws
 *.iml
 *.ipr
-
+./target
 ### NetBeans ###
 /nbproject/private/
 /nbbuild/
 /dist/
 /nbdist/
+/target/
 /.nb-gradle/
 build/
 !**/src/main/**/build/
