@@ -218,7 +218,6 @@ public class TaskController {
 
     /**
      * Obtiene todas las tareas asociadas a un colaborador.
-     *
      * @param colaboratorId ID del colaborador.
      * @return Lista de tareas asociadas al colaborador.
      */

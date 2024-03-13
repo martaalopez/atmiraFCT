@@ -411,6 +411,22 @@ public class TaskService implements StorageService {
         }
     }
 
+<<<<<<< HEAD
+    public Task updateTask(String idCode,Task updatedTask) {
+        Optional<Task> taskOptional = taskRepository.findByIdCode(idCode);
+
+        if (taskOptional.isPresent()) {
+            Task task = taskOptional.get();
+            if (updatedTask.getDescription() != null) {
+                task.setDescription(updatedTask.getDescription());
+            }
+            if (updatedTask.getObjective() != null) {
+                task.setObjective(updatedTask.getObjective());
+            }
+            if (updatedTask.getClosed() != null) {
+                task.setClosed(updatedTask.getClosed());
+            }
+=======
     /**
      * Actualiza una tarea existente.
      *
@@ -426,9 +442,10 @@ public class TaskService implements StorageService {
             task.setDescription(updateTask.getDescription());
             task.setObjective(updateTask.getObjective());
             task.setClosed(updateTask.getClosed());
+>>>>>>> 45b68070e84ae6e0687a3e7b4b7f148c7f5941da
             return taskRepository.save(task);
         } else {
-            throw new Exception("No task found with id" + id);
+            throw new RecordNotFoundException("Task not found with id code: " + idCode);
         }
     }
 
