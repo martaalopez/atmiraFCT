@@ -77,7 +77,7 @@ public class TaskService implements StorageService {
             task.setIdCode(idCode);
 
             Task savedTask = taskRepository.save(task);
-             return savedTask;
+            return savedTask;
         } else {
             throw new RecordNotFoundException("Colaborator or project not found");
         }
@@ -411,43 +411,27 @@ public class TaskService implements StorageService {
         }
     }
 
-<<<<<<< HEAD
-    public Task updateTask(String idCode,Task updatedTask) {
-        Optional<Task> taskOptional = taskRepository.findByIdCode(idCode);
 
-        if (taskOptional.isPresent()) {
-            Task task = taskOptional.get();
-            if (updatedTask.getDescription() != null) {
-                task.setDescription(updatedTask.getDescription());
+            /**
+             * Actualiza una tarea existente.
+             *
+             * @param id           El ID de la tarea a actualizar.
+             * @param updateTask La tarea actualizada.
+             * @return La tarea actualizada.
+             * @throws Exception Si no se encuentra el proyecto.
+             */
+            public Task updateTask(String id, Task updateTask) throws Exception {
+                Optional<Task> result = taskRepository.findById(id);
+                if (result.isPresent()) {
+                    Task task = result.get();
+                    task.setDescription(updateTask.getDescription());
+                    task.setObjective(updateTask.getObjective());
+                    task.setClosed(updateTask.getClosed());
+                    return taskRepository.save(task);
+                } else {
+                    throw new RecordNotFoundException("Task not found with id code: ");
+                }
             }
-            if (updatedTask.getObjective() != null) {
-                task.setObjective(updatedTask.getObjective());
-            }
-            if (updatedTask.getClosed() != null) {
-                task.setClosed(updatedTask.getClosed());
-            }
-=======
-    /**
-     * Actualiza una tarea existente.
-     *
-     * @param id           El ID de la tarea a actualizar.
-     * @param updateTask La tarea actualizada.
-     * @return La tarea actualizada.
-     * @throws Exception Si no se encuentra el proyecto.
-     */
-    public Task updateTask(String id, Task updateTask) throws Exception {
-        Optional<Task> result = taskRepository.findById(id);
-        if (result.isPresent()) {
-            Task task = result.get();
-            task.setDescription(updateTask.getDescription());
-            task.setObjective(updateTask.getObjective());
-            task.setClosed(updateTask.getClosed());
->>>>>>> 45b68070e84ae6e0687a3e7b4b7f148c7f5941da
-            return taskRepository.save(task);
-        } else {
-            throw new RecordNotFoundException("Task not found with id code: " + idCode);
+
+
         }
-    }
-
-
-}
