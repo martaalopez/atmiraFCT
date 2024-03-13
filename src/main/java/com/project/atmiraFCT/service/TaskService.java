@@ -411,25 +411,25 @@ public class TaskService implements StorageService {
         }
     }
 
-    /**
-     * Actualiza una tarea existente.
-     *
-     * @param id           El ID de la tarea a actualizar.
-     * @param updateTask La tarea actualizada.
-     * @return La tarea actualizada.
-     * @throws Exception Si no se encuentra el proyecto.
-     */
-    public Task updateTask(String id,Task updateTask) throws Exception {
-        Optional<Task> result = taskRepository.findById(id);
-        if (result.isPresent()) {
-            Task task = result.get();
-            task.setDescription(updateTask.getDescription());
-           task.setObjective(updateTask.getObjective());
-          task.setClosed(updateTask.getClosed());
+    public Task updateTask(String idCode,Task updatedTask) {
+        Optional<Task> taskOptional = taskRepository.findByIdCode(idCode);
+
+        if (taskOptional.isPresent()) {
+            Task task = taskOptional.get();
+            if (updatedTask.getDescription() != null) {
+                task.setDescription(updatedTask.getDescription());
+            }
+            if (updatedTask.getObjective() != null) {
+                task.setObjective(updatedTask.getObjective());
+            }
+            if (updatedTask.getClosed() != null) {
+                task.setClosed(updatedTask.getClosed());
+            }
             return taskRepository.save(task);
         } else {
-            throw new Exception("No task found with id" + id);
+            throw new RecordNotFoundException("Task not found with id code: " + idCode);
         }
     }
+
 
 }
