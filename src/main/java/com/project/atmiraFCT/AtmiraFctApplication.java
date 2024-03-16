@@ -20,7 +20,7 @@ public class AtmiraFctApplication {
 		return new WebMvcConfigurer() {
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
-				registry.addMapping("/**").allowedOrigins("http://localhost:4200").allowedMethods("*").allowedHeaders("*");
+				registry.addMapping("/**").allowedOrigins(System.getenv("Front_URL")).allowedMethods("*").allowedHeaders("*");
 			}
 		};
 	}
