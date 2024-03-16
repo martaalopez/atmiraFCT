@@ -126,33 +126,30 @@ public class TaskController {
      *
      * @param task          La tarea o sub-tarea a guardar.
      * @param colaboratorId El ID del colaborador asociado a la tarea.
-     * @param identifier    El identificador de la tarea (puede ser el ID del proyecto o el ID de la tarea padre).
      * @return La tarea guardada.
      */
 
     @CrossOrigin(origins = "${Front_URL}")
-    @PostMapping("/task/save/{colaboratorId}/{identifier}")
+    @PostMapping("/task/save/{colaboratorId}")
     public ResponseEntity<Task> saveTask(
             @RequestBody Task task,
-            @PathVariable String colaboratorId,
-            @PathVariable String identifier
+            @PathVariable String colaboratorId
     ) {
         Task savedTask;
-        if (identifier.contains("_")) {
+        String identifier = task.getTask() != null ? task.getTask().getIdCode() : null;
+        if (identifier!=null && identifier.contains("_")) {
             String[] parts = identifier.split("_");
-            if (parts.length != 2) {
+            if (parts.length < 2) {
                 throw new IllegalArgumentException("Invalid identifier format: " + identifier);
             }
-            String projectId = parts[0];
-            String parentTaskIdCode = parts[0] + "_" + parts[1];
 
             savedTask = taskService.saveSubTask(
                     task.getDescription(),
                     task.getObjective(),
                     task.getClosed(),
                     colaboratorId,
-                    projectId,
-                    parentTaskIdCode
+                    task.getProject().getId_code(),
+                    task.getTask().getIdCode()
             );
         } else {
             savedTask = taskService.saveTask(
@@ -160,7 +157,7 @@ public class TaskController {
                     task.getObjective(),
                     task.getClosed(),
                     colaboratorId,
-                    identifier
+                    task.getProject().getId_code()
             );
         }
 

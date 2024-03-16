@@ -21,30 +21,6 @@ public class ColaboratorController {
     private ColaboratorService colaboratorService;
 
     /**
-     * Guarda un nuevo Colaborador.
-     *
-     * @param colaborator   El objeto Colaborador a guardar.
-     * @param workplaceId   El ID del lugar de trabajo para asociar con el Colaborador.
-     * @return              El objeto Colaborador guardado.
-     */
-    @CrossOrigin(origins = "${Front_URL}")
-    @PostMapping("/colaborator/save/{workplaceId}")
-    public Colaborator saveColaborator(@RequestBody Colaborator colaborator, @PathVariable Long workplaceId) {
-        return colaboratorService.saveColaborator(colaborator, workplaceId);
-    }
-
-    /**
-     * Obtiene todos los Colaboradores.
-     *
-     * @return  Una lista de todos los Colaboradores.
-     */
-    @CrossOrigin(origins = "${Front_URL}")
-    @GetMapping("/colaborator/all")
-    public List<Colaborator> getAllColaborators() {
-        return colaboratorRepository.findAll();
-    }
-
-    /**
      * Elimina un Colaborador por su ID.
      *
      * @param id    El ID del Colaborador a eliminar.

@@ -48,22 +48,6 @@ public class ColaboratorService {
     }
 
     /**
-     * Guarda un nuevo colaborador.
-     *
-     * @param colaborator El colaborador a guardar.
-     * @param workplaceId El ID del lugar de trabajo asociado.
-     * @return El colaborador guardado.
-     * @throws RecordNotFoundException Si no se encuentra el lugar de trabajo asociado.
-     */
-    public Colaborator saveColaborator(Colaborator colaborator, Long workplaceId) {
-        WorkPlace workplace = workplaceRepository.findById(workplaceId)
-                .orElseThrow(() -> new RecordNotFoundException("Workplace not found with id: " + workplaceId));
-        colaborator.setWorkPlace(workplace);
-        colaborator.setPassword(passwordEncoder.encode(colaborator.getPassword())); // Codificar la contraseña con BCrypt
-        return colaboratorRepository.save(colaborator);
-    }
-
-    /**
      * Actualiza la contraseña de un colaborador.
      *
      * @param id       El ID del colaborador.
