@@ -28,8 +28,10 @@ La API REST del Sistema de Gestión de Proyectos de ATMIRA FTC proporciona una p
 </footer>
 
 ## Documentación:
+Para obtener más detalles sobre los endpoints disponibles y cómo interactuar con la API, consulta la documentación en 
+   - [Swagger UI](https://atmira-backend.onrender.com/swagger-ui/index.html#/)
+   - [Postman Doc](https://documenter.getpostman.com/view/32223959/2sA2xnwUY2)
 
-Para obtener más detalles sobre los endpoints disponibles y cómo interactuar con la API, consulta la documentación en [Swagger UI](https://atmira-backend.onrender.com/swagger-ui/index.html#/)
 ## Tecnologías Utilizadas:
 
 - Java 17
