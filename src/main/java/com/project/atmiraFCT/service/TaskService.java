@@ -105,10 +105,6 @@ public class TaskService implements StorageService {
                 throw new IllegalArgumentException("Invalid parentTaskIdCode format: " + parentTaskIdCode);
             }
 
-            String[] ids = parentTaskIdCode.split("_");
-            Long parentProjectId = Long.parseLong(ids[0]);
-            Long parentTaskId = Long.parseLong(ids[1]);
-
             int nextSubTaskNumber = getNextSubTaskNumber(parentTaskIdCode);
 
             Task subTask = new Task();
@@ -119,7 +115,7 @@ public class TaskService implements StorageService {
             subTask.setProject(projectOptional.get());
 
 
-            String subTaskIdCode = parentProjectId + "_" + parentTaskId + "_" + nextSubTaskNumber;
+            String subTaskIdCode = parentTaskIdCode + "_" + nextSubTaskNumber;
             subTask.setIdCode(subTaskIdCode);
 
             Task parentTask = taskRepository.findByIdCode(parentTaskIdCode).orElseThrow(() -> new RecordNotFoundException("Parent task not found"));
@@ -163,7 +159,7 @@ public class TaskService implements StorageService {
      */
     private boolean isValidParentTaskIdCodeFormat(String parentTaskIdCode) {
         String[] parts = parentTaskIdCode.split("_");
-        return parts.length == 2;
+        return parts.length >= 2;
     }
 
     /**
