@@ -1,6 +1,7 @@
 package com.project.atmiraFCT.service;
 
 import com.project.atmiraFCT.exception.RecordNotFoundException;
+import com.project.atmiraFCT.model.Enum.TypeExpensive;
 import com.project.atmiraFCT.model.domain.Colaborator;
 import com.project.atmiraFCT.model.domain.Expense;
 import com.project.atmiraFCT.model.domain.Project;
@@ -11,6 +12,7 @@ import com.project.atmiraFCT.repository.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,11 +30,6 @@ public class ExpenseService {
 
     /**
      * Guarda un gasto asociado a un colaborador y proyecto existente.
-     *
-     * @param day             Día del gasto.
-     * @param month           Mes del gasto.
-     * @param year            Año del gasto.
-     * @param hours           Horas del gasto.
      * @param cost            Costo del gasto.
      * @param description     Descripción del gasto.
      * @param state           Estado del gasto.
@@ -41,25 +38,14 @@ public class ExpenseService {
      * @return                El gasto guardado.
      * @throws RecordNotFoundException Si el colaborador o el proyecto no se encuentran.
      */
-    public Expense saveExpenseExistingProyectColaborator(Integer day, Integer month, Integer year, Integer hours, Integer cost,
-                                                         String description, Boolean state, String colaboratorId, String projectId) {
+    public Expense saveExpenseExistingProyectColaborator(String ticketId, Date ticketDate, Integer cost,
+                                                         String description, Boolean state, TypeExpensive typeExpensive, String colaboratorId, String projectId) {
         Optional<Colaborator> colaboratorOptional = colaboratorRepository.findById(colaboratorId);
         Optional<Project> projectOptional = projectRepository.findById(projectId);
 
         if (colaboratorOptional.isPresent() && projectOptional.isPresent()) {
-            Expense expense = new Expense();
-            expense.setDay(day);
-            expense.setMonth(month);
-            expense.setYear(year);
-            expense.setHours(hours);
-            expense.setCost(cost);
-            expense.setDescription(description);
-            expense.setState(state);
-            expense.setColaborator(colaboratorOptional.get());
-            expense.setProject(projectOptional.get());
-
-            Expense savedExpense = expenseRepository.save(expense);
-            return savedExpense;
+            Expense expense = new Expense(ticketId, ticketDate, cost, description, state, typeExpensive,projectOptional.get() ,colaboratorOptional.get());
+            return expenseRepository.save(expense);
         } else {
             throw new RecordNotFoundException("Colaborator or project not found");
         }

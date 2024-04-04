@@ -38,13 +38,12 @@ public class ExpenseController {
             @RequestBody Expense expense
     ) {
         Expense createdExpense = expenseService.saveExpenseExistingProyectColaborator(
-                expense.getDay(),
-                expense.getMonth(),
-                expense.getYear(),
-                expense.getHours(),
+                expense.getTicketId(),
+                expense.getTicketDate(),
                 expense.getCost(),
                 expense.getDescription(),
                 expense.getState(),
+                expense.getTypeExpensive(),
                 colaboratorId,
                 projectId
         );
