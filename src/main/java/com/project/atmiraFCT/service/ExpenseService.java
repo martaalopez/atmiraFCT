@@ -66,55 +66,11 @@ public class ExpenseService {
         }
     }
 
-    /**
-     * Obtiene todos los gastos asociados a un colaborador.
-     *
-     * @param colaboratorId ID del colaborador.
-     * @return Lista de gastos asociados al colaborador.
-     * @throws RecordNotFoundException Si no se encuentra el colaborador.
-     */
-    public List<Expense> getExpenseByColaborator(String colaboratorId) {
-        Optional<Colaborator> colaboratorOptional = colaboratorRepository.findById(colaboratorId);
-        if (colaboratorOptional.isPresent()) {
-            return expenseRepository.findByColaborator(colaboratorOptional.get());
-        } else {
-            throw new RecordNotFoundException("Colaborator not found with id: " + colaboratorId);
-        }
-    }
 
-    /**
-     * Obtiene todos los gastos asociados a un proyecto.
-     *
-     * @param projectId ID del proyecto.
-     * @return Lista de gastos asociados al proyecto.
-     * @throws RecordNotFoundException Si no se encuentra el proyecto.
-     */
-    public List<Expense> getExpenseByProject(String projectId) {
-        Optional<Project> projectOptional = projectRepository.findById(projectId);
-        if (projectOptional.isPresent()) {
-            return expenseRepository.findByProject(projectOptional.get());
-        } else {
-            throw new RecordNotFoundException("Project not found with id: " + projectId);
-        }
-    }
-
-    /**
-     * Obtiene todos los gastos asociados a un colaborador y proyecto.
-     *
-     * @param colaboratorId ID del colaborador.
-     * @param projectId     ID del proyecto.
-     * @return Lista de gastos asociados al colaborador y proyecto.
-     * @throws RecordNotFoundException Si no se encuentra el colaborador o el proyecto.
-     */
-    public List<Expense> getExpenseByColaboratorAndProject(String colaboratorId, String projectId) {
-        Optional<Colaborator> colaboratorOptional = colaboratorRepository.findById(colaboratorId);
-        Optional<Project> projectOptional = projectRepository.findById(projectId);
-
-        if (colaboratorOptional.isPresent() && projectOptional.isPresent()) {
-            return expenseRepository.findByColaboratorAndProject(colaboratorOptional.get(), projectOptional.get());
-        } else {
-            throw new RecordNotFoundException("Colaborator or project not found");
-        }
+    public List<Expense> getExpenseByFilter(String id_project, String id_alias, String date) {
+        String query ="SELECT * FROM Expense u WHERE "+ (id_project != null ? "id_code_project LIKE '"+id_project+"'" : "")+(id_project!=null && (id_alias!=null || date!=null) ? "AND" : "")+(id_alias != null ? "id_colaborator LIKE '"+id_alias+"'": "")+(id_alias!=null && date!=null ? "AND" : "")+(date != null ? "ticket_date= "+date : "");
+        System.out.println(query);
+        return expenseRepository.findByFilter(query);
     }
 
 }
