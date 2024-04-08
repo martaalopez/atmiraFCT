@@ -1,9 +1,8 @@
 package com.project.atmiraFCT.security.Auth;
 
-import com.project.atmiraFCT.exception.RecordNotFoundException;
+
 import com.project.atmiraFCT.exception.Validator;
 import com.project.atmiraFCT.model.domain.Colaborator;
-import com.project.atmiraFCT.model.domain.WorkPlace;
 import com.project.atmiraFCT.repository.ColaboratorRepository;
 import com.project.atmiraFCT.repository.WorkPlaceRepository;
 import com.project.atmiraFCT.security.Jwt.JwtService;

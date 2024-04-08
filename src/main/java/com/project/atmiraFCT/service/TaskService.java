@@ -53,6 +53,7 @@ public class TaskService implements StorageService {
     /**
      * Guarda una nueva tarea.
      *
+     * @param title El título de la tarea
      * @param description  La descripción de la tarea.
      * @param objective    El objetivo de la tarea.
      * @param isClosed     Indica si la tarea está cerrada.
@@ -61,12 +62,13 @@ public class TaskService implements StorageService {
      * @return La tarea guardada.
      * @throws RecordNotFoundException Si no se encuentra el colaborador o el proyecto.
      */
-    public Task saveTask( String description, String objective, Boolean isClosed,String colaboratorId, String projectId) {
+    public Task saveTask( String title,String description, String objective, Boolean isClosed,String colaboratorId, String projectId) {
         Optional<Colaborator> colaboratorOptional = colaboratorRepository.findById(colaboratorId);
         Optional<Project> projectOptional = projectRepository.findById(projectId);
 
         if (colaboratorOptional.isPresent() && projectOptional.isPresent()) {
             Task task = new Task();
+            task.setTitle(title);
             task.setDescription(description);
             task.setObjective(objective);
             task.setClosed(isClosed);
@@ -86,6 +88,7 @@ public class TaskService implements StorageService {
     /**
      * Guarda una nueva subtarea.
      *
+     * @param title El título de la tarea
      * @param description      La descripción de la subtarea.
      * @param objective        El objetivo de la subtarea.
      * @param isClosed         Indica si la subtarea está cerrada.
@@ -95,7 +98,7 @@ public class TaskService implements StorageService {
      * @return La subtarea guardada.
      * @throws RecordNotFoundException Si no se encuentra el colaborador, el proyecto o la tarea padre.
      */
-    public Task saveSubTask(String description, String objective, Boolean isClosed, String colaboratorId, String projectId, String parentTaskIdCode) {
+    public Task saveSubTask(String title,String description, String objective, Boolean isClosed, String colaboratorId, String projectId, String parentTaskIdCode) {
         Optional<Colaborator> colaboratorOptional = colaboratorRepository.findById(colaboratorId);
         Optional<Project> projectOptional = projectRepository.findById(projectId);
 
@@ -108,6 +111,7 @@ public class TaskService implements StorageService {
             int nextSubTaskNumber = getNextSubTaskNumber(parentTaskIdCode);
 
             Task subTask = new Task();
+            subTask.setTitle(title);
             subTask.setDescription(description);
             subTask.setObjective(objective);
             subTask.setClosed(isClosed);
@@ -420,6 +424,7 @@ public class TaskService implements StorageService {
         Optional<Task> result = taskRepository.findById(id);
         if (result.isPresent()) {
             Task task = result.get();
+            task.setTitle(updateTask.getTitle());
             task.setDescription(updateTask.getDescription());
             task.setObjective(updateTask.getObjective());
             task.setClosed(updateTask.getClosed());

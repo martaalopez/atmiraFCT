@@ -34,12 +34,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf(csrf -> csrf.disable())
-                .headers(headers -> headers
-                        .addHeaderWriter((request, response) -> {
-                            response.setHeader("Access-Control-Expose-Headers", "*");
-                            response.setHeader("Access-Control-Allow-Headers", "*");
-                        })
-                )
+
                 .authorizeHttpRequests(authRequest ->
                         authRequest
                                 .requestMatchers("/**").permitAll()

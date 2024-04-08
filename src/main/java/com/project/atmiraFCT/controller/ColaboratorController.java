@@ -20,6 +20,7 @@ public class ColaboratorController {
     @Autowired
     private ColaboratorService colaboratorService;
 
+
     /**
      * Elimina un Colaborador por su ID.
      *

@@ -12,6 +12,9 @@ public class Task {
     @Column(name = "id_code")
     private String idCode;
 
+    @Column(name = "title",length = 60)
+    private String title;
+
     @Column(name="description", length = 256)
     private String description;
 
@@ -31,7 +34,7 @@ public class Task {
    /* @JsonBackReference*/
     private Task task;
 
-    @ManyToOne
+  @ManyToOne
     @JoinColumn(name="id_code_project")
     private Project project;
 
@@ -41,6 +44,14 @@ public class Task {
 
     public Task() {
 
+
+    }
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getIdCode() {
@@ -111,12 +122,14 @@ public class Task {
     public String toString() {
         return "Task{" +
                 "idCode='" + idCode + '\'' +
+                ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
                 ", objective='" + objective + '\'' +
                 ", isClosed=" + isClosed +
+                ", subtareas=" + subtareas +
+                ", task=" + task +
+                ", project=" + project +
+                ", colaborator=" + colaborator +
                 '}';
     }
-
-
-
 }
