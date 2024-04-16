@@ -82,4 +82,14 @@ public class ExpenseController {
             throw new RecordNotFoundException("No project found with id: " + id);
         }
     }
+
+    @CrossOrigin(origins = "${Front_URL}")
+    @PutMapping("expensive/state")
+    public ResponseEntity<Expense> updateExpenseState(@RequestBody Expense expense) {
+        try {
+            return ResponseEntity.ok(expenseService.updateExpenseState(expense));
+        } catch (RecordNotFoundException e) {
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
 }
