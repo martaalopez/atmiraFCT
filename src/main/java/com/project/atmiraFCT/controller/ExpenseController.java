@@ -38,13 +38,12 @@ public class ExpenseController {
             @RequestBody Expense expense
     ) {
         Expense createdExpense = expenseService.saveExpenseExistingProyectColaborator(
-                expense.getDay(),
-                expense.getMonth(),
-                expense.getYear(),
-                expense.getHours(),
+                expense.getTicketId(),
+                expense.getTicketDate(),
                 expense.getCost(),
                 expense.getDescription(),
                 expense.getState(),
+                expense.getTypeExpensive(),
                 colaboratorId,
                 projectId
         );
@@ -52,46 +51,16 @@ public class ExpenseController {
     }
 
     /**
-     * Obtiene todos los gastos asociados a un colaborador.
-     *
-     * @param colaboratorId     El ID del colaborador.
-     * @return                  ResponseEntity con una lista de gastos.
+     * Metodo que filtrara los gastos en base a los parametros que recive de "proyecto, colaborador y fecha"
+     * @param id_code id del proyecto del cual queremos extraer sus dietas
+     * @param id_alias id del colaborador de quien deseamos extraer sus gastos
+     * @param date en formato YYYY-MM-DD (puedes omitir el dia y se buscara todos los del mes, y si omites dia y mes se busca todos los del año)
+     * @return
      */
     @CrossOrigin(origins = "${Front_URL}")
-    @GetMapping("/expense/byColaborator/{colaboratorId}")
-    public ResponseEntity<List<Expense>> getExpensesByColaborator(@PathVariable String colaboratorId) {
-        List<Expense> expenses = expenseService.getExpenseByColaborator(colaboratorId);
-        return ResponseEntity.ok(expenses);
-    }
-
-    /**
-     * Obtiene todos los gastos asociados a un proyecto.
-     *
-     * @param projectId     El ID del proyecto.
-     * @return              ResponseEntity con una lista de gastos.
-     */
-    @CrossOrigin(origins = "${Front_URL}")
-    @GetMapping("/expense/byProject/{projectId}")
-    public ResponseEntity<List<Expense>> getExpensesByProject(@PathVariable String projectId) {
-        List<Expense> expenses = expenseService.getExpenseByProject(projectId);
-        return ResponseEntity.ok(expenses);
-    }
-
-    /**
-     * Obtiene todos los gastos asociados a un colaborador y proyecto.
-     *
-     * @param colaboratorId     El ID del colaborador.
-     * @param projectId         El ID del proyecto.
-     * @return                  ResponseEntity con una lista de gastos.
-     */
-    @CrossOrigin(origins = "${Front_URL}")
-    @GetMapping("/expense/byColaboratorAndProject/{colaboratorId}/{projectId}")
-    public ResponseEntity<List<Expense>> getExpensesByColaboratorAndProject(
-            @PathVariable String colaboratorId,
-            @PathVariable String projectId
-    ) {
-        List<Expense> expenses= expenseService.getExpenseByColaboratorAndProject(colaboratorId, projectId);
-        return ResponseEntity.ok(expenses);
+    @GetMapping("/expense")
+    public ResponseEntity<List<Expense>> getExpenseByFilter(@RequestParam(name = "id_code_project",required = false) String id_code,@RequestParam(name="id_alias",required = false) String id_alias, @RequestParam(name="date",required = false) String date) {
+        return ResponseEntity.ok(expenseService.getExpenseByFilter(id_code, id_alias, date));
     }
 
     /**
@@ -104,10 +73,10 @@ public class ExpenseController {
      */
     @CrossOrigin(origins = "${Front_URL}")
     @DeleteMapping("/expense/delete/{id}")
-    public ResponseEntity<Boolean> deleteExpense(@PathVariable Integer id) {
-        Optional<Expense> result =expenseRepository.findById(id);
+    public ResponseEntity<Boolean> deleteExpense(@PathVariable String id) {
+        Optional<Expense> result =expenseRepository.findByTicketId(id);
         if (result.isPresent()) {
-            expenseRepository.deleteById(id);
+            expenseService.deleteExpense(id);
             return ResponseEntity.ok(true);
         } else {
             throw new RecordNotFoundException("No project found with id: " + id);
