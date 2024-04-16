@@ -9,9 +9,12 @@ import com.project.atmiraFCT.model.domain.Task;
 import com.project.atmiraFCT.repository.ColaboratorRepository;
 import com.project.atmiraFCT.repository.ExpenseRepository;
 import com.project.atmiraFCT.repository.ProjectRepository;
+import com.project.atmiraFCT.service.Specifications.ExpenseSpecifications;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -38,10 +41,12 @@ public class ExpenseService {
      * @return                El gasto guardado.
      * @throws RecordNotFoundException Si el colaborador o el proyecto no se encuentran.
      */
-    public Expense saveExpenseExistingProyectColaborator(String ticketId, Date ticketDate, Integer cost,
+    public Expense saveExpenseExistingProyectColaborator(String ticketId, LocalDate ticketDate, Integer cost,
                                                          String description, Boolean state, TypeExpensive typeExpensive, String colaboratorId, String projectId) {
         Optional<Colaborator> colaboratorOptional = colaboratorRepository.findById(colaboratorId);
         Optional<Project> projectOptional = projectRepository.findById(projectId);
+
+        if(this.expenseRepository.findByTicketId(ticketId)!=null)throw new RecordNotFoundException("Expense already exists");
 
         if (colaboratorOptional.isPresent() && projectOptional.isPresent()) {
             Expense expense = new Expense(ticketId, ticketDate, cost, description, state, typeExpensive,projectOptional.get() ,colaboratorOptional.get());
@@ -57,7 +62,7 @@ public class ExpenseService {
      * @param id El ID del gasto a eliminar.
      * @throws RecordNotFoundException Si no se encuentra el gasto.
      */
-    public void deleteExpense(Integer id) {
+    public void deleteExpense(String id) {
         Optional<Expense> result = expenseRepository.findById(id);
         if (result.isPresent()) {
             expenseRepository.deleteById(id);
@@ -66,11 +71,17 @@ public class ExpenseService {
         }
     }
 
-
-    public List<Expense> getExpenseByFilter(String id_project, String id_alias, String date) {
-        String query ="SELECT * FROM Expense u WHERE "+ (id_project != null ? "id_code_project LIKE '"+id_project+"'" : "")+(id_project!=null && (id_alias!=null || date!=null) ? "AND" : "")+(id_alias != null ? "id_colaborator LIKE '"+id_alias+"'": "")+(id_alias!=null && date!=null ? "AND" : "")+(date != null ? "ticket_date= "+date : "");
-        System.out.println(query);
-        return expenseRepository.findByFilter(query);
+    /**
+     * Busca los gastos filtrados por proyecto, colaborador y fecha.
+     * @param idProject id del proyecto en el que incurrio el gasto
+     * @param idAlias id del colaborador asociado al gasto
+     * @param date fecha del ticket
+     * @return la lista de gastos en base a los filtros
+     */
+    public List<Expense> getExpenseByFilter(String idProject, String idAlias, String date) {
+        return expenseRepository.findAll(ExpenseSpecifications.withFilter(idProject, idAlias, date));
     }
+
+
 
 }

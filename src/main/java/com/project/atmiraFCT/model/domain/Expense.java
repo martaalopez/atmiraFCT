@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -19,7 +20,7 @@ public class Expense {
     private String ticketId;
 
     @Column(name="ticketDate",nullable = false)
-    private Date ticketDate;
+    private LocalDate ticketDate;
     @Column(name="createdDate",nullable = false)
     private Date createdDate;
     @Column(name="cost",nullable = false)
@@ -44,7 +45,7 @@ public class Expense {
     @Column
     private TypeExpensive typeExpensive;
 
-    public Expense(String ticketId, Date ticketDate, Integer cost, String description, Boolean state,TypeExpensive typeExpensive, Project project, Colaborator colaborator) {
+    public Expense(String ticketId, LocalDate ticketDate, Integer cost, String description, Boolean state,TypeExpensive typeExpensive, Project project, Colaborator colaborator) {
         this.ticketId = ticketId;
         this.ticketDate = ticketDate;
         try {
@@ -73,11 +74,11 @@ public class Expense {
         this.ticketId = ticketId;
     }
 
-    public Date getTicketDate() {
+    public LocalDate getTicketDate() {
         return ticketDate;
     }
 
-    public void setTicketDate(Date ticketDate) {
+    public void setTicketDate(LocalDate ticketDate) {
         this.ticketDate = ticketDate;
     }
 
