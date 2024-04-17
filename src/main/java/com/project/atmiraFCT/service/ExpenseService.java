@@ -45,8 +45,7 @@ public class ExpenseService {
                                                          String description, Boolean state, TypeExpensive typeExpensive, String colaboratorId, String projectId) {
         Optional<Colaborator> colaboratorOptional = colaboratorRepository.findById(colaboratorId);
         Optional<Project> projectOptional = projectRepository.findById(projectId);
-
-        if(this.expenseRepository.findByTicketId(ticketId)!=null)throw new RecordNotFoundException("Expense already exists");
+        if(this.expenseRepository.findByTicketId(ticketId).isPresent())throw new RecordNotFoundException("Expense already exists");
 
         if (colaboratorOptional.isPresent() && projectOptional.isPresent()) {
             Expense expense = new Expense(ticketId, ticketDate, cost, description, state, typeExpensive,projectOptional.get() ,colaboratorOptional.get());
@@ -82,6 +81,21 @@ public class ExpenseService {
         return expenseRepository.findAll(ExpenseSpecifications.withFilter(idProject, idAlias, date));
     }
 
-
-
+    /**
+     * Actualiza el estado de un gasto.
+     *
+     * @param expense El gasto a actualizar.
+     * @throws RecordNotFoundException Si no se encuentra el gasto.
+     */
+    public Expense updateExpenseState(Expense expense) {
+        Optional<Expense> result = expenseRepository.findById(expense.getTicketId());
+        if (result.isPresent()) {
+            Expense savedExpense = result.get();
+            savedExpense.setState(expense.getState());
+            expenseRepository.save(savedExpense);
+            return savedExpense;
+        } else {
+            throw new RecordNotFoundException("No expense found with id: " + expense.getTicketId());
+        }
+    }
 }
