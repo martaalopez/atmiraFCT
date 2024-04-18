@@ -72,13 +72,11 @@ public class ExpenseService {
 
     /**
      * Busca los gastos filtrados por proyecto, colaborador y fecha.
-     * @param idProject id del proyecto en el que incurrio el gasto
-     * @param idAlias id del colaborador asociado al gasto
-     * @param date fecha del ticket
+     * @param expense el objeto Expense con los filtros
      * @return la lista de gastos en base a los filtros
      */
-    public List<Expense> getExpenseByFilter(String idProject, String idAlias, String date) {
-        return expenseRepository.findAll(ExpenseSpecifications.withFilter(idProject, idAlias, date));
+    public List<Expense> getExpenseByFilter(Expense expense) {
+        return expenseRepository.findAll(ExpenseSpecifications.withFilter(expense));
     }
 
     /**
