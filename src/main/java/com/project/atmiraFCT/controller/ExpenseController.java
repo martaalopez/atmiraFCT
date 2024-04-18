@@ -52,15 +52,12 @@ public class ExpenseController {
 
     /**
      * Metodo que filtrara los gastos en base a los parametros que recive de "proyecto, colaborador y fecha"
-     * @param id_code id del proyecto del cual queremos extraer sus dietas
-     * @param id_alias id del colaborador de quien deseamos extraer sus gastos
-     * @param date en formato YYYY-MM-DD (puedes omitir el dia y se buscara todos los del mes, y si omites dia y mes se busca todos los del año)
-     * @return
+     * @param expense El objeto Expense con los parametros por los que se realizara la busqueda
      */
     @CrossOrigin(origins = "${Front_URL}")
-    @GetMapping("/expense")
-    public ResponseEntity<List<Expense>> getExpenseByFilter(@RequestParam(name = "id_code_project",required = false) String id_code,@RequestParam(name="id_alias",required = false) String id_alias, @RequestParam(name="date",required = false) String date) {
-        return ResponseEntity.ok(expenseService.getExpenseByFilter(id_code, id_alias, date));
+    @PostMapping("/expense")
+    public ResponseEntity<List<Expense>> getExpenseByFilter(@RequestBody Expense expense) {
+        return ResponseEntity.ok(expenseService.getExpenseByFilter(expense));
     }
 
     /**
