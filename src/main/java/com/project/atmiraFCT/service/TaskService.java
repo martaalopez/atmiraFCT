@@ -439,6 +439,7 @@ public class TaskService implements StorageService {
             task.setDescription(updateTask.getDescription());
             task.setObjective(updateTask.getObjective());
             task.setClosed(updateTask.getClosed());
+            task.setColaborator(updateTask.getColaborator());
             return taskRepository.save(task);
         } else {
             throw new RecordNotFoundException("Task not found with id code: " );

@@ -16,11 +16,9 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.io.IOException;
-import java.nio.file.Files;
 import java.util.List;
 import java.util.Map;
 
@@ -29,32 +27,10 @@ import java.util.Map;
 
 public class TaskController {
 
-    private final StorageService storageService;
-    private final HttpServletRequest request;
 
     @Autowired
     private TaskService taskService;
-    @Autowired
-    private ColaboratorRepository colaboratorRepository;
-    @Autowired
-    private ProjectRepository projectRepository;
-    @Autowired
-    private TaskRepository taskRepository;
 
-
-
-    // Constructor con inyección de dependencias
-    @Autowired
-    public TaskController(StorageService storageService, HttpServletRequest request, TaskService taskService,
-                          ColaboratorRepository colaboratorRepository, ProjectRepository projectRepository,
-                          TaskRepository taskRepository) {
-        this.storageService = storageService;
-        this.request = request;
-        this.taskService = taskService;
-        this.colaboratorRepository = colaboratorRepository;
-        this.projectRepository = projectRepository;
-        this.taskRepository = taskRepository;
-    }
 
     /**
      * Obtiene todas las tareas asociadas a un proyecto específico.
@@ -67,45 +43,6 @@ public class TaskController {
     public ResponseEntity<List<Task>> getTasksByProjectId(@PathVariable String projectId) {
         List<Task> tasks = taskService.getTasksByProjectId(projectId);
         return ResponseEntity.ok(tasks);
-    }
-
-    /**
-     * Endpoint para subir un archivo.
-     *
-     * @param multipartFile Archivo a subir.
-     * @return Mapa que contiene la URL del archivo subido.
-     */
-
-    @CrossOrigin(origins = "${Front_URL}")
-    @PostMapping("/media/upload")
-    public Map<String, String> uploadFile(@RequestParam("file") MultipartFile multipartFile) {
-        String path = storageService.store(multipartFile);
-        String host = request.getRequestURL().toString().replace(request.getRequestURI(), "");
-        String url = ServletUriComponentsBuilder
-                .fromHttpUrl(host)
-                .path("/media/")
-                .path(path)
-                .toUriString();
-        return Map.of("url", url);
-    }
-
-    /**
-     * Obtiene un archivo por su nombre de archivo.
-     *
-     * @param filename Nombre del archivo.
-     * @return El archivo como un recurso.
-     * @throws IOException Si ocurre un error al cargar el archivo.
-     */
-    @CrossOrigin(origins = "${Front_URL}")
-    @GetMapping("/media/{filename:.+}")
-    public ResponseEntity<Resource> getFile(@PathVariable String filename) throws IOException {
-        Resource file = (Resource) storageService.loadAsResource(filename);
-        String contentType = Files.probeContentType(file.getFile().toPath());
-
-        return ResponseEntity
-                .ok()
-                .header(HttpHeaders.CONTENT_TYPE, contentType)
-                .body(file);
     }
 
     /**

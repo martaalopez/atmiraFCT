@@ -1,6 +1,9 @@
 package com.project.atmiraFCT.security.Config;
 
 import com.project.atmiraFCT.repository.ColaboratorRepository;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -15,6 +18,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 
 import lombok.RequiredArgsConstructor;
+
+import java.security.Key;
+
+
+
 
 @Configuration
 @RequiredArgsConstructor
@@ -68,4 +76,5 @@ public class ApplicationConfig {
         return username -> (UserDetails) colaboratorRepository.findByEmail(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
+
 }
