@@ -116,6 +116,26 @@ public class TaskServiceTest {
         verify(projectRepository, times(1)).findById("1");
     }
 
+     @DisplayName("Test create subtask")
+    @Test
+     public void testCreateSubtask() {
+         //Given
+         when(colaboratorRepository.findById("1")).thenReturn(Optional.of(colaborator));
+         when(projectRepository.findById("1")).thenReturn(Optional.of(project));
+         when(taskRepository.findById("1_1_1")).thenReturn(Optional.of(task));
+         when(taskRepository.save(any(Task.class))).thenAnswer(invocation -> {
+             Task taskArgument = invocation.getArgument(0);
+             taskArgument.setIdCode("1_1_1");
+             return taskArgument;
+         });
+         //When
+         Task savedTask = taskService.saveSubTask("Test1", "test", "objectivos", false, "1", "1","1_1");
+         //Then
+         assertNotNull(savedTask);
+         assertEquals("1_1_1", savedTask.getIdCode());
+         verify(taskRepository, times(1)).save(any(Task.class));
+         verify(taskRepository, times(1)).findById("1");
+     }
 
 
 

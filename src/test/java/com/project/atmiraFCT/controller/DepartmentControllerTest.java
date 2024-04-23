@@ -1,82 +1,113 @@
 package com.project.atmiraFCT.controller;
 
+import com.project.atmiraFCT.model.domain.Colaborator;
 import com.project.atmiraFCT.model.domain.Department;
+import com.project.atmiraFCT.repository.ColaboratorDepartmentRepository;
+import com.project.atmiraFCT.repository.ColaboratorRepository;
 import com.project.atmiraFCT.repository.DepartmentRepository;
 import com.project.atmiraFCT.service.DepartmentService;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(DepartmentController.class)
-class DepartmentControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
 
-    @MockBean
+@ExtendWith(MockitoExtension.class)
+public class DepartmentControllerTest {
+
+    @Mock
+    private DepartmentRepository departmentRepository;
+
+    @Mock
     private DepartmentService departmentService;
 
-    @MockBean
-    private DepartmentRepository departmentRepository;
+    @Mock
+    private ColaboratorRepository colaboratorRepository;
+
+    @Mock
+    private ColaboratorDepartmentRepository colaboratorDepartmentRepository;
 
     @InjectMocks
     private DepartmentController departmentController;
 
     private Department department;
+    private Colaborator colaborator;
 
     @BeforeEach
     void setUp() {
         department = new Department();
         department.setId(1L);
         department.setCode("ABC123");
+
+        colaborator = new Colaborator();
+        colaborator.setId_alias("COLAB_ID");
     }
 
+    @DisplayName("Test saveDepartment method")
     @Test
-    @Order(1)
-    void saveDepartment() throws Exception {
-        String colaboratorId = "1";
-        String requestBody = "{\"id\":1,\"code\":\"ABC123\"}";
+    void testSaveDepartment() {
+        // Given
+        String colaboratorId = "1"; // ID de colaborador simulado
+        Department department = new Department(); // Crear un objeto Department simulado
 
-        when(departmentService.createDeparmentWithExistingColaborator(any(), any(), any())).thenReturn(department);
+        given(departmentService.createDeparmentWithExistingColaborator(any(), any(), any()))
+                .willReturn(department); // Simular el servicio para devolver el departamento creado
 
-        ResultActions result = mockMvc.perform(post("/deparment/save/colaboratorId={colaboratorId}", colaboratorId)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(requestBody));
+        // When
+        ResponseEntity<Department> responseEntity = departmentController.save(colaboratorId, department);
 
-        result.andExpect(status().isCreated())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.id").value(1))
-                .andExpect(jsonPath("$.code").value("ABC123"));
+        // Then
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+        assertThat(responseEntity.getBody()).isEqualTo(department);
+        verify(departmentService).createDeparmentWithExistingColaborator(any(), any(), any());
     }
 
+    @DisplayName("Test getAll method")
     @Test
-    @Order(2)
-    void getAllDepartments() throws Exception {
-        List<Department> departmentList = new ArrayList<>();
-        departmentList.add(department);
+    void testGetAllDepartments() {
+        // Given
+        Department department1 = new Department();
+        department1.setId(1L);
+        department1.setCode("ABC123");
 
-        when(departmentRepository.findAll()).thenReturn(departmentList);
+        Department department2 = new Department();
+        department2.setId(2L);
+        department2.setCode("DEF456");
 
-        ResultActions result = mockMvc.perform(get("/department/all"));
+        List<Department> departments = Arrays.asList(department1, department2);
 
-        result.andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$[0].id").value(1))
-                .andExpect(jsonPath("$[0].code").value("ABC123"));
+        when(departmentRepository.findAll()).thenReturn(departments);
+
+        // When
+        List<Department> result = departmentController.getAll();
+
+        // Then
+        assertThat(result).isNotNull();
+        assertThat(result.size()).isEqualTo(2);
+        assertThat(result.get(0).getId()).isEqualTo(1L);
+        assertThat(result.get(0).getCode()).isEqualTo("ABC123");
+        assertThat(result.get(1).getId()).isEqualTo(2L);
+        assertThat(result.get(1).getCode()).isEqualTo("DEF456");
+
+        // Verify
+        verify(departmentRepository).findAll();
     }
+
 }
+

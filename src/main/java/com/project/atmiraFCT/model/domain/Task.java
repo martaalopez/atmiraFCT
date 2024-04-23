@@ -21,8 +21,13 @@ public class Task {
     @Column(name="objective", length = 256)
     private String objective;
 
+
     @Column(name="isClosed")
     private Boolean isClosed;
+
+
+    @Column(name="tasks_count")
+    private Integer tasks_count;
 
     // Relación OneToMany para las subtareas de una tarea
     @OneToMany(mappedBy = "task", cascade = CascadeType.ALL)
@@ -34,9 +39,11 @@ public class Task {
    /* @JsonBackReference*/
     private Task task;
 
-  @ManyToOne
+
+    @ManyToOne
     @JoinColumn(name="id_code_project")
     private Project project;
+
 
     @ManyToOne
     @JoinColumn(name="asigned")
@@ -118,6 +125,18 @@ public class Task {
         this.colaborator = colaborator;
     }
 
+    public Integer getTasks_count() {
+        return tasks_count;
+    }
+
+    public void setTasks_count(Integer tasks_count) {
+        this.tasks_count = tasks_count;
+    }
+
+    public void updateTasksCount() {
+        this.tasks_count = (subtareas != null) ? subtareas.size() : 0;
+    }
+
     @Override
     public String toString() {
         return "Task{" +
@@ -126,6 +145,7 @@ public class Task {
                 ", description='" + description + '\'' +
                 ", objective='" + objective + '\'' +
                 ", isClosed=" + isClosed +
+                ", tasks_count=" + tasks_count +
                 ", subtareas=" + subtareas +
                 ", task=" + task +
                 ", project=" + project +
