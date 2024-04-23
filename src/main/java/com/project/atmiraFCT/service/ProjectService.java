@@ -21,19 +21,18 @@ import java.util.stream.Collectors;
 public class ProjectService {
 
 
+    private final ProjectRepository projectRepository;
     private final ColaboratorRepository colaboratorRepository;
-
-    @Autowired
-    private ProjectRepository projectRepository;
     private final ColaboratorProjectRepository colaboratorProjectRepository;
 
-    public ProjectService(ColaboratorRepository colaboratorRepository,
+    @Autowired
+    public ProjectService(ProjectRepository projectRepository,
+                          ColaboratorRepository colaboratorRepository,
                           ColaboratorProjectRepository colaboratorProjectRepository) {
+        this.projectRepository = projectRepository;
         this.colaboratorRepository = colaboratorRepository;
-
         this.colaboratorProjectRepository = colaboratorProjectRepository;
     }
-
     /**
      * Obtiene todos los proyectos.
      *

@@ -6,7 +6,6 @@ import com.project.atmiraFCT.repository.ColaboratorRepository;
 import com.project.atmiraFCT.repository.DepartmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 @Service
@@ -19,10 +18,15 @@ public class DepartmentService {
 
     private final ColaboratorDepartmentRepository colaboratorDepartmentRepository;
 
-    public DepartmentService(ColaboratorRepository colaboratorRepository, ColaboratorDepartmentRepository colaboratorDepartmentRepository) {
+
+    @Autowired
+    public DepartmentService(DepartmentRepository departmentRepository,ColaboratorRepository colaboratorRepository, ColaboratorDepartmentRepository colaboratorDepartmentRepository) {
         this.colaboratorRepository = colaboratorRepository;
         this.colaboratorDepartmentRepository = colaboratorDepartmentRepository;
+        this.departmentRepository = departmentRepository;
     }
+
+
 
     /**
      * Crea un departamento con un colaborador existente.
