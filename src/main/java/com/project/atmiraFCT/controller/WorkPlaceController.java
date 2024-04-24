@@ -27,9 +27,9 @@ public class WorkPlaceController {
      * @return          El lugar de trabajo creado.
      */
     @CrossOrigin(origins = "${Front_URL}")
-    @PostMapping("/workplace/save")
-    public ResponseEntity<WorkPlace> saveWorkPlace(@RequestBody WorkPlace workPlace) {
-        workPlaceService.save(workPlace);
+    @PostMapping("/workplace/save/colaboratorId={id}")
+    public ResponseEntity<WorkPlace> saveWorkPlace(@PathVariable String id,@RequestBody WorkPlace workPlace) {
+        WorkPlace savedWorkPlace = workPlaceService.createWorkPlacWithExistingColaborator(workPlace.getId(), workPlace.getCode(), id);
         return ResponseEntity.status(HttpStatus.CREATED).body(workPlace);
     }
 

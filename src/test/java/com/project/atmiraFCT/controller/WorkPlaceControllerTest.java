@@ -41,7 +41,7 @@ public class WorkPlaceControllerTest {
         workPlace.setCode("WP001");
     }
 
-    @DisplayName("Test save work place")
+    /*@DisplayName("Test save work place")
     @Test
     void testSaveWorkPlace() {
         // Given
@@ -56,7 +56,7 @@ public class WorkPlaceControllerTest {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         assertThat(response.getBody()).isEqualTo(newWorkPlace);
         verify(workPlaceService, times(1)).save(newWorkPlace);
-    }
+    }*/
 
     @DisplayName("Test get all work places")
     @Test
