@@ -74,6 +74,7 @@ public class Colaborator  implements UserDetails {
     @JsonBackReference
     private WorkPlace workPlace;
 
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "colaborator", cascade = CascadeType.ALL)
     @JsonManagedReference
     private List<ColaboratorProject> colaboratorProjects;

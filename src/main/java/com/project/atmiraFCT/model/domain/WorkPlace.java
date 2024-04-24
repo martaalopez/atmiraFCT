@@ -1,6 +1,9 @@
 package com.project.atmiraFCT.model.domain;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -11,17 +14,19 @@ public class WorkPlace {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+
     @Column(name="code",length = 50)
     private String code;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "workPlace", cascade = CascadeType.ALL)
-    @JsonManagedReference
-    List<Colaborator> colaborators;
+    @JsonBackReference
+    List<Colaborator> colaborators=new ArrayList<>();
 
-    public WorkPlace(Long id, String code, List<Colaborator> colaborators) {
+    public WorkPlace(Long id, String code) {
         this.id = id;
         this.code = code;
-        this.colaborators = colaborators;
+        this.colaborators = new ArrayList<>();
+
     }
 
     public WorkPlace() {
