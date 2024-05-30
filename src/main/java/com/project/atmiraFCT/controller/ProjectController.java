@@ -117,6 +117,12 @@ public class ProjectController {
         Project createdProject = projectService.createProjectWithExistingColaborator(project.getId_code(),project.getName(), project.getInitialDate(),project.getEndDate(),project.getActive(),project.getTypeOfService(),colaboratorId);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdProject);
     }
+
+    /**
+     * @deprecated  YA  NO ES NECESARIO
+     * @param id
+     * @return
+     */
     @CrossOrigin(origins = "${Front_URL}")
     @GetMapping("/project/{id}/colaborators")
     public List<Colaborator> getColaboratorsByProject(@PathVariable String id) {

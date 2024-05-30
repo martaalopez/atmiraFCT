@@ -172,7 +172,11 @@ public class ProjectService {
 
     }
 
-
+    /**
+     * @deprecated  YA  NO ES NECESARIO
+     * @param id
+     * @return
+     */
     public List<Colaborator> getColaboratorsByProject(String id) {
         Optional<Project> project = projectRepository.findById(id);
         if (project.isPresent()) {
