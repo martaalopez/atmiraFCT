@@ -18,7 +18,7 @@ public class ProjectDTO {
     private Boolean active;
     private Integer tasks_count;
     private List<Expense> expenses;
-    private List<ColaboratorProject> colaboratorProjects;
+    private List<ColaboratorProjectDTO> colaboratorProjects;
 
     public ProjectDTO convertToDto(Project project) {
         ProjectDTO projectDTO = new ProjectDTO();
@@ -30,7 +30,7 @@ public class ProjectDTO {
         projectDTO.setActive(project.getActive());
         projectDTO.setTasks_count(project.getTasks_count());
         projectDTO.setExpenses(project.getExpenses());
-        projectDTO.setColaboratorProjects(project.getColaboratorProjects());
+        projectDTO.setColaboratorProjects(new ColaboratorProjectDTO().convertToDtoList(project.getColaboratorProjects()));
         return projectDTO;
     }
 
@@ -98,11 +98,11 @@ public class ProjectDTO {
         this.expenses = expenses;
     }
 
-    public List<ColaboratorProject> getColaboratorProjects() {
+    public List<ColaboratorProjectDTO> getColaboratorProjects() {
         return colaboratorProjects;
     }
 
-    public void setColaboratorProjects(List<ColaboratorProject> colaboratorProjects) {
+    public void setColaboratorProjects(List<ColaboratorProjectDTO> colaboratorProjects) {
         this.colaboratorProjects = colaboratorProjects;
     }
 
