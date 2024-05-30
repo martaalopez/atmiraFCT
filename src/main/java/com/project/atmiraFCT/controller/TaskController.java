@@ -2,7 +2,6 @@ package com.project.atmiraFCT.controller;
 
 import com.project.atmiraFCT.exception.RecordNotFoundException;
 import com.project.atmiraFCT.model.domain.Colaborator;
-import com.project.atmiraFCT.model.domain.Project;
 import com.project.atmiraFCT.model.domain.Task;
 import com.project.atmiraFCT.repository.ColaboratorRepository;
 import com.project.atmiraFCT.repository.ProjectRepository;
@@ -144,6 +143,7 @@ public class TaskController {
             }
 
             savedTask = taskService.saveSubTask(
+                    task.getTitle(),
                     task.getDescription(),
                     task.getObjective(),
                     task.getClosed(),
@@ -153,6 +153,7 @@ public class TaskController {
             );
         } else {
             savedTask = taskService.saveTask(
+                    task.getTitle(),
                     task.getDescription(),
                     task.getObjective(),
                     task.getClosed(),
@@ -283,13 +284,13 @@ public class TaskController {
         List<Task> tasks = taskService.getTasksByColaboratorAndProject(colaboratorId, projectId);
         return ResponseEntity.ok(tasks);
     }
-    @CrossOrigin(origins = "${Front_URL}")
+    /*@CrossOrigin(origins = "${Front_URL}")
     @PutMapping("/task/{taskId}/colaborator/{colaboratorId}")
     public ResponseEntity<Task> assignTaskToColaborator(
             @PathVariable String taskId, @PathVariable String colaboratorId) {
         Task task = taskService.assignTaskToColaborator(taskId, colaboratorId);
         return ResponseEntity.ok(task);
-    }
+    }*/
 
 
     /**

@@ -23,7 +23,7 @@ public class Department {
     public Department(Long id, String code) {
         this.id = id;
         this.code = code;
-
+        this.colaborators = new ArrayList<>();
     }
 
     public Department() {

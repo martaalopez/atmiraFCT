@@ -35,6 +35,10 @@ public class Project {
     @Column(name="active")
     private Boolean active;
 
+
+    @Column(name="tasks_count")
+    private Integer tasks_count;
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "project",cascade = CascadeType.ALL)
     @JsonManagedReference
     private List<Task> tasks;
@@ -125,9 +129,7 @@ public class Project {
         return tasks;
     }
 
-    public void setTasks(List<Task> tasks) {
-        this.tasks = tasks;
-    }
+
 
     public List<Expense> getExpenses() {
         return expenses;
@@ -145,8 +147,36 @@ public class Project {
         this.colaboratorProjects = colaboratorProjects;
     }
 
+    public Integer getTasks_count() {
+        return tasks_count;
+    }
+
+    public void setTasks_count(Integer tasks_count) {
+        this.tasks_count = tasks_count;
+    }
+    public void setTasks(List<Task> tasks) {
+        this.tasks = tasks;
+        updateTasksCount(); // Actualizar el contador de tareas
+    }
 
 
+    public void updateTasksCount() {
+        this.tasks_count = (tasks != null) ? tasks.size() : 0;
+    }
 
-
+    @Override
+    public String toString() {
+        return "Project{" +
+                "id_code='" + id_code + '\'' +
+                ", typeOfService=" + typeOfService +
+                ", name='" + name + '\'' +
+                ", initialDate=" + initialDate +
+                ", endDate=" + endDate +
+                ", active=" + active +
+                ", tasks_count=" + tasks_count +
+                ", tasks=" + tasks +
+                ", expenses=" + expenses +
+                ", colaboratorProjects=" + colaboratorProjects +
+                '}';
+    }
 }

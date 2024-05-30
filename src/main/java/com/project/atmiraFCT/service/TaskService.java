@@ -53,31 +53,42 @@ public class TaskService implements StorageService {
     /**
      * Guarda una nueva tarea.
      *
-     * @param description  La descripción de la tarea.
-     * @param objective    El objetivo de la tarea.
-     * @param isClosed     Indica si la tarea está cerrada.
+     * @param title         El título de la tarea.
+     * @param description   La descripción de la tarea.
+     * @param objective     El objetivo de la tarea.
+     * @param isClosed      Indica si la tarea está cerrada.
      * @param colaboratorId El ID del colaborador asignado a la tarea.
-     * @param projectId    El ID del proyecto al que pertenece la tarea.
+     * @param projectId     El ID del proyecto al que pertenece la tarea.
      * @return La tarea guardada.
      * @throws RecordNotFoundException Si no se encuentra el colaborador o el proyecto.
      */
-    public Task saveTask( String description, String objective, Boolean isClosed,String colaboratorId, String projectId) {
+    public Task saveTask(String title, String description, String objective, Boolean isClosed, String colaboratorId, String projectId) {
         Optional<Colaborator> colaboratorOptional = colaboratorRepository.findById(colaboratorId);
         Optional<Project> projectOptional = projectRepository.findById(projectId);
 
         if (colaboratorOptional.isPresent() && projectOptional.isPresent()) {
             Task task = new Task();
+            task.setTitle(title);
             task.setDescription(description);
             task.setObjective(objective);
             task.setClosed(isClosed);
-            task.setColaborator(colaboratorOptional.get());
-            task.setProject(projectOptional.get());
 
             String idCode = generateTaskIdCode(projectOptional.get());
             task.setIdCode(idCode);
 
             Task savedTask = taskRepository.save(task);
-             return savedTask;
+
+            // Después de guardar la tarea
+            Project project = projectOptional.get();
+            if (project.getTasks_count() != null) {
+                project.setTasks_count(project.getTasks_count() + 1); // Incrementar el contador
+            } else {
+                project.setTasks_count(1); // Si es null, establecerlo en 1
+            }
+            projectRepository.save(project);
+
+
+            return savedTask;
         } else {
             throw new RecordNotFoundException("Colaborator or project not found");
         }
@@ -86,21 +97,21 @@ public class TaskService implements StorageService {
     /**
      * Guarda una nueva subtarea.
      *
-     * @param description      La descripción de la subtarea.
-     * @param objective        El objetivo de la subtarea.
-     * @param isClosed         Indica si la subtarea está cerrada.
-     * @param colaboratorId    El ID del colaborador asignado a la subtarea.
-     * @param projectId        El ID del proyecto al que pertenece la subtarea.
+     * @param title             El título de la subtarea.
+     * @param description       La descripción de la subtarea.
+     * @param objective         El objetivo de la subtarea.
+     * @param isClosed          Indica si la subtarea está cerrada.
+     * @param colaboratorId     El ID del colaborador asignado a la subtarea.
+     * @param projectId         El ID del proyecto al que pertenece la subtarea.
      * @param parentTaskIdCode El código de identificación de la tarea padre.
      * @return La subtarea guardada.
      * @throws RecordNotFoundException Si no se encuentra el colaborador, el proyecto o la tarea padre.
      */
-    public Task saveSubTask(String description, String objective, Boolean isClosed, String colaboratorId, String projectId, String parentTaskIdCode) {
+    public Task saveSubTask(String title, String description, String objective, Boolean isClosed, String colaboratorId, String projectId, String parentTaskIdCode) {
         Optional<Colaborator> colaboratorOptional = colaboratorRepository.findById(colaboratorId);
         Optional<Project> projectOptional = projectRepository.findById(projectId);
 
         if (colaboratorOptional.isPresent() && projectOptional.isPresent()) {
-
             if (!isValidParentTaskIdCodeFormat(parentTaskIdCode)) {
                 throw new IllegalArgumentException("Invalid parentTaskIdCode format: " + parentTaskIdCode);
             }
@@ -108,31 +119,35 @@ public class TaskService implements StorageService {
             int nextSubTaskNumber = getNextSubTaskNumber(parentTaskIdCode);
 
             Task subTask = new Task();
+            subTask.setTitle(title);
             subTask.setDescription(description);
             subTask.setObjective(objective);
             subTask.setClosed(isClosed);
-            subTask.setColaborator(colaboratorOptional.get());
-            subTask.setProject(projectOptional.get());
-
 
             String subTaskIdCode = parentTaskIdCode + "_" + nextSubTaskNumber;
             subTask.setIdCode(subTaskIdCode);
 
-            Task parentTask = taskRepository.findByIdCode(parentTaskIdCode).orElseThrow(() -> new RecordNotFoundException("Parent task not found"));
-
+            Task parentTask = taskRepository.findByIdCode(parentTaskIdCode)
+                    .orElseThrow(() -> new RecordNotFoundException("Parent task not found"));
 
             subTask.setTask(parentTask);
 
-
             Task savedSubTask = taskRepository.save(subTask);
 
-            List<Task> subTasks = parentTask.getSubtareas();
-
-            subTasks.add(savedSubTask);
-
-            parentTask.setSubtareas(subTasks);
-
+            if (parentTask.getTasks_count() != null) {
+                parentTask.setTasks_count(parentTask.getTasks_count() + 1); // Incrementar el contador de la tarea padre
+            } else {
+                parentTask.setTasks_count(1); // Si es null, establecerlo en 1
+            }
             taskRepository.save(parentTask);
+
+            Project project = projectOptional.get();
+            if (project.getTasks_count() != null) {
+                project.setTasks_count(project.getTasks_count() + 1); // Incrementar el contador del proyecto
+            } else {
+                project.setTasks_count(1); // Si es null, establecerlo en 1
+            }
+            projectRepository.save(project);
 
             return savedSubTask;
         } else {
@@ -420,6 +435,7 @@ public class TaskService implements StorageService {
         Optional<Task> result = taskRepository.findById(id);
         if (result.isPresent()) {
             Task task = result.get();
+            task.setTitle(updateTask.getTitle());
             task.setDescription(updateTask.getDescription());
             task.setObjective(updateTask.getObjective());
             task.setClosed(updateTask.getClosed());
