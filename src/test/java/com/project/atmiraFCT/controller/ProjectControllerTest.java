@@ -50,8 +50,8 @@ public class ProjectControllerTest {
     void testGetProjectById() {
 
         // Given
-        List<Project> projects = Arrays.asList(new Project(), new Project());
-        when(projectService.getProjectById("1")).thenReturn(project);
+        List<ProjectDTO> projects = Arrays.asList(new ProjectDTO(), new ProjectDTO());
+        when(projectService.getProjectById("1")).thenReturn(new ProjectDTO().convertToDto(project));
 
         // When
         ResponseEntity<ProjectDTO> response = projectController.getProjectById("1");
