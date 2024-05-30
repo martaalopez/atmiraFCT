@@ -1,6 +1,7 @@
 package com.project.atmiraFCT.controller;
 
 import com.project.atmiraFCT.model.Enum.TypeOfService;
+import com.project.atmiraFCT.model.domain.DTO.ProjectDTO;
 import com.project.atmiraFCT.model.domain.Project;
 import com.project.atmiraFCT.service.ProjectService;
 import org.junit.jupiter.api.BeforeEach;
@@ -53,7 +54,7 @@ public class ProjectControllerTest {
         when(projectService.getProjectById("1")).thenReturn(project);
 
         // When
-        ResponseEntity<Project> response = projectController.getProjectById("1");
+        ResponseEntity<ProjectDTO> response = projectController.getProjectById("1");
 
         // Then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -84,11 +85,11 @@ public class ProjectControllerTest {
     @Test
     void testGetProjectsByColaboratorId() {
         // Given
-        List<Project> projects = Arrays.asList(new Project(), new Project());
+            List<ProjectDTO> projects = Arrays.asList(new ProjectDTO(), new ProjectDTO());
         when(projectService.getProjectsByColaboratorId("123")).thenReturn(projects);
 
         // When
-        List<Project> result = projectController.getProjectsByColaboratorId("123");
+        List<ProjectDTO> result = projectController.getProjectsByColaboratorId("123");
 
         // Then
         assertThat(result).hasSize(2);

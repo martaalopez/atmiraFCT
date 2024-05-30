@@ -4,6 +4,7 @@ import com.project.atmiraFCT.exception.RecordNotFoundException;
 import com.project.atmiraFCT.model.Enum.TypeOfService;
 import com.project.atmiraFCT.model.domain.Colaborator;
 import com.project.atmiraFCT.model.domain.ColaboratorProject;
+import com.project.atmiraFCT.model.domain.DTO.ProjectDTO;
 import com.project.atmiraFCT.model.domain.Project;
 import com.project.atmiraFCT.repository.ColaboratorProjectRepository;
 import com.project.atmiraFCT.repository.ColaboratorRepository;
@@ -49,10 +50,10 @@ public class ProjectService {
      * @return El proyecto encontrado.
      * @throws RecordNotFoundException Si no se encuentra el proyecto.
      */
-    public Project getProjectById(String id) {
+    public ProjectDTO getProjectById(String id) {
         Optional<Project> project = projectRepository.findById(id);
         if (project.isPresent()) {
-            return project.get();
+            return new ProjectDTO().convertToDto(project.get());
         } else {
             throw new RecordNotFoundException("No user found with id: " + id);
         }
@@ -103,19 +104,21 @@ public class ProjectService {
      * @return La lista de proyectos asociados al colaborador.
      * @throws RecordNotFoundException Si no se encuentra el colaborador.
      */
-    public List<Project> getProjectsByColaboratorId(String colaboratorId) {
+    public List<ProjectDTO> getProjectsByColaboratorId(String colaboratorId) {
         Optional<Colaborator> colaborator = colaboratorRepository.findById(colaboratorId);
 
         if (colaborator.isPresent()) {
             List<ColaboratorProject> colaboratorProjects = colaborator.get().getColaboratorProjects();
-            List<Project> projects = colaboratorProjects.stream()
+            List<ProjectDTO> projects = colaboratorProjects.stream()
                     .map(ColaboratorProject::getProject)
+                    .map(project -> new ProjectDTO().convertToDto(project)) // Convierte Project a ProjectDTO
                     .collect(Collectors.toList());
             return projects;
         } else {
             throw new RecordNotFoundException("No collaborator found with id: " + colaboratorId);
         }
     }
+
 
     /**
      * Crea un proyecto con un colaborador existente.

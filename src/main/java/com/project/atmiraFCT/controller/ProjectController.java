@@ -3,6 +3,7 @@ package com.project.atmiraFCT.controller;
 import com.project.atmiraFCT.exception.RecordNotFoundException;
 import com.project.atmiraFCT.exception.Validator;
 import com.project.atmiraFCT.model.domain.Colaborator;
+import com.project.atmiraFCT.model.domain.DTO.ProjectDTO;
 import com.project.atmiraFCT.model.domain.Project;
 import com.project.atmiraFCT.repository.ProjectRepository;
 import com.project.atmiraFCT.service.ProjectService;
@@ -36,9 +37,12 @@ public class ProjectController {
      */
     @CrossOrigin(origins = "${Front_URL}")
     @GetMapping("/project/list/{id}")
-    public ResponseEntity<Project> getProjectById(@PathVariable("id") String id){
-        Project project = service.getProjectById(id);
+    public ResponseEntity<ProjectDTO> getProjectById(@PathVariable String id) {
+        ProjectDTO project = projectService.getProjectById(id);
         return ResponseEntity.ok(project);
+    }
+    private ProjectDTO convertToDto(Project project) {
+        return new ProjectDTO().convertToDto(project);
     }
 
     /**
@@ -83,7 +87,7 @@ public class ProjectController {
      */
     @CrossOrigin(origins = "${Front_URL}")
     @GetMapping("/colaborator/{colaboratorId}/projects")
-    public List<Project> getProjectsByColaboratorId(@PathVariable String colaboratorId) {
+    public List<ProjectDTO> getProjectsByColaboratorId(@PathVariable String colaboratorId) {
         return projectService.getProjectsByColaboratorId(colaboratorId);
     }
 

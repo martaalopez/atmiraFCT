@@ -174,7 +174,6 @@ public class Project {
                 ", endDate=" + endDate +
                 ", active=" + active +
                 ", tasks_count=" + tasks_count +
-                ", tasks=" + tasks +
                 ", expenses=" + expenses +
                 ", colaboratorProjects=" + colaboratorProjects +
                 '}';
