@@ -36,7 +36,7 @@ public class Project {
     private Boolean active;
 
 
-    @Column(name="tasks_count")
+    @Column(name="tasks_count", columnDefinition = "INTEGER DEFAULT 0")
     private Integer tasks_count;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "project",cascade = CascadeType.ALL)
