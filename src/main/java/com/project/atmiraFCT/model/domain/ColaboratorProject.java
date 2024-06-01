@@ -58,6 +58,11 @@ public class ColaboratorProject {
         this.project = project;
     }
 
-
-
+    @Override
+    public String toString() {
+        return "ColaboratorProject{" +
+                "id=" + id +
+                ", colaborator=" + colaborator.getId_alias() +
+                '}';
+    }
 }

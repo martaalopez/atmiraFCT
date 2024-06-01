@@ -3,7 +3,9 @@ package com.project.atmiraFCT.repository;
 import com.project.atmiraFCT.model.domain.Colaborator;
 import com.project.atmiraFCT.model.domain.Project;
 import com.project.atmiraFCT.model.domain.Task;
+import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.data.jpa.repository.Query;
@@ -45,5 +47,10 @@ public interface TaskRepository extends JpaRepository<Task, String> {
 
     @Query("SELECT t FROM Task t WHERE t.project.id_code = :projectId AND t.idCode = :taskIdCode")
     Optional<Task> findByProjectIdAndTaskIdCode(@Param("projectId") String projectId, @Param("taskIdCode") String taskIdCode);
+
+    @Modifying
+    @Transactional
+    @Query(value = "UPDATE task SET tasks_count = :count WHERE id_code = :idCode", nativeQuery = true)
+    void updateTask_Count(@Param("idCode") String idCode, @Param("count") Integer count);
 
 }

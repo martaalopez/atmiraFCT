@@ -146,9 +146,6 @@ public class Task {
                 ", objective='" + objective + '\'' +
                 ", isClosed=" + isClosed +
                 ", tasks_count=" + tasks_count +
-                ", subtareas=" + subtareas +
-                ", task=" + task +
-                ", project=" + project +
                 ", colaborator=" + colaborator +
                 '}';
     }
