@@ -11,20 +11,21 @@ import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
-@JsonIgnoreProperties({"project", "colaborator"})
+@JsonIgnoreProperties({"project"})
 @Table(name="expense")
 public class Expense {
 
     @Id
-    @Column
-    private String ticketId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column()
+    private Integer ticketId;
 
     @Column(name="ticketDate",nullable = false)
     private LocalDate ticketDate;
     @Column(name="createdDate",nullable = false)
     private Date createdDate;
     @Column(name="cost",nullable = false)
-    private Integer cost;
+    private Double cost;
 
     @Column(name="description",length = 256)
     private String description;
@@ -38,14 +39,13 @@ public class Expense {
     private Project project;
 
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JsonManagedReference
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="id_colaborator")
     private Colaborator colaborator;
     @Column
     private TypeExpensive typeExpensive;
 
-    public Expense(String ticketId, LocalDate ticketDate, Integer cost, String description, Boolean state,TypeExpensive typeExpensive, Project project, Colaborator colaborator) {
+    public Expense(Integer ticketId, LocalDate ticketDate, Double cost, String description, Boolean state,TypeExpensive typeExpensive, Project project, Colaborator colaborator) {
         this.ticketId = ticketId;
         this.ticketDate = ticketDate;
         try {
@@ -66,11 +66,11 @@ public class Expense {
 
     }
 
-    public String getTicketId() {
+    public Integer getTicketId() {
         return ticketId;
     }
 
-    public void setTicketId(String ticketId) {
+    public void setTicketId(Integer ticketId) {
         this.ticketId = ticketId;
     }
 
@@ -90,11 +90,11 @@ public class Expense {
         this.createdDate = createdDate;
     }
 
-    public Integer getCost() {
+    public Double getCost() {
         return cost;
     }
 
-    public void setCost(Integer cost) {
+    public void setCost(Double cost) {
         this.cost = cost;
     }
 
@@ -136,5 +136,20 @@ public class Expense {
 
     public void setTypeExpensive(TypeExpensive typeExpensive) {
         this.typeExpensive = typeExpensive;
+    }
+
+    @Override
+    public String toString() {
+        return "Expense{" +
+                "ticketId=" + ticketId +
+                ", ticketDate=" + ticketDate +
+                ", createdDate=" + createdDate +
+                ", cost=" + cost +
+                ", description='" + description + '\'' +
+                ", state=" + state +
+                ", project=" + project.getId_code() +
+                ", colaboratorID=" + colaborator.getId_alias() +
+                ", typeExpensive=" + typeExpensive +
+                '}';
     }
 }

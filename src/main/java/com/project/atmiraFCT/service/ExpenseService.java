@@ -5,17 +5,14 @@ import com.project.atmiraFCT.model.Enum.TypeExpensive;
 import com.project.atmiraFCT.model.domain.Colaborator;
 import com.project.atmiraFCT.model.domain.Expense;
 import com.project.atmiraFCT.model.domain.Project;
-import com.project.atmiraFCT.model.domain.Task;
 import com.project.atmiraFCT.repository.ColaboratorRepository;
 import com.project.atmiraFCT.repository.ExpenseRepository;
 import com.project.atmiraFCT.repository.ProjectRepository;
 import com.project.atmiraFCT.service.Specifications.ExpenseSpecifications;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,7 +38,7 @@ public class ExpenseService {
      * @return                El gasto guardado.
      * @throws RecordNotFoundException Si el colaborador o el proyecto no se encuentran.
      */
-    public Expense saveExpenseExistingProyectColaborator(String ticketId, LocalDate ticketDate, Integer cost,
+    public Expense saveExpenseExistingProyectColaborator(Integer ticketId, LocalDate ticketDate, Double cost,
                                                          String description, Boolean state, TypeExpensive typeExpensive, String colaboratorId, String projectId) {
         Optional<Colaborator> colaboratorOptional = colaboratorRepository.findById(colaboratorId);
         Optional<Project> projectOptional = projectRepository.findById(projectId);
@@ -61,7 +58,7 @@ public class ExpenseService {
      * @param id El ID del gasto a eliminar.
      * @throws RecordNotFoundException Si no se encuentra el gasto.
      */
-    public void deleteExpense(String id) {
+    public void deleteExpense(Integer id) {
         Optional<Expense> result = expenseRepository.findById(id);
         if (result.isPresent()) {
             expenseRepository.deleteById(id);

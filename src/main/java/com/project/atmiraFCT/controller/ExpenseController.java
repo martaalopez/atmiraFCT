@@ -70,7 +70,7 @@ public class ExpenseController {
      */
     @CrossOrigin(origins = "${Front_URL}")
     @DeleteMapping("/expense/delete/{id}")
-    public ResponseEntity<Boolean> deleteExpense(@PathVariable String id) {
+    public ResponseEntity<Boolean> deleteExpense(@PathVariable Integer id) {
         Optional<Expense> result =expenseRepository.findByTicketId(id);
         if (result.isPresent()) {
             expenseService.deleteExpense(id);

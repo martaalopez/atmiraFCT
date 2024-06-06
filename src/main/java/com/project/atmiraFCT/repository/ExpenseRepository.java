@@ -13,6 +13,6 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface ExpenseRepository extends JpaRepository<Expense, String>, JpaSpecificationExecutor<Expense> {
-    Optional<Expense> findByTicketId(String ticketId);
+public interface ExpenseRepository extends JpaRepository<Expense, Integer>, JpaSpecificationExecutor<Expense> {
+    Optional<Expense> findByTicketId(Integer ticketId);
 }

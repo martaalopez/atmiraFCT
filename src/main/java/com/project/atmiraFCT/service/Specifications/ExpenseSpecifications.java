@@ -52,7 +52,7 @@ public class ExpenseSpecifications {
         };
     }
 
-    private static Predicate addTicketIdPredicate(Predicate p, Root<Expense> root, CriteriaBuilder cb, String ticketId) {
+    private static Predicate addTicketIdPredicate(Predicate p, Root<Expense> root, CriteriaBuilder cb, Integer ticketId) {
         return cb.and(p, cb.equal(root.get("ticketId"), ticketId));
     }
 
@@ -64,7 +64,7 @@ public class ExpenseSpecifications {
         return cb.and(p, cb.equal(root.get("createdDate"), createdDate));
     }
 
-    private static Predicate addCostPredicate(Predicate p, Root<Expense> root, CriteriaBuilder cb, Integer cost) {
+    private static Predicate addCostPredicate(Predicate p, Root<Expense> root, CriteriaBuilder cb, Double cost) {
         return cb.and(p, cb.equal(root.get("cost"), cost));
     }
 
