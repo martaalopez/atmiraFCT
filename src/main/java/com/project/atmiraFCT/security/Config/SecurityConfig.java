@@ -1,5 +1,6 @@
 package com.project.atmiraFCT.security.Config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -23,50 +24,37 @@ public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final AuthenticationProvider authProvider;
 
-    /**
-     * Configura la cadena de filtros de seguridad.
-     *
-     * @param http La configuración de seguridad HTTP.
-     * @return La cadena de filtros de seguridad configurada.
-     * @throws Exception Si hay un error al configurar la cadena de filtros de seguridad.
-     */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf(csrf -> csrf.disable())
 
-                .authorizeHttpRequests(authRequest ->
-                        authRequest
-                                .requestMatchers("/**").permitAll()
-                                .anyRequest().authenticated()
-                )
+                .authorizeHttpRequests(auth -> {
+                    auth.requestMatchers("/**").permitAll()
+                            .anyRequest().authenticated(); // Requiere autenticación para cualquier otra solicitud
+                })
+
                 .sessionManagement(sessionManager ->
-                        sessionManager
-                                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                        sessionManager.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authenticationProvider(authProvider)
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 
-    /**
-     * Configura la fuente de configuración CORS.
-     *
-     * @return Fuente de configuración CORS configurada.
-     */
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-
-        configuration.addAllowedOrigin(System.getenv("Front_URL")); // Origen permitido
-
-        configuration.addAllowedOrigin("http://localhost:4200"); // Origen permitido
-
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE")); // Métodos permitidos
-        configuration.setAllowedHeaders(Arrays.asList("*")); // Todos los encabezados permitidos
-        configuration.setAllowCredentials(true); // Permitir credenciales
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        configuration.setAllowedOrigins(Arrays.asList("*"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH",
+                "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(Arrays.asList("authorization", "content-type",
+                "x-auth-token"));
+        configuration.setExposedHeaders(Arrays.asList("x-auth-token"));
+        UrlBasedCorsConfigurationSource source = new
+                UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
+
         return source;
     }
 }

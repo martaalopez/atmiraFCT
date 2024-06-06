@@ -92,4 +92,35 @@ public class JwtService {
     {
         return getExpiration(token).before(new Date());
     }
+
+    /**
+     * Validates the access token.
+     *
+     * @param token The access token to validate.
+     * @return True if the token is valid, false otherwise.
+     */
+    public boolean validateTokenAccess(String token) {
+        try {
+            Jwts.parserBuilder()
+                    .setSigningKey(getSeignatureKey())
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+
+            return true;
+        } catch (Exception e) {
+           // log.error("Token invalido, error: ".concat(e.getMessage()));
+            return false;
+
+        }
+    }
+    /**
+     * Generates the signature key using the secret key.
+     *
+     * @return The generated signature key.
+     */
+    public Key getSeignatureKey() {
+        byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
+        return Keys.hmacShaKeyFor(keyBytes);
+    }
 }

@@ -36,7 +36,7 @@ public class Project {
     private Boolean active;
 
 
-    @Column(name="tasks_count")
+    @Column(name="tasks_count", columnDefinition = "INTEGER DEFAULT 0")
     private Integer tasks_count;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "project",cascade = CascadeType.ALL)
@@ -60,18 +60,14 @@ public class Project {
         this.initialDate = initialDate;
         this.endDate = endDate;
         this.active = active;
-        this.tasks = tasks; // No inicializar aquí
+        this.tasks = tasks;
         this.expenses = expenses;
         this.colaboratorProjects = colaboratorProjects;
     }
 
 
 
-    public Project() {
-        this.colaboratorProjects = new ArrayList<>();
-  // Llama al método getTasks() en lugar de acceder directamente al atributo tasks
-
-    }
+    public Project() { }
 
 
     public String getId_code() {
@@ -174,7 +170,6 @@ public class Project {
                 ", endDate=" + endDate +
                 ", active=" + active +
                 ", tasks_count=" + tasks_count +
-                ", tasks=" + tasks +
                 ", expenses=" + expenses +
                 ", colaboratorProjects=" + colaboratorProjects +
                 '}';

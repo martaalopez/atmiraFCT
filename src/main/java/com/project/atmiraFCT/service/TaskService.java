@@ -75,6 +75,8 @@ public class TaskService implements StorageService {
 
             String idCode = generateTaskIdCode(projectOptional.get());
             task.setIdCode(idCode);
+            task.setProject(projectOptional.get());
+            task.setColaborator(colaboratorOptional.get());
 
             Task savedTask = taskRepository.save(task);
 
@@ -126,6 +128,8 @@ public class TaskService implements StorageService {
 
             String subTaskIdCode = parentTaskIdCode + "_" + nextSubTaskNumber;
             subTask.setIdCode(subTaskIdCode);
+            subTask.setProject(projectOptional.get());
+            subTask.setColaborator(colaboratorOptional.get());
 
             Task parentTask = taskRepository.findByIdCode(parentTaskIdCode)
                     .orElseThrow(() -> new RecordNotFoundException("Parent task not found"));
@@ -140,14 +144,7 @@ public class TaskService implements StorageService {
                 parentTask.setTasks_count(1); // Si es null, establecerlo en 1
             }
             taskRepository.save(parentTask);
-
-            Project project = projectOptional.get();
-            if (project.getTasks_count() != null) {
-                project.setTasks_count(project.getTasks_count() + 1); // Incrementar el contador del proyecto
-            } else {
-                project.setTasks_count(1); // Si es null, establecerlo en 1
-            }
-            projectRepository.save(project);
+            this.updateTask_Count(parentTask);
 
             return savedSubTask;
         } else {
@@ -242,10 +239,21 @@ public class TaskService implements StorageService {
     public void deleteTask(String id) {
         Optional<Task> result = taskRepository.findById(id);
         if (result.isPresent()) {
+            Task parentTask = result.get().getTask();
+            if(parentTask!=null && parentTask.getTasks_count() != null) {
+                parentTask.setTasks_count(parentTask.getTasks_count() - 1);
+            }else if(parentTask!=null && parentTask.getTasks_count() == null) {
+                parentTask.setTasks_count(0);
+            }
+            if(parentTask!=null) taskRepository.save(parentTask);
             taskRepository.deleteById(id);
         } else {
             throw new RecordNotFoundException("No task found with id: " + id);
         }
+    }
+
+    public void updateTask_Count(Task task) {
+        taskRepository.updateTask_Count(task.getIdCode(), task.getTasks_count());
     }
 
     /**
@@ -439,6 +447,7 @@ public class TaskService implements StorageService {
             task.setDescription(updateTask.getDescription());
             task.setObjective(updateTask.getObjective());
             task.setClosed(updateTask.getClosed());
+            task.setColaborator(updateTask.getColaborator());
             return taskRepository.save(task);
         } else {
             throw new RecordNotFoundException("Task not found with id code: " );

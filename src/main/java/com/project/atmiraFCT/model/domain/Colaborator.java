@@ -133,6 +133,7 @@ public class Colaborator  implements UserDetails {
         return null;
     }
 
+
     public String getPassword() {
         return password;
     }
@@ -241,6 +242,14 @@ public class Colaborator  implements UserDetails {
 
     public void setWorkPlace(WorkPlace workPlace) {
         this.workPlace = workPlace;
+    }
+
+    public String getResponsible() {
+        return responsible;
+    }
+
+    public void setResponsible(String responsible) {
+        this.responsible = responsible;
     }
 
     public List<ColaboratorProject> getColaboratorProjects() {
