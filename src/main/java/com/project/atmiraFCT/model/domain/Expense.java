@@ -11,7 +11,6 @@ import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
-@JsonIgnoreProperties({"project"})
 @Table(name="expense")
 public class Expense {
 
@@ -33,8 +32,7 @@ public class Expense {
     @Column(name="state")
     private Boolean state;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JsonManagedReference
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="id_code_project")
     private Project project;
 
