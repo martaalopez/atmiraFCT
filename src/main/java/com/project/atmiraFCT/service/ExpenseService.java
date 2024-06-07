@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.ZoneOffset;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -83,14 +85,19 @@ public class ExpenseService {
      * @throws RecordNotFoundException Si no se encuentra el gasto.
      */
     public Expense updateExpenseState(Expense expense) {
-        Optional<Expense> result = expenseRepository.findById(expense.getTicketId());
-        if (result.isPresent()) {
-            Expense savedExpense = result.get();
-            savedExpense.setState(expense.getState());
-            expenseRepository.save(savedExpense);
-            return savedExpense;
-        } else {
-            throw new RecordNotFoundException("No expense found with id: " + expense.getTicketId());
+        if(expense.getTicketId() !=null){
+            Optional<Expense> result = expenseRepository.findById(expense.getTicketId());
+            if (result.isPresent()) {
+                Expense savedExpense = result.get();
+                savedExpense.setState(expense.getState());
+                expenseRepository.save(savedExpense);
+                return savedExpense;
+            } else {
+                throw new RecordNotFoundException("No expense found with id: " + expense.getTicketId());
+            }
+        }else{
+            expense.setCreatedDate(Date.from(LocalDate.now().atStartOfDay().toInstant(ZoneOffset.UTC)));
+            return expenseRepository.save(expense);
         }
     }
 }
