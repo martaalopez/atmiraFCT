@@ -12,6 +12,7 @@ import com.project.atmiraFCT.repository.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -151,7 +152,12 @@ public class ProjectService {
         ColaboratorProject colaboratorProject = new ColaboratorProject(savedProject, colaborator);
 
         colaboratorProjectRepository.save(colaboratorProject);
-        savedProject.getColaboratorProjects().add(colaboratorProject);
+        if(savedProject.getColaboratorProjects() == null){
+            savedProject.setColaboratorProjects(new ArrayList<>());
+            savedProject.getColaboratorProjects().add(colaboratorProject);
+        }else{
+            savedProject.getColaboratorProjects().add(colaboratorProject);
+        }
 
         return savedProject;
     }
